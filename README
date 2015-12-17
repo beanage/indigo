@@ -2,6 +2,7 @@
 OpenGL
 GLEW
 SDL2
+GLM
 
 # how to build
 mkdir build
