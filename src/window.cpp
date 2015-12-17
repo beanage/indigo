@@ -37,9 +37,10 @@ std::string window::title() const
 	return SDL_GetWindowTitle(impl_->wnd);
 }
 
-void window::title(const std::string& t)
+window& window::title(const std::string& t)
 {
 	SDL_SetWindowTitle(impl_->wnd, t.c_str());
+	return *this;
 }
 
 irect window::frame() const
@@ -56,10 +57,11 @@ irect window::frame() const
 	return rect;
 }
 
-void window::frame(const irect& f)
+window& window::frame(const irect& f)
 {
 	SDL_SetWindowPosition(impl_->wnd, f.left, f.top);
 	SDL_SetWindowSize(impl_->wnd, f.width(), f.height());
+	return *this;
 }
 
 void window::swap() const

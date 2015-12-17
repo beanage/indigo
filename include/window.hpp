@@ -14,10 +14,10 @@ namespace indigo
 		virtual ~window();
 
 		std::string title() const;
-		void title(const std::string& t);
+		window& title(const std::string& t);
 
 		irect frame() const;
-		void frame(const irect& v);
+		window& frame(const irect& v);
 
 		void swap() const;
 
