@@ -5,11 +5,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/tools/cma
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(GLM REQUIRED)
 
 include_directories(
 	${OPENGL_INCLUDE_DIR}
 	${GLEW_INCLUDE_DIR}
-	${SDL2_INCLUDE_DIR})
+	${SDL2_INCLUDE_DIR}
+	${GLM_INCLUDE_DIR})
 
 include_directories(
 	include
