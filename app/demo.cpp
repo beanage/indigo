@@ -35,8 +35,6 @@ int main(int argc, char** argv)
 
 	glm::mat4 model;
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glDisable(GL_CULL_FACE); //TODO: Testing
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
