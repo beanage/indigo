@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
+set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake) 
 
 find_package(SDL2 REQUIRED)
@@ -20,6 +21,10 @@ include_directories(
 add_executable(demo
 	src/window.cpp
 	src/camera.cpp
+	src/obj_mesh.cpp
+	src/obj_loader.cpp
+	src/shader.cpp
+	src/program.cpp
 	app/demo.cpp)
 
 target_link_libraries(demo
@@ -28,4 +33,13 @@ target_link_libraries(demo
 	${SDL2_LIBRARY})
 
 target_compile_features(demo
-	PRIVATE cxx_range_for)
+	PRIVATE cxx_range_for
+	PRIVATE cxx_nullptr
+	PRIVATE cxx_lambdas
+	PRIVATE cxx_auto_type
+	PRIVATE cxx_func_identifier
+	PRIVATE cxx_right_angle_brackets
+	PRIVATE cxx_override
+	PRIVATE cxx_defaulted_functions
+	PRIVATE cxx_variadic_templates
+	PRIVATE cxx_binary_literals)

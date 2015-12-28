@@ -1,8 +1,19 @@
 #include "window.hpp"
+#include "gl.hpp"
 
 #include <SDL2/SDL.h>
 
 using namespace indigo;
+
+static void glew_init()
+{
+#if !__APPLE__
+	glewExperimental = GL_TRUE;
+	GLenum glew_error = glewInit();
+	if (glew_error != GLEW_OK)
+		throw std::runtime_error("[glew_init] error");
+#endif
+}
 
 struct window::impl
 {
@@ -24,6 +35,8 @@ window::window(const irect& rect)
 
 	if (!impl_->cxt)
 		throw std::runtime_error("SDL_GL_CreateContext failed!");
+
+	glew_init();
 }
 
 window::~window()
