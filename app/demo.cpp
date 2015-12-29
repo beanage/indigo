@@ -1,7 +1,6 @@
 #include "window.hpp"
 #include "mesh.hpp"
 #include "obj_loader.hpp"
-#include "obj_mesh.hpp"
 #include "program.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
@@ -76,7 +75,7 @@ int main(int argc, char** argv)
 		glClearColor(0.f, 0.f, 0.f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        ent.look_at(cam.position());
+        //ent.look_at(cam.position());
 		ent.render();
 
 		program.set("model", ent.model());
