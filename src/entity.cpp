@@ -49,10 +49,16 @@ const glm::mat4& entity::model() const
 	return model_;
 }
 
+void entity::model(const glm::mat4& m) const
+{
+	model_ = m;
+}
+
 glm::mat4 entity::orientation() const
 {
-	glm::mat4 result = glm::rotate(glm::mat4(), glm::radians(rotation_.z), glm::vec3(1.f, 0.f, 0.f));
-	result = glm::rotate(result, glm::radians(rotation_.x), glm::vec3(0.f, 1.f, 0.f));
+	glm::mat4 result = glm::rotate(glm::mat4(), glm::radians(rotation_.x), glm::vec3(1.f, 0.f, 0.f));
+	result = glm::rotate(result, glm::radians(rotation_.y), glm::vec3(0.f, 1.f, 0.f));
+	result = glm::rotate(result, glm::radians(rotation_.z), glm::vec3(0.f, 0.f, 1.f));
 	return result;
 }
 
@@ -75,5 +81,6 @@ void entity::look_at(const glm::vec3& target)
 {
 	glm::vec3 direction = glm::normalize(target - position());
 	rotation_.x = glm::radians(asinf(-direction.y));
+	rotation_.y = glm::radians(acosf(-direction.x));
 	rotation_.z = -glm::radians(atan2f(-direction.x, -direction.z));
 }

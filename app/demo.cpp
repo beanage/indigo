@@ -6,7 +6,6 @@
 #include "shader.hpp"
 #include "camera.hpp"
 #include "mesh_entity.hpp"
-#include "billboard.hpp"
 #include "log.hpp"
 #include "texture.hpp"
 
@@ -39,7 +38,6 @@ int main(int argc, char** argv)
 	cam.aspect_ratio(800.f/600.f);
 	cam.position({0.f, 1.f, 10.f});
 
-	//indigo::billboard ent(mesh.get(), &cam);
 	indigo::mesh_entity ent(mesh.get());
 
 	indigo::texture tex("../media/texture.png");
@@ -78,7 +76,6 @@ int main(int argc, char** argv)
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 		ent.render();
-		ent.look_at(cam.position());
 
 		program.set("model", ent.model());
 		program.set("projection", cam.projection());

@@ -13,7 +13,7 @@ namespace indigo
 		virtual ~mesh() {}
 
 		virtual void upload() = 0;
-		virtual void render() = 0;
+		virtual void render() const = 0;
 	};
 }
 
