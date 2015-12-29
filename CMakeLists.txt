@@ -20,9 +20,12 @@ include_directories(
 
 add_executable(demo
 	src/window.cpp
+	src/entity.cpp
 	src/camera.cpp
+	src/mesh_entity.cpp
 	src/obj_mesh.cpp
 	src/obj_loader.cpp
+	src/texture.cpp
 	src/shader.cpp
 	src/program.cpp
 	app/demo.cpp)

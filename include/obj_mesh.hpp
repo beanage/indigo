@@ -13,7 +13,7 @@ namespace indigo
 		friend class obj_loader;
 	public:
 		void upload();
-		void render();
+		void render() const;
 
 	private:
 		obj_mesh();

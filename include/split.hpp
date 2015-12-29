@@ -12,13 +12,13 @@ namespace indigo
 		std::vector<std::basic_string<T>> res;
 
 		std::string::size_type old = 0, pos = 0;
-		while ((pos = str.find(sep, old+1)) != std::string::npos) {
-			res.push_back(str.substr(old, pos));
-			old = pos;
+		while ((pos = str.find(sep, old)) != std::string::npos) {
+			res.push_back(str.substr(old, pos-old));
+			old = pos + sep.length();
 		}
 
-		if (old < str.length()-1)
-			res.push_back(str.substr(old, -1));
+		if (old < str.length())
+			res.push_back(str.substr(old, std::string::npos));
 	
 		return res;
 	}

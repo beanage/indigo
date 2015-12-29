@@ -42,7 +42,7 @@ static std::tuple<int, int, int> parse_face_indices(const std::string& input)
 obj_loader::obj_loader()
 {}
 
-std::unique_ptr<obj_mesh> obj_loader::load(const std::string& filename)
+std::unique_ptr<mesh> obj_loader::load(const std::string& filename)
 {
 	std::vector<glm::vec3> tmp_vertices;
 	std::vector<glm::vec2> tmp_uvs;
