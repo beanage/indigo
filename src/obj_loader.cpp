@@ -73,14 +73,6 @@ public:
     std::vector<glm::vec2> normals_;
 };
 
-struct face
-{
-	size_t size;
-	int vertices[4];
-	int uvs[4];
-	int normals[4];
-};
-
 static int parse_face_indices_number(const std::string& str)
 {
 	if (!str.empty())
@@ -146,31 +138,44 @@ std::unique_ptr<mesh> obj_loader::load(const std::string& filename)
 		}
 		else
 		if (type == "f") {
-			std::string vert[3];
-			parts >> vert[0] >> vert[1] >> vert[2];
+            std::string vert[4];
+            parts >> vert[0] >> vert[1] >> vert[2] >> vert[3];
 
-			// TODO: Obj can also store quads! e.g. vert[4]
-			for (int i = 0; i < 3; ++i) {
-				std::tuple<int, int, int> indices = parse_face_indices(vert[i]);
+            static const int vertex_order[] = {
+                0, 1, 2, // first triangle
+                0, 2, 3, // second triangle
+            };
 
-				tmp_vertex_indices.push_back(std::get<0>(indices));
-				tmp_uv_indices.push_back(std::get<1>(indices));
-				tmp_normal_indices.push_back(std::get<2>(indices));
-			}
+            bool is_quad = vert[3].size();
+            int vertex_count = is_quad ? 6 : 3;
+
+            for (int i = 0; i < vertex_count; ++i) {
+                std::tuple<int, int, int> indices = parse_face_indices(vert[vertex_order[i]]);
+
+                tmp_vertex_indices.push_back(std::get<0>(indices));
+                tmp_uv_indices.push_back(std::get<1>(indices));
+                tmp_normal_indices.push_back(std::get<2>(indices));
+            }
 		}
-	}
-
-	file.close();
-	//if (file.fail())
-	//	throw std::runtime_error("[obj_loader] error closing file!");
+        else
+        if (type == "mtllib") {
+            // TODO: load material
+        }
+        else
+        if (type == "usemtl") {
+            // TODO: use model for the following faces
+        }
+    }
 
 	if (tmp_vertex_indices.size() != tmp_uv_indices.size() ||
 	    tmp_vertex_indices.size() != tmp_normal_indices.size())
 		throw std::runtime_error("[obj_loader] index sizes mismatching!");
 
-	// TODO: remove this two lines.
-	tmp_normals.push_back(glm::vec2());
-	tmp_uvs.push_back(glm::vec2());
+    if (tmp_normals.empty())
+        tmp_normals.push_back(glm::vec2());
+
+    if (tmp_uvs.empty())
+        tmp_uvs.push_back(glm::vec2());
 
     std::unique_ptr<obj_mesh> mesh(new obj_mesh());
 
