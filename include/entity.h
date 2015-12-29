@@ -9,6 +9,8 @@ namespace indigo
 	class entity
 	{
 	public:
+                virtual ~entity() {}
+
 		virtual void render() const {}
 
 		const glm::vec3& position() const;
@@ -27,12 +29,11 @@ namespace indigo
 		void look_at(const glm::vec3& target);
 
 	protected:
-		entity();
-
-		void model(const glm::mat4& m) const;
+                entity() = default;
+                entity(const entity&) = default;
 
 	private:
-		mutable glm::mat4 model_;
+                glm::mat4 model_;
 		glm::vec3 position_;
 		glm::vec3 rotation_;
 	};

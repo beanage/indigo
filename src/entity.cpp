@@ -19,9 +19,6 @@ static glm::mat4 build_model_matrix(const entity& e)
 	return e.orientation() * glm::translate(glm::mat4(), -e.position());
 }
 
-entity::entity()
-{}
-
 const glm::vec3& entity::position() const
 {
 	return position_;
@@ -47,11 +44,6 @@ void entity::rotation(const glm::vec3& rot)
 const glm::mat4& entity::model() const
 {
 	return model_;
-}
-
-void entity::model(const glm::mat4& m) const
-{
-	model_ = m;
 }
 
 glm::mat4 entity::orientation() const
@@ -83,4 +75,6 @@ void entity::look_at(const glm::vec3& target)
 	rotation_.x = glm::radians(asinf(-direction.y));
 	rotation_.y = glm::radians(acosf(-direction.x));
 	rotation_.z = -glm::radians(atan2f(-direction.x, -direction.z));
+
+    model_ = build_model_matrix(*this);
 }

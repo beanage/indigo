@@ -5,21 +5,21 @@
 
 namespace indigo
 {
-	class texture
-	{
-	public:
-		explicit texture(const std::string& file);
-		texture(unsigned char* buffer, unsigned len);
-		virtual ~texture();
+class texture
+{
+public:
+        explicit texture(const std::string& file);
+        texture(unsigned char* buffer, unsigned len);
+        virtual ~texture();
 
-		virtual void bind() const;
+        virtual void bind() const;
 
-	private:
-		texture() = delete;
-		texture(const texture&) = delete;
+private:
+        texture() = delete;
+        texture(const texture&) = delete;
 
-		unsigned int obj_;
-	};
+        unsigned int obj_;
+};
 }
 
 #endif
