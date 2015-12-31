@@ -4,6 +4,10 @@
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "basic_geom.hpp"
+
+#include <tuple>
+
 namespace indigo
 {
 	class entity
@@ -27,6 +31,11 @@ namespace indigo
 		glm::vec3 right() const;
 
 		void look_at(const glm::vec3& target);
+
+                aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform);
+
+                virtual box bounding_box();
+                virtual std::pair<bool, double> intersect(ray const& r);
 
 	protected:
                 entity() = default;

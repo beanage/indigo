@@ -1,6 +1,7 @@
 #include "entity.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 using namespace indigo;
 
@@ -48,6 +49,7 @@ const glm::mat4& entity::model() const
 
 glm::mat4 entity::orientation() const
 {
+    // change this to glm::eulerAngleYXZ //
 	glm::mat4 result = glm::rotate(glm::mat4(), glm::radians(rotation_.x), glm::vec3(1.f, 0.f, 0.f));
 	result = glm::rotate(result, glm::radians(rotation_.y), glm::vec3(0.f, 1.f, 0.f));
 	result = glm::rotate(result, glm::radians(rotation_.z), glm::vec3(0.f, 0.f, 1.f));
