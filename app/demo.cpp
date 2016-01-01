@@ -62,9 +62,7 @@ int main(int argc, char** argv)
     glEnable(GL_DEPTH_TEST);
     glActiveTexture(GL_TEXTURE0);
 
-    bool key_w(false), key_s(false);
-
-    bool lctrl_pressed = false;
+    bool key_w(false), key_s(false), key_a(false), key_d(false);
     while (true) {
         SDL_Event event;
         while (SDL_PollEvent(&event) != 0) {
@@ -72,22 +70,26 @@ int main(int argc, char** argv)
             case SDL_QUIT:
                 return 0;
             case SDL_KEYDOWN:
-                if(event.key.keysym.sym == SDLK_LCTRL)
-                    lctrl_pressed = true;
                 if (event.key.keysym.sym == SDLK_w)
                     key_w = true;
                 if (event.key.keysym.sym == SDLK_s)
                     key_s = true;
+                if (event.key.keysym.sym == SDLK_a)
+                    key_a = true;
+                if (event.key.keysym.sym == SDLK_d)
+                    key_d = true;
                 break;
             case SDL_KEYUP:
-                if(event.key.keysym.sym == SDLK_LCTRL)
-                    lctrl_pressed = false;
                 if(event.key.keysym.sym == SDLK_r)
                     cam.look_at(ent.position());
                 if (event.key.keysym.sym == SDLK_w)
                     key_w = false;
                 if (event.key.keysym.sym == SDLK_s)
                     key_s = false;
+                if (event.key.keysym.sym == SDLK_a)
+                    key_a = false;
+                if (event.key.keysym.sym == SDLK_d)
+                    key_d = false;
                 break;
             }
         }
@@ -96,15 +98,23 @@ int main(int argc, char** argv)
         Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
 
         bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
-        bool rbt = butt & SDL_BUTTON(SDL_BUTTON_RIGHT);
 
         if (lbt) {
             ent.turn(mx, glm::inverse(ent.rotation())*cam.up()).turn(my, glm::inverse(ent.rotation())*cam.right());
-        } else if (rbt && !lctrl_pressed) {
-            cam.position(cam.position() + cam.forward() * (my * 0.1f));
         } else {
             cam.turn((float)mx/10.f, cam.up()).turn((float)my/10.f, cam.right());
         }
+
+        glm::vec3 velocity(0,0,0);
+        if(key_w)
+            velocity += cam.forward() * .1f;
+        if(key_s)
+            velocity += cam.forward() * -.1f;
+        if(key_a)
+            velocity += cam.right() * -.1f;
+        if(key_d)
+            velocity += cam.right() * .1f;
+        cam.move(velocity);
 
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);

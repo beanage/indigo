@@ -33,6 +33,11 @@ void entity::position(const glm::vec3& pos)
     model_ = build_model_martix();
 }
 
+entity &entity::move(const glm::vec3 &velocity)
+{
+    position(position() + velocity);
+}
+
 const glm::quat& entity::rotation() const
 {
     return rotation_;
