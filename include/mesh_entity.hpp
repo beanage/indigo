@@ -15,10 +15,19 @@ namespace indigo
 		//const mesh* model() const;
 		//void model(const mesh* m);
 
+                enum render_mode {
+                    filled,
+                    wireframe
+                };
+
+                void rendermode(render_mode mode) {rendermode_ = mode;};
+                render_mode rendermode() {return rendermode_;}
+
 		virtual void render() const;
 
 	private:
 		const mesh* model_;
+                render_mode rendermode_;
 	};
 }
 

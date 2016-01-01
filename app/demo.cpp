@@ -39,6 +39,7 @@ int main(int argc, char** argv)
 
     indigo::mesh_entity ent(mesh.get());
     ent.position({0.f, 0.f, 0.f});
+    ent.rendermode(indigo::mesh_entity::wireframe);
 
     indigo::camera cam;
     cam.aspect_ratio(800.f/600.f);

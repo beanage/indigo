@@ -2,8 +2,6 @@
 #include "split.hpp"
 #include "gl.hpp"
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
 #include <vector>
 #include <fstream>
 #include <sstream>
@@ -16,23 +14,16 @@ using namespace indigo;
 class obj_mesh : public mesh
 {
 public:
-        obj_mesh() : vao_(0), vbo_(0)
-        {}
+    obj_mesh()
+    {}
 
-        void upload()
-        {
-                if (glIsBuffer(vbo_))
-                        throw std::runtime_error("[obj_mesh::upload] mesh is already online!");
+    void upload()
+    {
+        if (glIsBuffer(vbo_))
+                throw std::runtime_error("[obj_mesh::upload] mesh is already online!");
 
-                struct vertex
-                {
-                        glm::vec3 v;
-                        glm::vec2 vn;
-                        glm::vec2 vt;
-                };
-
-                std::vector<vertex> data;
-                data.resize(vertices_.size());
+        std::vector<vertex> data;
+        data.resize(vertices_.size());
 
         // compile the separate vertex, uv and normal vector data
         auto pos_it = vertices_.begin();
@@ -45,36 +36,12 @@ public:
             ++pos_it, ++uv_it, ++norm_it;
         }
 
-                glGenBuffers(1, &vbo_);
-                glGenVertexArrays(1, &vao_);
+        mesh::upload(data);
+    }
 
-                glBindVertexArray(vao_);
-                glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-                glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(vertex), data.data(), GL_STATIC_DRAW);
-
-                glEnableVertexAttribArray(mesh::vertex_attribute_index);
-                glVertexAttribPointer(mesh::vertex_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), reinterpret_cast<void*>(0));
-
-                glEnableVertexAttribArray(mesh::texcoord_attribute_index);
-                glVertexAttribPointer(mesh::texcoord_attribute_index, 2, GL_FLOAT, GL_TRUE, sizeof(vertex), reinterpret_cast<void*>(sizeof(glm::vec3)+sizeof(glm::vec2)));
-                glBindVertexArray(0);
-        }
-
-        void render() const
-        {
-                glBindVertexArray(vao_);
-                glEnableVertexAttribArray(mesh::vertex_attribute_index);
-                glEnableVertexAttribArray(mesh::texcoord_attribute_index);
-                glDrawArrays(GL_TRIANGLES, 0, vertices_.size());
-                glBindVertexArray(0);
-        }
-
-        unsigned int vao_;
-        unsigned int vbo_;
-
-        std::vector<glm::vec3> vertices_;
-        std::vector<glm::vec2> uvs_;
-        std::vector<glm::vec2> normals_;
+    std::vector<glm::vec3> vertices_;
+    std::vector<glm::vec2> uvs_;
+    std::vector<glm::vec2> normals_;
 };
 
 static int parse_face_indices_number(const std::string& str)
