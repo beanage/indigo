@@ -18,19 +18,19 @@ int main(int argc, char** argv)
 {
 	indigo::log("starting demo...");
 
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_GL_SetSwapInterval(1);
+        SDL_Init(SDL_INIT_VIDEO);
+        SDL_GL_SetSwapInterval(1);
 
 	indigo::window win({0, 0, 800, 600});
 	win.title("DEMO");
 
-    indigo::program program({
-        indigo::load_shader("../shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER),
-        indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)});
-    program.use();
+        indigo::program program({
+                indigo::load_shader("../shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER),
+                indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)});
+        program.use();
 
 	indigo::obj_loader loader;
-	std::unique_ptr<indigo::mesh> mesh(loader.load("../media/mesh.obj"));
+        std::unique_ptr<indigo::mesh> mesh(loader.load("../media/cube.obj"));
 	mesh->upload();
 
 	indigo::camera cam;
@@ -38,7 +38,7 @@ int main(int argc, char** argv)
 	cam.position({0.f, 1.f, 10.f});
 
 	indigo::mesh_entity ent(mesh.get());
-    ent.position({0.f, 0.f, 0.f});
+        ent.position({0.f, 0.f, 0.f});
 
 	indigo::texture tex("../media/texture.png");
 	tex.bind();
@@ -65,17 +65,21 @@ int main(int argc, char** argv)
 		bool mb = butt & SDL_BUTTON(SDL_BUTTON_MIDDLE);
 
 		if (up) {
-			ent.rotation(ent.rotation() + glm::vec3((float)my, (float)mx, 0.f));
+                        glm::quat rotation = ent.rotation();
+                        rotation *= glm::angleAxis(glm::radians((float)mx), glm::vec3(0.f, 1.f, 0.f));
+                        rotation *= glm::angleAxis(glm::radians((float)my), glm::vec3(1.f, 0.f, 0.f));
+
+                        ent.rotation(rotation);
 		} else if (dw) {
 			cam.position(cam.position() + cam.forward() * (my * 0.1f));
 		} else if (mb) {
-			cam.rotation(cam.rotation() + glm::vec3((float)my, (float)mx, 0.f));
+                        //cam.rotation(cam.rotation() + glm::vec3((float)my, (float)mx, 0.f));
 		}
 
 		glClearColor(0.f, 0.f, 0.f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        //ent.look_at(cam.position());
+                //ent.look_at(cam.position());
 		ent.render();
 
 		program.set("model", ent.model());

@@ -1,5 +1,7 @@
 #include "entity.h"
 
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 using namespace indigo;
@@ -30,14 +32,14 @@ void entity::position(const glm::vec3& pos)
 	model_ = build_model_matrix(*this);
 }
 
-const glm::vec3& entity::rotation() const
+const glm::quat& entity::rotation() const
 {
-	return rotation_;
+        return rotation_;
 }
 
-void entity::rotation(const glm::vec3& rot)
+void entity::rotation(const glm::quat& rot)
 {
-	rotation_ = rot;
+        rotation_ = rot;
 	model_ = build_model_matrix(*this);
 }
 
@@ -48,10 +50,7 @@ const glm::mat4& entity::model() const
 
 glm::mat4 entity::orientation() const
 {
-	glm::mat4 result = glm::rotate(glm::mat4(), glm::radians(rotation_.x), glm::vec3(1.f, 0.f, 0.f));
-	result = glm::rotate(result, glm::radians(rotation_.y), glm::vec3(0.f, 1.f, 0.f));
-	result = glm::rotate(result, glm::radians(rotation_.z), glm::vec3(0.f, 0.f, 1.f));
-	return result;
+        return glm::toMat4(rotation_);
 }
 
 glm::vec3 entity::forward() const
@@ -76,5 +75,5 @@ void entity::look_at(const glm::vec3& target)
 	rotation_.y = glm::radians(acosf(-direction.x));
 	rotation_.z = -glm::radians(atan2f(-direction.x, -direction.z));
 
-    model_ = build_model_matrix(*this);
+        model_ = build_model_matrix(*this);
 }
