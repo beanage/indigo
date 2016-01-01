@@ -18,6 +18,8 @@ include_directories(
 	include
 	contrib/stb)
 
+add_definitions(-DGLM_FORCE_RADIANS)
+
 add_executable(demo
 	src/window.cpp
 	src/entity.cpp

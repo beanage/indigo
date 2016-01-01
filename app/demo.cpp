@@ -23,6 +23,9 @@ int main(int argc, char** argv)
     indigo::log("starting demo...");
 
     SDL_Init(SDL_INIT_VIDEO);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetSwapInterval(1);
 
     indigo::window win({0, 0, 800, 600});
@@ -30,7 +33,8 @@ int main(int argc, char** argv)
 
     indigo::program program({
         indigo::load_shader("../shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER),
-        indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)});
+        indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)
+    });
     program.use();
 
     indigo::obj_loader loader;
@@ -43,7 +47,7 @@ int main(int argc, char** argv)
 
     indigo::camera cam;
     cam.aspect_ratio(800.f/600.f);
-    cam.position({250.f, 0.f, 250.f});
+    cam.position({10.f, 10.f, 10.f});
     cam.look_at(ent.position());
 
     //indigo::texture tex("../media/texture.png");
@@ -95,7 +99,7 @@ int main(int argc, char** argv)
         bool mbt = butt & SDL_BUTTON(SDL_BUTTON_MIDDLE);
 
         if (lbt) {
-            ent.turn(mx*10.0, glm::inverse(ent.rotation())*cam.up()).turn(my*10.0, glm::inverse(ent.rotation())*cam.right());
+            ent.turn(mx, glm::inverse(ent.rotation())*cam.up()).turn(my, glm::inverse(ent.rotation())*cam.right());
         } else if (rbt && !lctrl_pressed) {
             cam.position(cam.position() + cam.forward() * (my * 0.1f));
         } else if (mbt || lctrl_pressed) {
