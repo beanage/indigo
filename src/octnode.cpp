@@ -12,44 +12,44 @@ namespace indigo
 
 struct octnode_plane_isect
 {
-    octnode_plane_isect(ray const& r, plane const& p, glm::vec3<int8_t> step = glm::vec3<int8_t>(0,0,0)) : step(step)
+    octnode_plane_isect(ray const& r, plane const& p, glm::lowp_ivec3 step = glm::lowp_ivec3(0,0,0)) : step(step)
     {
         bool valid = false;
         t = p.intersect(r, valid);
         if(valid) {
             pos = r.offset + r.direction * t;
-            double s = 0;
+            float s = 0;
             valid = glm::intersectRayPlane(r.offset, p.direction, p.offset, p.direction, s);
             if(s < 0)
                 step *= -1;
         }
     }
 
-    glm::vec3<int8_t> step;
+    glm::lowp_ivec3 step;
     glm::vec3 pos;
-    double t;
+    float t;
 
     bool operator < (octnode_plane_isect const& other) const {
         return t < other.t;
     }
 };
 
-octnode::octnode(const aabb &geom, uint8_t x, uint8_t y, uint8_t z) : geom(geom),
-    x(x), y(y), z(z), lr(geom.middle, x_axis), bt(geom.middle, y_axis), fb(geom.middle, z_axis)
+octnode::octnode(const aabb &geom, octant_indices pos) : geom(geom),
+    indices(pos), lr(geom.middle, x_axis), bt(geom.middle, y_axis), fb(geom.middle, z_axis)
 {
 }
 
 bool octnode::push(const entity &ent, glm::mat4 const& abs_transform)
 {
-    if(!geom.intersect(ent.axis_aligned_bounding_box()))
+    if(!geom.intersect(ent.axis_aligned_bounding_box(abs_transform)))
         return false;
 
     if(is_leaf()) {
         entities.push_back(&ent);
         if(entities.size() > OCTNODE_NUM_ENTITY_SPLIT_THRESHOLD) {
             make_children();
-            for(auto const& ent : entities)
-                push(ent, abs_transform);
+            for(auto const& e : entities)
+                push(*e, abs_transform);
             entities.clear();
         }
         return true;
@@ -58,13 +58,13 @@ bool octnode::push(const entity &ent, glm::mat4 const& abs_transform)
         for(auto const& z : children)
             for(auto const& y : z)
                 for(auto const& x : y)
-                    if(x->push(ent))
+                    if(x->push(ent, abs_transform))
                         return true;
 
     throw std::runtime_error("Failed to insert entity into oct for no reason.");
 }
 
-entity const* octnode::pick(const ray &r, glm::vec3 const& entry, double exit)
+entity const* octnode::pick(const ray &r, glm::vec3 entry, double exit) const
 {
     if(is_leaf()) {
         entity const* closest_entity = nullptr;
@@ -81,9 +81,9 @@ entity const* octnode::pick(const ray &r, glm::vec3 const& entry, double exit)
     else {
         // determine the succession of intersections
         std::array<octnode_plane_isect, 3> inner_isects = {
-            octnode_plane_isect(r, lr, glm::vec3<int8_t>(1,0,0)),
-            octnode_plane_isect(r, bt, glm::vec3<int8_t>(0,1,0)),
-            octnode_plane_isect(r, fb, glm::vec3<int8_t>(0,0,1))
+            octnode_plane_isect(r, lr, glm::lowp_ivec3(1,0,0)),
+            octnode_plane_isect(r, bt, glm::lowp_ivec3(0,1,0)),
+            octnode_plane_isect(r, fb, glm::lowp_ivec3(0,0,1))
         };
         std::sort(inner_isects.begin(), inner_isects.end());
 
@@ -128,7 +128,7 @@ entity const* octnode::pick(const ray &r, glm::vec3 const& entry, double exit)
 void octnode::make_children()
 {
     glm::vec3 pos = geom.front_bottom_left;
-    glm::vec3 size = geom.size / 2.0;
+    glm::vec3 size = geom.size / 2.0f;
     for(int x = 0; x < 2; ++x) {
         pos.y = 0;
         for(int y = 0; y < 2; ++y) {
@@ -143,7 +143,7 @@ void octnode::make_children()
     }
 }
 
-octant_indices octnode::octant_indices_for_pos(glm::vec3 pos)
+octant_indices octnode::octant_indices_for_pos(glm::vec3 pos) const
 {
     octant_indices result(0,0,0);
 
@@ -157,7 +157,7 @@ octant_indices octnode::octant_indices_for_pos(glm::vec3 pos)
     return result;
 }
 
-const unique_octnode &octnode::octant_for_indices(const octant_indices &pos)
+const unique_octnode &octnode::octant_for_indices(const octant_indices &pos) const
 {
     return children[std::max(pos.z, 1)][std::max(pos.y, 1)][std::max(pos.x, 1)];
 }
@@ -165,7 +165,7 @@ const unique_octnode &octnode::octant_for_indices(const octant_indices &pos)
 /************************ root_octnode **********************/
 
 root_octnode::root_octnode(const aabb &size) :
-    octnode(size, 0, 0, 0),
+    octnode(size),
     left(geom.front_bottom_left, x_axis),
     right(geom.front_bottom_left + glm::vec3(geom.size.x,0,0), x_axis),
     bottom(geom.front_bottom_left, y_axis),
@@ -175,7 +175,7 @@ root_octnode::root_octnode(const aabb &size) :
 {
 }
 
-const entity *root_octnode::pick(const ray &r)
+const entity *root_octnode::pick(const ray &r) const
 {
     std::array<octnode_plane_isect, 6> bounding_isects = {
         octnode_plane_isect(r, top),
@@ -194,7 +194,7 @@ const entity *root_octnode::pick(const ray &r)
             break;
         }
 
-    query(r, r.offset, first_positive_intersection);
+    octnode::pick(r, r.offset, first_positive_intersection);
 }
 
 }

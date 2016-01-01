@@ -34,12 +34,23 @@ public:
         std::vector<vertex> data;
         data.resize(vertices_.size());
 
-        std::transform(vertices_.begin(), vertices_.end(), data.begin(), data.begin(),
-                [&](const auto& val, auto& vert){ vert.v = val; return vert; });
-        std::transform(uvs_.begin(), uvs_.end(), data.begin(), data.begin(),
-                [&](const auto& val, auto& vert){ vert.vt = val; return vert; });
-        std::transform(normals_.begin(), normals_.end(), data.begin(), data.begin(),
-                [&](const auto& val, auto& vert){ vert.vn = val; return vert; });
+        // compile the separate vertex, uv and normal vector data
+        auto pos_it = vertices_.begin();
+        auto uv_it = uvs_.begin();
+        auto norm_it = normals_.begin();
+        for(vertex& vert : data) {
+            vert.v = *pos_it;
+            vert.vt = *uv_it;
+            vert.vn = *norm_it;
+            ++pos_it, ++uv_it, ++norm_it;
+        }
+        // these require c++14
+        // std::transform(vertices_.begin(), vertices_.end(), data.begin(), data.begin(),
+        //         [&](const auto& val, auto& vert){ vert.v = val; return vert; });
+        // std::transform(uvs_.begin(), uvs_.end(), data.begin(), data.begin(),
+        //         [&](const auto& val, auto& vert){ vert.vt = val; return vert; });
+        // std::transform(normals_.begin(), normals_.end(), data.begin(), data.begin(),
+        //         [&](const auto& val, auto& vert){ vert.vn = val; return vert; });
 
         glGenBuffers(1, &vbo_);
         glGenVertexArrays(1, &vao_);
@@ -177,16 +188,16 @@ std::unique_ptr<mesh> obj_loader::load(const std::string& filename)
     if (tmp_uvs.empty())
         tmp_uvs.push_back(glm::vec2());
 
-    std::unique_ptr<obj_mesh> mesh(new obj_mesh());
+    obj_mesh* result(new obj_mesh());
 
 	for (auto index : tmp_vertex_indices)
-		mesh->vertices_.push_back(tmp_vertices[index-1]);
+        result->vertices_.push_back(tmp_vertices[index-1]);
 
 	for (auto index : tmp_uv_indices)
-		mesh->uvs_.push_back(tmp_uvs[index-1]);
+        result->uvs_.push_back(tmp_uvs[index-1]);
 
 	for (auto index : tmp_normal_indices)
-		mesh->normals_.push_back(tmp_normals[index-1]);
+        result->normals_.push_back(tmp_normals[index-1]);
 
-	return mesh;
+    return std::unique_ptr<mesh>(result);
 }

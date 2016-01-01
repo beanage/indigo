@@ -5,9 +5,9 @@
 
 namespace indigo {
 
-aabb::aabb(glm::vec3 size, glm::vec3 front_bottom_right) : size(size), front_bottom_right(front_bottom_right), middle(front_bottom_right + size/2.0) {}
+aabb::aabb(glm::vec3 size, glm::vec3 front_bottom_left) : size(size), front_bottom_left(front_bottom_left), middle(front_bottom_left + size/.5f) {}
 
-bool aabb::intersect(const aabb &other)
+bool aabb::intersect(const aabb &other) const
 {
     return contains(other.front_bottom_left.x, other.front_bottom_left.y, other.front_bottom_left.z) ||
            contains(other.front_bottom_left.x + other.size.x, other.front_bottom_left.y, other.front_bottom_left.z) ||
@@ -20,7 +20,7 @@ bool aabb::intersect(const aabb &other)
            other.intersect(*this);
 }
 
-bool aabb::contains(double x, double y, double z)
+bool aabb::contains(double x, double y, double z) const
 {
     return x >= front_bottom_left.x && x <= front_bottom_left.x + size.x &&
            y >= front_bottom_left.y && y <= front_bottom_left.y + size.y &&
@@ -35,14 +35,14 @@ std::vector<glm::vec3> box::verts()
     };
 
     for(auto& vec : result)
-        vec *= transform;
+        vec = glm::vec3(transform * glm::vec4(vec.x, vec.y, vec.z, 0.0));
 
     return result;
 }
 
 aabb box::axis_aligned_bounding_box()
 {
-    double nan = std::numeric_limits<double>::quiet_NaN;
+    double nan = std::numeric_limits<double>::quiet_NaN();
     double min_x(nan), min_y(nan), min_z(nan), max_x(nan), max_y(nan), max_z(nan);
 
     for(auto const& vert : verts()) {
@@ -67,10 +67,10 @@ plane::plane(const glm::vec3 &offset, const glm::vec3 &direction) : offset(offse
 {
 }
 
-double plane::intersect(const ray &r, bool& valid)
+double plane::intersect(const ray &r, bool& valid) const
 {
-    double t = .0;
-    bool valid = glm::intersectRayPlane(r.offset, r.direction, offset, direction, t);
+    float t = .0;
+    valid = glm::intersectRayPlane(r.offset, r.direction, offset, direction, t);
     return t;
 }
 

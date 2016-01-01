@@ -16,7 +16,7 @@ namespace indigo
     class octnode;
     typedef std::unique_ptr<octnode> unique_octnode;
 
-    typedef glm::vec3<uint8_t> octant_indices;
+    typedef glm::lowp_ivec3 octant_indices;
 
     class octnode
     {
@@ -24,24 +24,24 @@ namespace indigo
         bool push(entity const& ent, const glm::mat4 &abs_transform);
 
     protected:
-        inline bool is_leaf() {return children[0][0][0].get() == nullptr;}
+        inline bool is_leaf() const {return children[0][0][0].get() == nullptr;}
 
         aabb const geom;
         octant_indices indices;
 
-        entity const* pick(ray const& r, glm::vec3 const& entry, double exit);
+        entity const* pick(ray const& r, glm::vec3 entry, double exit) const;
 
-        octnode(aabb const& size, octant_indices pos);
+        octnode(aabb const& size, octant_indices pos = octant_indices(0,0,0));
 
     private:
         /// this function will return the octant for the given position.
         /// it will NOT check whether the position is actually inside the
         /// aabb! the returned vector has {zero,nonzero} as possible values
         /// on either dimension, with zero indicating (-) and nonzero indicating (+)
-        octant_indices octant_indices_for_pos(glm::vec3 pos);
+        octant_indices octant_indices_for_pos(glm::vec3 pos) const;
 
         /// might return nullptr if this is a leaf!
-        unique_octnode const& octant_for_indices(octant_indices const& pos);
+        unique_octnode const& octant_for_indices(octant_indices const& pos) const;
 
         void make_children();
 
@@ -50,12 +50,12 @@ namespace indigo
         unique_octnode children[2][2][2];
     };
 
-    class root_octnode : octnode
+    class root_octnode : public octnode
     {
     public:
         root_octnode(aabb const& size);
 
-        entity const* pick(ray const& r);
+        entity const* pick(ray const& r) const;
 
     private:
         plane const left, right, top, bottom, front, back;

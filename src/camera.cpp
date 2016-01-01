@@ -8,7 +8,7 @@
 #define CAM_DEF_FOV 50.f
 
 #define CAM_DEF_NEAR .1f
-#define CAM_DEF_FAR  100.f
+#define CAM_DEF_FAR  10000.f
 
 using namespace indigo;
 

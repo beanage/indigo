@@ -1,9 +1,22 @@
 #include "entity.h"
+#include "basic_geom.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 #include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/quaternion.hpp>
+
+#include <iostream>
 
 using namespace indigo;
+
+std::ostream& operator<<(std::ostream& out, const glm::vec3& vec) {
+            return out << "{x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << "}";
+    }
+
+std::ostream& operator<<(std::ostream& out, const glm::quat& q) {
+            return out << "{x: " << q.x << ", y: " << q.y << ", z: " << q.z << ", w: " << q.w <<"}";
+    }
 
 static float normalize_angle(float value, float max)
 {
@@ -31,15 +44,16 @@ void entity::position(const glm::vec3& pos)
 	model_ = build_model_matrix(*this);
 }
 
-const glm::vec3& entity::rotation() const
+glm::vec3 const& entity::rotation() const
 {
-	return rotation_;
+    return rotation_;
 }
 
 void entity::rotation(const glm::vec3& rot)
 {
-	rotation_ = rot;
-	model_ = build_model_matrix(*this);
+    rotation_ = rot;
+    std::cout << rot << std::endl;
+    model_ = build_model_matrix(*this);
 }
 
 const glm::mat4& entity::model() const
@@ -49,10 +63,7 @@ const glm::mat4& entity::model() const
 
 glm::mat4 entity::orientation() const
 {
-    // change this to glm::eulerAngleYXZ //
-	glm::mat4 result = glm::rotate(glm::mat4(), glm::radians(rotation_.x), glm::vec3(1.f, 0.f, 0.f));
-	result = glm::rotate(result, glm::radians(rotation_.y), glm::vec3(0.f, 1.f, 0.f));
-	result = glm::rotate(result, glm::radians(rotation_.z), glm::vec3(0.f, 0.f, 1.f));
+    glm::mat4 result = glm::eulerAngleYXZ(rotation_.x/180.f, rotation_.y/180.f, rotation_.z/180.f);
 	return result;
 }
 
@@ -73,10 +84,7 @@ glm::vec3 entity::right() const
 
 void entity::look_at(const glm::vec3& target)
 {
-	glm::vec3 direction = glm::normalize(target - position());
-	rotation_.x = glm::radians(asinf(-direction.y));
-	rotation_.y = glm::radians(acosf(-direction.x));
-	rotation_.z = -glm::radians(atan2f(-direction.x, -direction.z));
-
-    model_ = build_model_matrix(*this);
+    model_ = glm::lookAt(position(), target, up());
+    rotation_ = glm::eulerAngles(glm::quat_cast(model_));
+    std::cout << rotation_ << std::endl;
 }

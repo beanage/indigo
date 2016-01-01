@@ -1,8 +1,8 @@
-#ifndef __AABB_H_INCLUDED__
-#define __AABB_H_INCLUDED__
+#ifndef __BASEGEOM_H_INCLUDED__
+#define __BASEGEOM_H_INCLUDED__
 
 #include "glm/vec3.hpp"
-#include "glm/mat3x3.hpp"
+#include "glm/mat4x4.hpp"
 
 #include <vector>
 #include <utility>
@@ -25,7 +25,7 @@ namespace indigo
     struct plane
     {
         plane(glm::vec3 const& offset, glm::vec3 const& direction);
-        glm::vec3 intersect(ray const& r, bool &valid);
+        double intersect(ray const& r, bool &valid) const;
 
         glm::vec3 const offset;
         glm::vec3 const direction;
@@ -35,8 +35,8 @@ namespace indigo
     {
         aabb(glm::vec3 size, glm::vec3 front_bottom_right);
 
-        bool intersect(aabb const& other);
-        bool contains(double x, double y, double z);
+        bool intersect(aabb const& other) const;
+        bool contains(double x, double y, double z) const;
 
         glm::vec3 const size;
         glm::vec3 const front_bottom_left; // corner that is closest to the origin if the bounding box was placed in the 1st octant (+,+,+)
@@ -52,15 +52,15 @@ namespace indigo
         glm::mat4 const transform;
     };
 
-    template<typename T>
+    /*
+
     std::ostream& operator<<(std::ostream& out, const aabb& r) {
-            return out << "{size: [" << r.size.x << ", " << r.size.y << ", " << r.size.z << "], pos: [" << r.front_bottom_left.x << ", " << r.front_bottom_left.y << ", " << r.front_bottom_left.z << "]}";
+            return out << "{size: " << r.size << ", pos: " << r.front_bottom_left << "}";
     }
 
-    template<typename T>
     std::ostream& operator<<(std::ostream& out, const box& r) {
-            return out << "{size: [" << r.size.x << ", " << r.size.y << ", " << r.size.z << "]}";
-    }
+            return out << "{size: " << r.size << "}";
+    }*/
 }
 
 #endif

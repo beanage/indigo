@@ -20,7 +20,7 @@ namespace indigo
 		const glm::vec3& position() const;
 		void position(const glm::vec3& pos);
 
-		const glm::vec3& rotation() const;
+                glm::vec3 const& rotation() const;
 		void rotation(const glm::vec3& rot);
 
 		glm::mat4 orientation() const;
@@ -32,10 +32,9 @@ namespace indigo
 
 		void look_at(const glm::vec3& target);
 
-                aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform);
-
-                virtual box bounding_box();
-                virtual std::pair<bool, double> intersect(ray const& r);
+                aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform) const {return aabb(glm::vec3(),glm::vec3());}
+                virtual box bounding_box() const {return box();}
+                virtual std::pair<bool, double> intersect(ray const& r) const {return std::pair<bool, double>(false, 0.0);}
 
 	protected:
                 entity() = default;
