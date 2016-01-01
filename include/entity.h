@@ -3,6 +3,7 @@
 
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "basic_geom.hpp"
 
@@ -20,11 +21,11 @@ namespace indigo
 		const glm::vec3& position() const;
 		void position(const glm::vec3& pos);
 
-                glm::vec3 const& rotation() const;
-		void rotation(const glm::vec3& rot);
+                const glm::quat& rotation() const;
+                void rotation(const glm::quat& rot);
 
-		glm::mat4 orientation() const;
-		const glm::mat4& model() const;
+                glm::mat4 orientation() const;
+                const glm::mat4& model() const;
 
 		glm::vec3 forward() const;
 		glm::vec3 up() const;
@@ -43,7 +44,7 @@ namespace indigo
 	private:
                 glm::mat4 model_;
 		glm::vec3 position_;
-		glm::vec3 rotation_;
+                glm::quat rotation_;
 	};
 }
 

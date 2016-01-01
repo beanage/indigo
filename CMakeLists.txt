@@ -24,6 +24,7 @@ add_executable(demo
 	src/camera.cpp
 	src/mesh_entity.cpp
 	src/obj_loader.cpp
+        src/mtl_loader.cpp
 	src/texture.cpp
 	src/shader.cpp
 	src/program.cpp

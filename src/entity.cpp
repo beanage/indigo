@@ -1,6 +1,8 @@
 #include "entity.h"
 #include "basic_geom.hpp"
 
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/euler_angles.hpp>
@@ -44,16 +46,15 @@ void entity::position(const glm::vec3& pos)
 	model_ = build_model_matrix(*this);
 }
 
-glm::vec3 const& entity::rotation() const
+const glm::quat& entity::rotation() const
 {
-    return rotation_;
+        return rotation_;
 }
 
-void entity::rotation(const glm::vec3& rot)
+void entity::rotation(const glm::quat& rot)
 {
-    rotation_ = rot;
-    std::cout << rot << std::endl;
-    model_ = build_model_matrix(*this);
+        rotation_ = rot;
+	model_ = build_model_matrix(*this);
 }
 
 const glm::mat4& entity::model() const
@@ -63,8 +64,7 @@ const glm::mat4& entity::model() const
 
 glm::mat4 entity::orientation() const
 {
-    glm::mat4 result = glm::eulerAngleYXZ(rotation_.x/180.f, rotation_.y/180.f, rotation_.z/180.f);
-	return result;
+        return glm::toMat4(rotation_);
 }
 
 glm::vec3 entity::forward() const
