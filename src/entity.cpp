@@ -46,7 +46,7 @@ void entity::rotation(const glm::quat& rot)
 
 entity &entity::turn(float angle, glm::vec3 axis)
 {
-    rotation_ = glm::rotate(rotation_, glm::degrees(angle), axis);
+    rotation_ = glm::rotate(rotation_, glm::radians(angle), axis);
     model_ = build_model_martix();
     return *this;
 }

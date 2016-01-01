@@ -38,7 +38,7 @@ int main(int argc, char** argv)
     mesh->upload();
 
     indigo::mesh_entity ent(mesh.get());
-    ent.position({0.f, 0.f, 0.f});
+    ent.position({2.f, 0.f, 0.f});
     ent.rendermode(indigo::mesh_entity::wireframe);
 
     indigo::camera cam;
@@ -87,11 +87,11 @@ int main(int argc, char** argv)
             }
         }
 
-        ent.turn(.001, ent.up());
-        ent.turn(.001, ent.right());
+        ent.turn(.1, ent.up());
+        ent.turn(.11, ent.right());
 
-		int mx, my;
-		Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
+        int mx, my;
+        Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
 
         bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
         bool rbt = butt & SDL_BUTTON(SDL_BUTTON_RIGHT);
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
             cam.position(cam.position() + cam.forward() * (my * 0.1f));
         } else if (mbt || lctrl_pressed) {
             std::cout << cam.right() << cam.forward() << std::endl;
-            cam.turn(45, cam.right());
+            cam.turn((float)mx/10.f, glm::vec3(0.f, 1.f, 0.f));
         }
 
         glClearColor(0.f, 0.f, 0.f, 0.f);
