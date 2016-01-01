@@ -54,7 +54,14 @@ const glm::quat& entity::rotation() const
 void entity::rotation(const glm::quat& rot)
 {
         rotation_ = rot;
-	model_ = build_model_matrix(*this);
+        model_ = build_model_matrix(*this);
+}
+
+entity &entity::turn(float angle, glm::vec3 axis)
+{
+    rotation_ = glm::rotate(rotation_, glm::degrees(angle), axis);
+    model_ = build_model_matrix(*this);
+    return *this;
 }
 
 const glm::mat4& entity::model() const

@@ -23,6 +23,7 @@ namespace indigo
 
                 const glm::quat& rotation() const;
                 void rotation(const glm::quat& rot);
+                entity& turn(float angle, glm::vec3 axis);
 
                 glm::mat4 orientation() const;
                 const glm::mat4& model() const;

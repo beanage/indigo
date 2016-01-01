@@ -14,6 +14,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "debug.hpp"
+
+using namespace indigo;
+
 int main(int argc, char** argv)
 {
 	indigo::log("starting demo...");
@@ -71,6 +75,9 @@ int main(int argc, char** argv)
             }
 		}
 
+        ent.turn(.001, ent.up());
+        ent.turn(.001, ent.right());
+
 		int mx, my;
 		Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
 
@@ -87,8 +94,9 @@ int main(int argc, char** argv)
         } else if (rbt && !lctrl_pressed) {
 			cam.position(cam.position() + cam.forward() * (my * 0.1f));
         } else if (mbt || lctrl_pressed) {
- //           cam.rotation(cam.rotation() + glm::vec3((float)my, (float)mx, 0.f));
-		}
+            std::cout << cam.right() << cam.forward() << std::endl;
+            cam.turn(45, cam.right());
+        }
 
 		glClearColor(0.f, 0.f, 0.f, 0.f);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
