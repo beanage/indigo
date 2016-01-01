@@ -23,6 +23,7 @@ int main(int argc, char** argv)
     indigo::log("starting demo...");
 
     SDL_Init(SDL_INIT_VIDEO);
+    SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
@@ -43,15 +44,15 @@ int main(int argc, char** argv)
 
     indigo::mesh_entity ent(mesh.get());
     ent.position({2.f, 0.f, 0.f});
-    ent.rendermode(indigo::mesh_entity::wireframe);
+    ent.rendermode(indigo::mesh_entity::filled);
 
     indigo::camera cam;
     cam.aspect_ratio(800.f/600.f);
     cam.position({10.f, 10.f, 10.f});
     cam.look_at(ent.position());
 
-    //indigo::texture tex("../media/texture.png");
-    indigo::texture tex(indigo::colors::red, 512, 512);
+    indigo::texture tex("../media/texture.png");
+    // indigo::texture tex(indigo::colors::red, 512, 512);
     tex.bind();
 
     glEnable(GL_CULL_FACE);
@@ -96,15 +97,13 @@ int main(int argc, char** argv)
 
         bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
         bool rbt = butt & SDL_BUTTON(SDL_BUTTON_RIGHT);
-        bool mbt = butt & SDL_BUTTON(SDL_BUTTON_MIDDLE);
 
         if (lbt) {
             ent.turn(mx, glm::inverse(ent.rotation())*cam.up()).turn(my, glm::inverse(ent.rotation())*cam.right());
         } else if (rbt && !lctrl_pressed) {
             cam.position(cam.position() + cam.forward() * (my * 0.1f));
-        } else if (mbt || lctrl_pressed) {
-            std::cout << cam.right() << cam.forward() << std::endl;
-            cam.turn((float)mx/10.f, glm::vec3(0.f, 1.f, 0.f));
+        } else {
+            cam.turn((float)mx/10.f, cam.up()).turn((float)my/10.f, cam.right());
         }
 
         glClearColor(0.f, 0.f, 0.f, 0.f);
