@@ -87,9 +87,6 @@ int main(int argc, char** argv)
             }
         }
 
-        ent.turn(.1, ent.up());
-        ent.turn(.11, ent.right());
-
         int mx, my;
         Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
 
@@ -98,11 +95,7 @@ int main(int argc, char** argv)
         bool mbt = butt & SDL_BUTTON(SDL_BUTTON_MIDDLE);
 
         if (lbt) {
-            glm::quat rotation = ent.rotation();
-            rotation *= glm::angleAxis(glm::radians((float)mx), glm::vec3(0.f, 1.f, 0.f));
-            rotation *= glm::angleAxis(glm::radians((float)my), glm::vec3(1.f, 0.f, 0.f));
-
-            ent.rotation(rotation);
+            ent.turn(mx*10.0, glm::inverse(ent.rotation())*cam.up()).turn(my*10.0, glm::inverse(ent.rotation())*cam.right());
         } else if (rbt && !lctrl_pressed) {
             cam.position(cam.position() + cam.forward() * (my * 0.1f));
         } else if (mbt || lctrl_pressed) {

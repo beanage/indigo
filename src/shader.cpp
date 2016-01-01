@@ -40,7 +40,7 @@ struct shader::impl
 		}
 	}
 
-	~impl()
+    ~impl()
 	{
 		glDeleteShader(handle);
 	}
