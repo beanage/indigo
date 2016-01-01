@@ -12,14 +12,6 @@
 
 using namespace indigo;
 
-std::ostream& operator<<(std::ostream& out, const glm::vec3& vec) {
-            return out << "{x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << "}";
-    }
-
-std::ostream& operator<<(std::ostream& out, const glm::quat& q) {
-            return out << "{x: " << q.x << ", y: " << q.y << ", z: " << q.z << ", w: " << q.w <<"}";
-    }
-
 static float normalize_angle(float value, float max)
 {
 	value = fmodf(value, 360.f);

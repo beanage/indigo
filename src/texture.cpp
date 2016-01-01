@@ -2,6 +2,7 @@
 #include "gl.hpp"
 
 #include <stdexcept>
+#include <array>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_NO_PSD
@@ -43,7 +44,16 @@ texture::texture(unsigned char* buffer, unsigned len)
 		throw std::runtime_error("[texture] error loading texture from buffer!");
 	
 	obj_ = gen_gl_texture(data, x, y);
-	stbi_image_free(data);
+    stbi_image_free(data);
+}
+
+texture::texture(const rgba_color &solid_color, uint32_t width, uint32_t height)
+{
+    size_t size = width*height*4*sizeof(uint8_t);
+    uint8_t data[size];
+    for(size_t i = 0; i < size; ++i)
+        data[i] = solid_color.bytes[i % 4];
+    obj_ = gen_gl_texture(data, width, height);
 }
 
 texture::texture(const std::string& file)

@@ -3,22 +3,27 @@
 
 #include <string>
 
+#include "colors.hpp"
+
 namespace indigo
 {
+
 class texture
 {
 public:
-        explicit texture(const std::string& file);
-        texture(unsigned char* buffer, unsigned len);
-        virtual ~texture();
+    explicit texture(const std::string& file);
+    texture(unsigned char* buffer, unsigned len);
+    texture(rgba_color const& solid_color, uint32_t width, uint32_t height);
 
-        virtual void bind() const;
+    virtual ~texture();
+
+    virtual void bind() const;
 
 private:
-        texture() = delete;
-        texture(const texture&) = delete;
+    texture() = delete;
+    texture(const texture&) = delete;
 
-        unsigned int obj_;
+    unsigned int obj_;
 };
 }
 
