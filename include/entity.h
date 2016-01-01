@@ -5,6 +5,10 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/quaternion.hpp>
 
+#include "basic_geom.hpp"
+
+#include <tuple>
+
 namespace indigo
 {
 	class entity
@@ -28,6 +32,10 @@ namespace indigo
 		glm::vec3 right() const;
 
 		void look_at(const glm::vec3& target);
+
+                aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform) const {return aabb(glm::vec3(),glm::vec3());}
+                virtual box bounding_box() const {return box();}
+                virtual std::pair<bool, double> intersect(ray const& r) const {return std::pair<bool, double>(false, 0.0);}
 
 	protected:
                 entity() = default;

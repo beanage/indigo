@@ -1,10 +1,24 @@
 #include "entity.h"
+#include "basic_geom.hpp"
 
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/quaternion.hpp>
+
+#include <iostream>
 
 using namespace indigo;
+
+std::ostream& operator<<(std::ostream& out, const glm::vec3& vec) {
+            return out << "{x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << "}";
+    }
+
+std::ostream& operator<<(std::ostream& out, const glm::quat& q) {
+            return out << "{x: " << q.x << ", y: " << q.y << ", z: " << q.z << ", w: " << q.w <<"}";
+    }
 
 static float normalize_angle(float value, float max)
 {
@@ -70,10 +84,7 @@ glm::vec3 entity::right() const
 
 void entity::look_at(const glm::vec3& target)
 {
-	glm::vec3 direction = glm::normalize(target - position());
-	rotation_.x = glm::radians(asinf(-direction.y));
-	rotation_.y = glm::radians(acosf(-direction.x));
-	rotation_.z = -glm::radians(atan2f(-direction.x, -direction.z));
-
-        model_ = build_model_matrix(*this);
+    model_ = glm::lookAt(position(), target, up());
+    rotation_ = glm::eulerAngles(glm::quat_cast(model_));
+    std::cout << rotation_ << std::endl;
 }

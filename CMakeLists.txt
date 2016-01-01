@@ -28,7 +28,9 @@ add_executable(demo
 	src/texture.cpp
 	src/shader.cpp
 	src/program.cpp
-	app/demo.cpp)
+        app/demo.cpp
+        src/basic_geom.cpp
+        src/octnode.cpp)
 
 target_link_libraries(demo
 	${OPENGL_LIBRARIES}
@@ -44,5 +46,4 @@ target_compile_features(demo
 	PRIVATE cxx_right_angle_brackets
 	PRIVATE cxx_override
 	PRIVATE cxx_defaulted_functions
-	PRIVATE cxx_variadic_templates
-	PRIVATE cxx_binary_literals)
+	PRIVATE cxx_variadic_templates)
