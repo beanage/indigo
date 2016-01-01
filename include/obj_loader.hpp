@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace indigo
 {
@@ -13,7 +14,7 @@ namespace indigo
 	public:
 		obj_loader();
 
-		std::unique_ptr<mesh> load(const std::string& file);
+                std::vector<std::unique_ptr<mesh>> load(const std::string& file);
 	};
 }
 
