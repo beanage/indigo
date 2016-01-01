@@ -21,6 +21,7 @@ camera::camera()
 	: fov_(CAM_DEF_FOV)
 	, near_(CAM_DEF_NEAR)
 	, far_(CAM_DEF_FAR)
+        , ratio_(1.f)
 {}
 
 float camera::aspect_ratio() const
