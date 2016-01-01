@@ -24,7 +24,7 @@ static float normalize_angle(float value, float max)
 
 static glm::mat4 build_model_matrix(const entity& e)
 {
-	return e.orientation() * glm::translate(glm::mat4(), -e.position());
+        return glm::translate(glm::mat4(), -e.position()) * e.orientation();
 }
 
 const glm::vec3& entity::position() const
