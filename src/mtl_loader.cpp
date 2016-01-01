@@ -13,8 +13,8 @@ mtl_loader::mtl_loader()
 
 std::unique_ptr<material> mtl_loader::load(const std::string& file)
 {
-        std::unique_ptr<obj_material> mat(new obj_material);
+        obj_material* mat(nullptr/*new obj_material*/);
         // ...
 
-        return mat;
+        return std::unique_ptr<material>(mat);
 }

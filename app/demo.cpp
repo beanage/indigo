@@ -30,7 +30,7 @@ int main(int argc, char** argv)
         program.use();
 
 	indigo::obj_loader loader;
-        std::unique_ptr<indigo::mesh> mesh(loader.load("../media/cube.obj"));
+    std::unique_ptr<indigo::mesh> mesh(loader.load("../media/mesh.obj"));
 	mesh->upload();
 
 	indigo::mesh_entity ent(mesh.get());
@@ -78,16 +78,16 @@ int main(int argc, char** argv)
         bool rbt = butt & SDL_BUTTON(SDL_BUTTON_RIGHT);
         bool mbt = butt & SDL_BUTTON(SDL_BUTTON_MIDDLE);
 
-		if (up) {
-                        glm::quat rotation = ent.rotation();
-                        rotation *= glm::angleAxis(glm::radians((float)mx), glm::vec3(0.f, 1.f, 0.f));
-                        rotation *= glm::angleAxis(glm::radians((float)my), glm::vec3(1.f, 0.f, 0.f));
+        if (lbt) {
+            glm::quat rotation = ent.rotation();
+            rotation *= glm::angleAxis(glm::radians((float)mx), glm::vec3(0.f, 1.f, 0.f));
+            rotation *= glm::angleAxis(glm::radians((float)my), glm::vec3(1.f, 0.f, 0.f));
 
-                        ent.rotation(rotation);
-		} else if (dw) {
+            ent.rotation(rotation);
+        } else if (rbt && !lctrl_pressed) {
 			cam.position(cam.position() + cam.forward() * (my * 0.1f));
-		} else if (mb) {
-                        //cam.rotation(cam.rotation() + glm::vec3((float)my, (float)mx, 0.f));
+        } else if (mbt || lctrl_pressed) {
+ //           cam.rotation(cam.rotation() + glm::vec3((float)my, (float)mx, 0.f));
 		}
 
 		glClearColor(0.f, 0.f, 0.f, 0.f);
