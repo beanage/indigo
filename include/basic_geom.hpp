@@ -51,16 +51,6 @@ namespace indigo
         glm::vec3 const size;
         glm::mat4 const transform;
     };
-
-    /*
-
-    std::ostream& operator<<(std::ostream& out, const aabb& r) {
-            return out << "{size: " << r.size << ", pos: " << r.front_bottom_left << "}";
-    }
-
-    std::ostream& operator<<(std::ostream& out, const box& r) {
-            return out << "{size: " << r.size << "}";
-    }*/
 }
 
 #endif

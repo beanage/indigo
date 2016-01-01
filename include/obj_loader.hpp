@@ -14,7 +14,7 @@ namespace indigo
 	public:
 		obj_loader();
 
-                std::vector<std::unique_ptr<mesh>> load(const std::string& file);
+                std::unique_ptr<mesh> load(const std::string& file);
 	};
 }
 

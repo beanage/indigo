@@ -85,6 +85,5 @@ glm::vec3 entity::right() const
 void entity::look_at(const glm::vec3& target)
 {
     model_ = glm::lookAt(position(), target, up());
-    rotation_ = glm::eulerAngles(glm::quat_cast(model_));
-    std::cout << rotation_ << std::endl;
+    rotation_ = glm::quat_cast(model_);
 }
