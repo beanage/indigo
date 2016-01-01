@@ -24,14 +24,14 @@ add_executable(demo
 	src/camera.cpp
 	src/mesh_entity.cpp
 	src/obj_loader.cpp
-        src/mtl_loader.cpp
+    src/mtl_loader.cpp
 	src/texture.cpp
 	src/shader.cpp
 	src/program.cpp
-        app/demo.cpp
-        src/basic_geom.cpp
-        src/octnode.cpp
-        src/mesh.cpp)
+    app/demo.cpp
+    src/basic_geom.cpp
+    src/octnode.cpp
+    src/mesh.cpp)
 
 target_link_libraries(demo
 	${OPENGL_LIBRARIES}

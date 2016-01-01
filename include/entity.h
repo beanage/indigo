@@ -14,19 +14,19 @@ namespace indigo
 	class entity
 	{
 	public:
-                virtual ~entity() {}
+        virtual ~entity() {}
 
 		virtual void render() const {}
 
 		const glm::vec3& position() const;
 		void position(const glm::vec3& pos);
 
-                const glm::quat& rotation() const;
-                void rotation(const glm::quat& rot);
-                entity& turn(float angle, glm::vec3 axis);
+        const glm::quat& rotation() const;
+        void rotation(const glm::quat& rot);
+        entity& turn(float angle, glm::vec3 axis);
 
-                glm::mat4 orientation() const;
-                const glm::mat4& model() const;
+        glm::mat4 orientation() const;
+        const glm::mat4& model() const;
 
 		glm::vec3 forward() const;
 		glm::vec3 up() const;
@@ -34,18 +34,20 @@ namespace indigo
 
 		void look_at(const glm::vec3& target);
 
-                aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform) const {return aabb(glm::vec3(),glm::vec3());}
-                virtual box bounding_box() const {return box();}
-                virtual std::pair<bool, double> intersect(ray const& r) const {return std::pair<bool, double>(false, 0.0);}
+        aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform) const {return aabb(glm::vec3(),glm::vec3());}
+        virtual box bounding_box() const {return box();}
+        virtual std::pair<bool, double> intersect(ray const& r) const {return std::pair<bool, double>(false, 0.0);}
 
 	protected:
-                entity() = default;
-                entity(const entity&) = default;
+        entity() = default;
+        entity(const entity&) = default;
+
+        virtual glm::mat4 build_model_martix();
 
 	private:
-                glm::mat4 model_;
+        glm::mat4 model_;
 		glm::vec3 position_;
-                glm::quat rotation_;
+        glm::quat rotation_;
 	};
 }
 

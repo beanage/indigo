@@ -20,6 +20,9 @@ namespace indigo
 		glm::mat4 projection() const;
 		const glm::mat4& view() const;
 
+    protected:
+        glm::mat4 build_model_martix();
+
 	private:
 		float fov_;
 		float near_;

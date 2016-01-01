@@ -14,42 +14,47 @@ using namespace indigo;
 
 static float clamp(float min, float value, float max)
 {
-	return std::min(max, std::max(min, value));
+    return std::min(max, std::max(min, value));
 }
 
 camera::camera()
-	: fov_(CAM_DEF_FOV)
-	, near_(CAM_DEF_NEAR)
-	, far_(CAM_DEF_FAR)
-        , ratio_(1.f)
+    : fov_(CAM_DEF_FOV)
+    , near_(CAM_DEF_NEAR)
+    , far_(CAM_DEF_FAR)
+    , ratio_(1.f)
 {}
 
 float camera::aspect_ratio() const
 {
-	return ratio_;
+    return ratio_;
 }
 
 void camera::aspect_ratio(float value)
 {
-	ratio_ = value;
+    ratio_ = value;
 }
 
 float camera::fov() const
 {
-	return fov_;
+    return fov_;
 }
 
 void camera::fov(float value)
 {
-	fov_ = clamp(CAM_MIN_FOV, value, CAM_MAX_FOV);
+    fov_ = clamp(CAM_MIN_FOV, value, CAM_MAX_FOV);
 }
 
 glm::mat4 camera::projection() const
 {
-	return glm::perspective(glm::radians(fov_), ratio_, near_, far_);
+    return glm::perspective(glm::radians(fov_), ratio_, near_, far_);
 }
 
 const glm::mat4& camera::view() const
 {
-	return model();
+    return model();
+}
+
+glm::mat4 camera::build_model_martix()
+{
+    return orientation() * glm::translate(glm::mat4(), -position());
 }

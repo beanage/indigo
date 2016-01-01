@@ -22,67 +22,67 @@ static float normalize_angle(float value, float max)
 	return value;
 }
 
-static glm::mat4 build_model_matrix(const entity& e)
-{
-        return glm::translate(glm::mat4(), -e.position()) * e.orientation();
-}
-
 const glm::vec3& entity::position() const
 {
-	return position_;
+    return position_;
 }
 
 void entity::position(const glm::vec3& pos)
 {
-	position_ = pos;
-	model_ = build_model_matrix(*this);
+    position_ = pos;
+    model_ = build_model_martix();
 }
 
 const glm::quat& entity::rotation() const
 {
-        return rotation_;
+    return rotation_;
 }
 
 void entity::rotation(const glm::quat& rot)
 {
-        rotation_ = rot;
-        model_ = build_model_matrix(*this);
+    rotation_ = rot;
+    model_ = build_model_martix();
 }
 
 entity &entity::turn(float angle, glm::vec3 axis)
 {
     rotation_ = glm::rotate(rotation_, glm::degrees(angle), axis);
-    model_ = build_model_matrix(*this);
+    model_ = build_model_martix();
     return *this;
 }
 
 const glm::mat4& entity::model() const
 {
-	return model_;
+    return model_;
 }
 
 glm::mat4 entity::orientation() const
 {
-        return glm::toMat4(rotation_);
+    return glm::toMat4(rotation_);
 }
 
 glm::vec3 entity::forward() const
 {
-	return glm::vec3(glm::inverse(orientation()) * glm::vec4(0, 0, -1, 1));
+    return glm::vec3(glm::inverse(orientation()) * glm::vec4(0, 0, -1, 1));
 }
 
 glm::vec3 entity::up() const
 {
-	return glm::vec3(glm::inverse(orientation()) * glm::vec4(0, 1, 0, 1));
+    return glm::vec3(glm::inverse(orientation()) * glm::vec4(0, 1, 0, 1));
 }
 
 glm::vec3 entity::right() const
 {
-	return glm::vec3(glm::inverse(orientation()) * glm::vec4(1, 0, 0, 1));
+    return glm::vec3(glm::inverse(orientation()) * glm::vec4(1, 0, 0, 1));
 }
 
 void entity::look_at(const glm::vec3& target)
 {
-    model_ = glm::lookAt(position(), target, up());
-    rotation_ = glm::quat_cast(model_);
+    rotation_ = glm::quat_cast(glm::lookAt(glm::vec3(), target - position(), up()));
+    model_ = build_model_martix();
+}
+
+glm::mat4 entity::build_model_martix()
+{
+    return glm::translate(glm::mat4(), position()) * orientation();
 }
