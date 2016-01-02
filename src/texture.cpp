@@ -29,6 +29,7 @@ static unsigned gen_gl_texture(unsigned char* data, int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE); // TODO: :)
 
         if (data)
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -124,19 +125,21 @@ uint32_t texture::height() const
 framebuffer::framebuffer(const texture &t)
     : texture_(t)
     , fbo_(0)
-    , rbo_(0)
 {
-    glGenFramebuffersEXT(1, &fbo_);
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo_);
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture_.handle(), 0);
+    texture_.bind();
 
-    glGenRenderbuffersEXT(1, &rbo_);
-    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rbo_);
-    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT24, texture_.width(), texture_.height());
-    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rbo_);
+    glGenFramebuffers(1, &fbo_);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_.handle(), 0);
 
-    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-    if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+    glGenRenderbuffers(1, &rbo_);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo_);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, texture_.width(), texture_.height());
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo_);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if (status != GL_FRAMEBUFFER_COMPLETE)
         throw std::runtime_error("[framebuffer] error creating fbo!");
 
     unbind();
@@ -144,26 +147,23 @@ framebuffer::framebuffer(const texture &t)
 
 framebuffer::~framebuffer()
 {
-    glDeleteRenderbuffersEXT(1, &rbo_);
-    glDeleteFramebuffersEXT(1, &fbo_);
+    unbind();
+    glDeleteFramebuffers(1, &fbo_);
+    glDeleteRenderbuffers(1, &rbo_);
 }
 
 void framebuffer::bind()
 {
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbo_);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
 }
 
 void framebuffer::unbind()
 {
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
-unsigned int framebuffer::fbo_handle() const
+unsigned int framebuffer::handle() const
 {
-        return fbo_;
-}
-
-unsigned int framebuffer::rbo_handle() const
-{
-        return rbo_;
+    return fbo_;
 }

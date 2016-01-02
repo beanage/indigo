@@ -2,8 +2,8 @@
 #define __TEXTTURE_HPP_INCLUDED__
 
 #include <string>
-
 #include "colors.hpp"
+#include "gl.hpp"
 
 namespace indigo
 {
@@ -30,7 +30,7 @@ private:
 
     uint32_t width_;
     uint32_t height_;
-    unsigned int obj_;
+    gl_handle obj_;
 };
 
 class framebuffer
@@ -42,16 +42,15 @@ public:
     void bind();
     void unbind();
 
-    unsigned int fbo_handle() const;
-    unsigned int rbo_handle() const;
+    unsigned int handle() const;
 
 private:
     framebuffer() = delete;
     framebuffer(const framebuffer&) = delete;
 
     const texture& texture_;
-    unsigned int fbo_;
-    unsigned int rbo_;
+    gl_handle fbo_;
+    gl_handle rbo_;
 };
 }
 

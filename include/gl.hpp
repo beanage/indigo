@@ -4,3 +4,5 @@
 	#include <GL/glew.h>
 	#include <GL/gl.h>
 #endif
+
+using gl_handle = GLuint;

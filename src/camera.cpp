@@ -22,7 +22,18 @@ camera::camera()
     , near_(CAM_DEF_NEAR)
     , far_(CAM_DEF_FAR)
     , ratio_(1.f)
+    , mode_(view_mode::perspective)
 {}
+
+camera::view_mode camera::mode() const
+{
+    return mode_;
+}
+
+void camera::mode(view_mode m)
+{
+    mode_ = m;
+}
 
 float camera::aspect_ratio() const
 {
@@ -46,7 +57,9 @@ void camera::fov(float value)
 
 glm::mat4 camera::projection() const
 {
-    return glm::perspective(glm::radians(fov_), ratio_, near_, far_);
+    if (mode_ == view_mode::perspective)
+        return glm::perspective(glm::radians(fov_), ratio_, near_, far_);
+    return glm::ortho(-1.f, 1.f, 1.f, -1.f, near_, far_);
 }
 
 const glm::mat4& camera::view() const

@@ -9,7 +9,16 @@ namespace indigo
 	class camera : public entity
 	{
 	public:
+        enum class view_mode
+        {
+            perspective,
+            ortho
+        };
+
 		camera();
+
+        view_mode mode() const;
+        void mode(view_mode m);
 
 		float aspect_ratio() const;
 		void aspect_ratio(float ratio);
@@ -28,6 +37,7 @@ namespace indigo
 		float near_;
 		float far_;
 		float ratio_;
+        view_mode mode_;
 	};
 }
 

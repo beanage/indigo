@@ -42,18 +42,21 @@ int main(int argc, char** argv)
     std::unique_ptr<indigo::mesh> mesh(loader.load("../media/mesh.obj"));
     mesh->upload();
 
-    indigo::mesh_entity ent(mesh.get());
-    ent.position({2.f, 0.f, 0.f});
-    ent.rendermode(indigo::mesh_entity::filled);
+    indigo::mesh_entity ent1(mesh.get());
+    ent1.position({2.f, 0.f, 0.f});
+
+    indigo::mesh_entity ent2(mesh.get());
+    ent2.position({-2.f, 0.f, 0.f});
 
     indigo::camera cam;
     cam.aspect_ratio(800.f/600.f);
-    cam.position({10.f, 10.f, 10.f});
-    cam.look_at(ent.position());
+    cam.position({10.f, 0.f, 10.f});
+    cam.look_at(ent1.position());
 
-    indigo::texture tex("../media/texture.png");
-    // indigo::texture tex(indigo::colors::red, 512, 512);
-    tex.bind();
+    indigo::texture tex1("../media/texture.png");
+
+    indigo::texture tex2(800, 600);
+    indigo::framebuffer fbo(tex2);
 
     glEnable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
@@ -81,7 +84,7 @@ int main(int argc, char** argv)
                 break;
             case SDL_KEYUP:
                 if(event.key.keysym.sym == SDLK_r)
-                    cam.look_at(ent.position());
+                    cam.look_at(ent1.position());
                 if (event.key.keysym.sym == SDLK_w)
                     key_w = false;
                 if (event.key.keysym.sym == SDLK_s)
@@ -100,7 +103,7 @@ int main(int argc, char** argv)
         bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
 
         if (lbt) {
-            ent.turn(mx, glm::inverse(ent.rotation())*cam.up()).turn(my, glm::inverse(ent.rotation())*cam.right());
+            ent1.turn(mx, glm::inverse(ent1.rotation())*cam.up()).turn(my, glm::inverse(ent1.rotation())*cam.right());
         } else {
             cam.turn((float)mx/10.f, cam.up()).turn((float)my/10.f, cam.right());
         }
@@ -119,10 +122,24 @@ int main(int argc, char** argv)
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        //ent.look_at(cam.position());
-        ent.render();
+        if (lbt) {
+                fbo.bind();
 
-        program.set("model", ent.model());
+                glClearColor(0.0, 0.0, 0.0, 0.0);
+                glClearDepth(1.0f);
+                glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        }
+
+        //ent.look_at(cam.position());
+        program.set("model", ent1.model());
+        tex1.bind();
+        ent1.render();
+        fbo.unbind();
+
+        program.set("model", ent2.model());
+        tex2.bind();
+        ent2.render();
+
         program.set("projection", cam.projection());
         program.set("view", cam.view());
         program.set("tex", GL_TEXTURE0);

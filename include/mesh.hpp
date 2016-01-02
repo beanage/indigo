@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include "gl.hpp"
 
 namespace indigo
 {
@@ -29,8 +30,8 @@ namespace indigo
     protected:
         virtual void upload(std::vector<vertex> verts);
 
-        unsigned int vao_;
-        unsigned int vbo_;
+        gl_handle vao_;
+        gl_handle vbo_;
         size_t num_verts;
     };
 }
