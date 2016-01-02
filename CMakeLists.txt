@@ -33,8 +33,7 @@ add_executable(demo
     app/demo.cpp
     src/basic_geom.cpp
     src/octnode.cpp
-    src/mesh.cpp
-    src/scene.cpp)
+    src/mesh.cpp)
 
 target_link_libraries(demo
     ${OPENGL_LIBRARIES}
