@@ -13,6 +13,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include "debug.hpp"
 
@@ -50,8 +51,8 @@ int main(int argc, char** argv)
 
     indigo::camera cam;
     cam.aspect_ratio(800.f/600.f);
-    cam.position({10.f, 0.f, 10.f});
-    cam.look_at(ent1.position());
+    cam.position({0.f, 0.f, 10.f});
+    //cam.look_at(ent1.position());
 
     indigo::texture tex1("../media/texture.png");
 
@@ -66,6 +67,10 @@ int main(int argc, char** argv)
     glActiveTexture(GL_TEXTURE0);
 
     bool key_w(false), key_s(false), key_a(false), key_d(false);
+
+
+    glm::quat dq;
+
     while (true) {
         SDL_Event event;
         while (SDL_PollEvent(&event) != 0) {
@@ -103,9 +108,24 @@ int main(int argc, char** argv)
         bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
 
         if (lbt) {
-            ent1.turn(mx, glm::inverse(ent1.rotation())*cam.up()).turn(my, glm::inverse(ent1.rotation())*cam.right());
+           ent1.turn(mx, glm::inverse(ent1.rotation())*cam.up()).turn(my, glm::inverse(ent1.rotation())*cam.right());
         } else {
-            cam.turn((float)mx/10.f, cam.up()).turn((float)my/10.f, cam.right());
+
+            float pitch = my/10.f;
+            float yaw = mx/10.f;
+
+            const glm::quat& r = cam.rotation();
+
+
+
+            // Rotate up/down | apply local rotation
+            cam.rotation(glm::rotate(glm::quat(), glm::radians(pitch), glm::vec3(1, 0, 0)) * r);//cam.right()));
+
+            // Rotate left/right | apply global rotation
+            cam.rotation(r * glm::rotate(glm::quat(), glm::radians(yaw), glm::vec3(0, 1, 0)));
+
+            glm::vec3 euler = glm::eulerAngles(cam.rotation());
+            std::cout << "Euler: " << euler << std::endl;
         }
 
         glm::vec3 velocity(0,0,0);
@@ -122,23 +142,11 @@ int main(int argc, char** argv)
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        if (lbt) {
-                fbo.bind();
-
-                glClearColor(0.0, 0.0, 0.0, 0.0);
-                glClearDepth(1.0f);
-                glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-        }
-
         //ent.look_at(cam.position());
         program.set("model", ent1.model());
         tex1.bind();
         ent1.render();
         fbo.unbind();
-
-        program.set("model", ent2.model());
-        tex2.bind();
-        ent2.render();
 
         program.set("projection", cam.projection());
         program.set("view", cam.view());
