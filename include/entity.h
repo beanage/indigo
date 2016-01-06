@@ -8,14 +8,23 @@
 #include "basic_geom.hpp"
 
 #include <tuple>
+#include <memory>
+#include <list>
 
 namespace indigo
 {
-class entity
+class entity;
+typedef std::shared_ptr<entity> entity_shared_ptr;
+
+class entity : public std::enable_shared_from_this<entity>
 {
 public:
-    virtual ~entity() {}
+    entity(entity_shared_ptr parent = nullptr);
 
+    void parent(entity_shared_ptr new_parent);
+    entity_shared_ptr parent();
+
+    virtual ~entity() {}
     virtual void update();
     virtual void render() const {}
 
@@ -43,14 +52,18 @@ public:
     virtual std::pair<bool, double> intersect(ray const& r) const {return std::pair<bool, double>(false, 0.0);}
 
 protected:
-    entity() = default;
     entity(const entity&) = default;
+
+    void remove();
 
     virtual glm::mat4 build_model_martix(const glm::vec3& pos, const glm::quat& rot) const;
 
 private:
     glm::vec3 position_, prev_position_;
     glm::quat rotation_, prev_rotation_;
+
+    entity const* parent_;
+    std::list<entity_shared_ptr> children_;
 };
 }
 
