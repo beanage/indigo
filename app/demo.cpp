@@ -15,68 +15,109 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/constants.hpp>
 
+#include "application.hpp"
 #include "debug.hpp"
 
 using namespace indigo;
 
-int main(int argc, char** argv)
+class demo_application : public indigo::application
 {
-    indigo::log("starting demo...");
+public:
+    demo_application()
+        : window_({0, 0, 800, 600})
+        , program_({indigo::load_shader("../shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)})
+        , mesh_(nullptr)
+        , entity_(nullptr)
+        , texture_("../media/texture.png")
+        , key_w(false)
+        , key_s(false)
+        , key_a(false)
+        , key_d(false)
+    {}
 
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_SetRelativeMouseMode(SDL_TRUE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    SDL_GL_SetSwapInterval(1);
+    void init() override
+    {
+        glEnable(GL_CULL_FACE);
+        glFrontFace(GL_CCW);
+        glCullFace(GL_BACK);
+        glClearDepth(1.0);
+        glEnable(GL_DEPTH_TEST);
+        glActiveTexture(GL_TEXTURE0);
 
-    indigo::window win({0, 0, 800, 600});
-    win.title("DEMO");
+        program_.use();
 
-    indigo::program program({
-        indigo::load_shader("../shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER),
-        indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)
-    });
-    program.use();
+        indigo::obj_loader loader;
+        mesh_ = loader.load("../media/mesh.obj");
+        mesh_->upload();
 
-    indigo::obj_loader loader;
-    std::unique_ptr<indigo::mesh> mesh(loader.load("../media/mesh.obj"));
-    mesh->upload();
+        camera_.aspect_ratio(800.f/600.f);
+        camera_.position({0.f, 0.f, 10.f});
 
-    indigo::mesh_entity ent1(mesh.get());
-    ent1.position({2.f, 0.f, 0.f});
+        entity_.position({0.f, 0.f, 0.f});
+        entity_.attach_mesh(mesh_.get());
+    }
 
-    indigo::mesh_entity ent2(mesh.get());
-    ent2.position({-2.f, 0.f, 0.f});
+    void update() override
+    {
+        update_keys();
 
-    indigo::camera cam;
-    cam.aspect_ratio(800.f/600.f);
-    cam.position({0.f, 0.f, 10.f});
-    //cam.look_at(ent1.position());
+        int mx, my;
+        Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
 
-    indigo::texture tex1("../media/texture.png");
+        bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
 
-    indigo::texture tex2(800, 600);
-    indigo::framebuffer fbo(tex2);
+        if (lbt) {
+           entity_.turn(mx, glm::inverse(entity_.rotation()) * camera_.up()).turn(my, glm::inverse(entity_.rotation()) * camera_.right());
+        } else {
+            float pitch = my/10.f;
+            float yaw = mx/10.f;
 
-    glEnable(GL_CULL_FACE);
-    glFrontFace(GL_CCW);
-    glCullFace(GL_BACK);
-    glClearDepth(1.0);
-    glEnable(GL_DEPTH_TEST);
-    glActiveTexture(GL_TEXTURE0);
+            const glm::quat& r = camera_.rotation();
 
-    bool key_w(false), key_s(false), key_a(false), key_d(false);
+            // Rotate up/down | apply local rotation
+            camera_.rotation(glm::rotate(glm::quat(), glm::radians(pitch), glm::vec3(1, 0, 0)) * r);//cam.right()));
 
+            // Rotate left/right | apply global rotation
+            camera_.rotation(r * glm::rotate(glm::quat(), glm::radians(yaw), glm::vec3(0, 1, 0)));
+        }
 
-    glm::quat dq;
+        glm::vec3 velocity(0, 0, 0);
+        if(key_w)
+            velocity += camera_.forward() * .1f;
+        if(key_s)
+            velocity += camera_.forward() * -.1f;
+        if(key_a)
+            velocity += camera_.right() * -.1f;
+        if(key_d)
+            velocity += camera_.right() * .1f;
 
-    while (true) {
+        camera_.move(velocity);
+    }
+
+    void render(float factor) override
+    {
+        glClearColor(0.f, 0.f, 0.f, 0.f);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+        program_.set("projection", camera_.projection());
+        program_.set("view", camera_.view());
+        program_.set("tex", GL_TEXTURE0);
+
+        program_.set("model", entity_.model());
+        texture_.bind();
+        entity_.render();
+
+        window_.swap();
+    }
+
+    void update_keys()
+    {
         SDL_Event event;
         while (SDL_PollEvent(&event) != 0) {
             switch(event.type) {
             case SDL_QUIT:
-                return 0;
+                quit();
+                break;
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_w)
                     key_w = true;
@@ -88,8 +129,6 @@ int main(int argc, char** argv)
                     key_d = true;
                 break;
             case SDL_KEYUP:
-                if(event.key.keysym.sym == SDLK_r)
-                    cam.look_at(ent1.position());
                 if (event.key.keysym.sym == SDLK_w)
                     key_w = false;
                 if (event.key.keysym.sym == SDLK_s)
@@ -101,59 +140,31 @@ int main(int argc, char** argv)
                 break;
             }
         }
-
-        int mx, my;
-        Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
-
-        bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
-
-        if (lbt) {
-           ent1.turn(mx, glm::inverse(ent1.rotation())*cam.up()).turn(my, glm::inverse(ent1.rotation())*cam.right());
-        } else {
-
-            float pitch = my/10.f;
-            float yaw = mx/10.f;
-
-            const glm::quat& r = cam.rotation();
-
-
-
-            // Rotate up/down | apply local rotation
-            cam.rotation(glm::rotate(glm::quat(), glm::radians(pitch), glm::vec3(1, 0, 0)) * r);//cam.right()));
-
-            // Rotate left/right | apply global rotation
-            cam.rotation(r * glm::rotate(glm::quat(), glm::radians(yaw), glm::vec3(0, 1, 0)));
-
-            glm::vec3 euler = glm::eulerAngles(cam.rotation());
-            std::cout << "Euler: " << euler << std::endl;
-        }
-
-        glm::vec3 velocity(0,0,0);
-        if(key_w)
-            velocity += cam.forward() * .1f;
-        if(key_s)
-            velocity += cam.forward() * -.1f;
-        if(key_a)
-            velocity += cam.right() * -.1f;
-        if(key_d)
-            velocity += cam.right() * .1f;
-        cam.move(velocity);
-
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-        //ent.look_at(cam.position());
-        program.set("model", ent1.model());
-        tex1.bind();
-        ent1.render();
-        fbo.unbind();
-
-        program.set("projection", cam.projection());
-        program.set("view", cam.view());
-        program.set("tex", GL_TEXTURE0);
-
-        win.swap();
     }
+
+private:
+    indigo::window window_;
+    indigo::program program_;
+    indigo::camera camera_;
+    indigo::texture texture_;
+
+    std::unique_ptr<indigo::mesh> mesh_;
+    indigo::mesh_entity entity_;
+
+    bool key_w, key_s, key_a, key_d;
+};
+
+int main(int argc, char const ** argv)
+{
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+    SDL_GL_SetSwapInterval(1);
+
+    demo_application app;
+    app.run(argc, argv);
 
     return 0;
 }

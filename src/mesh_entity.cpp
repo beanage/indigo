@@ -8,15 +8,15 @@ mesh_entity::mesh_entity(const mesh* m)
 	: model_(m)
 {}
 
-// const mesh* mesh_entity::model() const
-// {
-// 	return model_;
-// }
-// 
-// void mesh_entity::model(const mesh* m)
-// {
-// 	model_ = m;
-// }
+const mesh* mesh_entity::attached_mesh() const
+{
+    return model_;
+}
+
+void mesh_entity::attach_mesh(const mesh* m)
+{
+    model_ = m;
+}
 
 void mesh_entity::render() const
 {
