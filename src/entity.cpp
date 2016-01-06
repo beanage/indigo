@@ -12,14 +12,10 @@
 
 using namespace indigo;
 
-static float normalize_angle(float value, float max)
+void entity::update()
 {
-	value = fmodf(value, 360.f);
-	if (value < .0f)
-		value += 360.f;
-	if (value > max)
-		value = max;
-	return value;
+    prev_position_ = position_;
+    prev_rotation_ = rotation_;
 }
 
 const glm::vec3& entity::position() const
@@ -29,13 +25,15 @@ const glm::vec3& entity::position() const
 
 void entity::position(const glm::vec3& pos)
 {
-    position_ = pos;
-    model_ = build_model_martix();
+    prev_position_ = position_ = pos;
 }
 
-entity &entity::move(const glm::vec3 &velocity)
+entity& entity::move(const glm::vec3& velocity)
 {
-    position(position() + velocity);
+    if (prev_position_ == position_)
+        prev_position_ = position_;
+    position_ += velocity;
+    return *this;
 }
 
 const glm::quat& entity::rotation() const
@@ -45,20 +43,36 @@ const glm::quat& entity::rotation() const
 
 void entity::rotation(const glm::quat& rot)
 {
-    rotation_ = rot;
-    model_ = build_model_martix();
+    prev_rotation_ = rotation_ = rot;
 }
 
-entity &entity::turn(float angle, glm::vec3 axis)
+entity&entity::turn_global(float angle, glm::vec3 axis)
 {
-    rotation_ = glm::rotate(rotation_, glm::radians(angle), axis);
-    model_ = build_model_martix();
+    if (prev_rotation_ == rotation_)
+        prev_rotation_ = rotation_;
+    rotation_ = rotation_ * glm::rotate(glm::quat(), glm::radians(angle), axis);
     return *this;
 }
 
-const glm::mat4& entity::model() const
+entity& entity::turn_local(float angle, glm::vec3 axis)
 {
-    return model_;
+    if (prev_rotation_ == rotation_)
+        prev_rotation_ = rotation_;
+    rotation_ = glm::rotate(glm::quat(), glm::radians(angle), axis) * rotation_;
+    return *this;
+}
+
+glm::mat4 entity::model() const
+{
+    return build_model_martix(position_, rotation_);
+}
+
+glm::mat4 entity::model(float step) const
+{
+    glm::vec3 pos = glm::mix(prev_position_, position_, step);
+    glm::quat rot = glm::slerp(prev_rotation_, rotation_, step);
+
+    return build_model_martix(pos, rot);
 }
 
 glm::mat4 entity::orientation() const
@@ -83,11 +97,10 @@ glm::vec3 entity::right() const
 
 void entity::look_at(const glm::vec3& target)
 {
-    rotation_ = glm::quat_cast(glm::lookAt(glm::vec3(), target - position(), up()));
-    model_ = build_model_martix();
+    rotation(glm::quat_cast(glm::lookAt(glm::vec3(), target - position(), up())));
 }
 
-glm::mat4 entity::build_model_martix()
+glm::mat4 entity::build_model_martix(const glm::vec3& pos, const glm::quat& rot) const
 {
-    return glm::translate(glm::mat4(), position()) * orientation();
+    return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
 }

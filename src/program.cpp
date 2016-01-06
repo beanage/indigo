@@ -74,3 +74,8 @@ void program::set(const std::string& name, const glm::mat4& value)
 {
 	glUniformMatrix4fv(uniform(name), 1, GL_TRUE, glm::value_ptr(value));
 }
+
+void program::set(const std::string& name, const glm::vec3& value)
+{
+    glUniform3fv(uniform(name), 1, glm::value_ptr(value));
+}

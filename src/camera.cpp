@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #define CAM_MAX_FOV 110.f
 #define CAM_MIN_FOV 0.f
@@ -62,12 +63,18 @@ glm::mat4 camera::projection() const
     return glm::ortho(-1.f, 1.f, 1.f, -1.f, near_, far_);
 }
 
-const glm::mat4& camera::view() const
+glm::mat4 camera::view() const
 {
     return model();
 }
 
-glm::mat4 camera::build_model_martix()
+void camera::turn(float yaw, float pitch)
 {
-    return orientation() * glm::translate(glm::mat4(), -position());
+    turn_global(yaw, glm::vec3(0, 1, 0));
+    turn_local(pitch, glm::vec3(1, 0, 0));
+}
+
+glm::mat4 camera::build_model_martix(const glm::vec3& pos, const glm::quat& rot) const
+{
+    return glm::toMat4(rot) * glm::translate(glm::mat4(), -pos);
 }

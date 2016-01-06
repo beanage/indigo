@@ -64,17 +64,34 @@ public:
         //std::cout << "update" << std::endl;
         update_keys();
 
+        entity_.update();
+        camera_.update();
+
+        if ((cube_accell_.x > .01f || cube_accell_.x < -.01f) || (cube_accell_.y > .01f || cube_accell_.y < -.01f ))
+            cube_accell_ /= 1.01f;
+        else
+            cube_accell_ = glm::vec2(0.f, 0.f);
+
         int mx, my;
         Uint8 butt = SDL_GetRelativeMouseState(&mx, &my);
 
         bool lbt = butt & SDL_BUTTON(SDL_BUTTON_LEFT);
 
+        if (cube_accell_ != glm::vec2(0.f, 0.f)) {
+            entity_.turn_global(cube_accell_.x, cube_accell_up_);
+            entity_.turn_global(cube_accell_.y, cube_accell_right_);
+        }
+
         if (lbt) {
-           entity_.turn(mx, glm::inverse(entity_.rotation()) * camera_.up()).turn(my, glm::inverse(entity_.rotation()) * camera_.right());
+            cube_accell_up_ = glm::inverse(entity_.rotation()) * camera_.up();
+            cube_accell_right_ = glm::inverse(entity_.rotation()) * camera_.right();
+            cube_accell_ = glm::vec2(mx/5.f, my/5.f);
         } else {
             float pitch = my/10.f;
             float yaw = mx/10.f;
 
+            camera_.turn(yaw, pitch);
+            /*
             const glm::quat& r = camera_.rotation();
 
             // Rotate up/down | apply local rotation
@@ -82,6 +99,7 @@ public:
 
             // Rotate left/right | apply global rotation
             camera_.rotation(r * glm::rotate(glm::quat(), glm::radians(yaw), glm::vec3(0, 1, 0)));
+            */
         }
 
         glm::vec3 velocity(0, 0, 0);
@@ -104,11 +122,13 @@ public:
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+        program_.set("light_1.position", camera_.position());
+        program_.set("light_1.color", glm::vec3(1, 1, 1));
         program_.set("projection", camera_.projection());
-        program_.set("view", camera_.view());
+        program_.set("view", camera_.model(factor));
         program_.set("tex", GL_TEXTURE0);
 
-        program_.set("model", entity_.model());
+        program_.set("model", entity_.model(factor));
         texture_.bind();
         entity_.render();
 
@@ -157,6 +177,9 @@ private:
     indigo::mesh_entity entity_;
 
     bool key_w, key_s, key_a, key_d;
+    glm::vec2 cube_accell_;
+    glm::vec3 cube_accell_up_;
+    glm::vec3 cube_accell_right_;
 };
 
 int main(int argc, char const ** argv)

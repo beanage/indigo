@@ -1,11 +1,12 @@
 #include "application.hpp"
 #include <SDL2/SDL.h>
+#include <iostream>
 
 using namespace indigo;
 
 const unsigned int application::gl_major_version(3);
 const unsigned int application::gl_minor_version(3);
-const std::chrono::milliseconds application::step_time(10);
+const std::chrono::milliseconds application::update_intervall(10);
 
 application::application()
     : quit_(false)
@@ -33,18 +34,31 @@ void indigo::run(application& app, int argc, const char** argv)
     milliseconds prev_time(SDL_GetTicks());
     double update_lag(0.);
 
+    milliseconds prev_sec(SDL_GetTicks());
+    double frames(0.), updates(0.);
+
     while (!app.terminated()) {
         milliseconds cur_time(SDL_GetTicks());
         milliseconds time_div(cur_time - prev_time);
         prev_time = cur_time;
         update_lag += time_div.count();
 
-        while (update_lag >= application::step_time.count()) {
-            app.update();
-            update_lag -= application::step_time.count();
+        // TEST
+        if (cur_time - prev_sec > milliseconds(1000)) {
+            std::cout << "Frames: " << frames << " Updates: " << updates << std::endl;
+            frames = 0;
+            updates = 0;
+            prev_sec = cur_time;
         }
 
-        app.render(update_lag / application::step_time.count());
+        while (update_lag >= application::update_intervall.count()) {
+            app.update();
+            ++updates;
+            update_lag -= application::update_intervall.count();
+        }
+
+        app.render(update_lag / application::update_intervall.count());
+        ++frames;
     }
 }
 

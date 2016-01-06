@@ -11,7 +11,7 @@ namespace indigo
     struct vertex
     {
         glm::vec3 v;
-        glm::vec2 vn;
+        glm::vec3 vn;
         glm::vec2 vt;
     };
 

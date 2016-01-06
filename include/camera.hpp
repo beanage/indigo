@@ -27,10 +27,12 @@ namespace indigo
 		void fov(float fov);
 
 		glm::mat4 projection() const;
-		const glm::mat4& view() const;
+        glm::mat4 view() const;
+
+        void turn(float yaw, float pitch);
 
     protected:
-        glm::mat4 build_model_martix();
+        glm::mat4 build_model_martix(const glm::vec3& pos, const glm::quat& rot) const override;
 
 	private:
 		float fov_;

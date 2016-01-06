@@ -12,7 +12,7 @@ public:
     static const unsigned int gl_major_version;
     static const unsigned int gl_minor_version;
 
-    static const std::chrono::milliseconds step_time;
+    static const std::chrono::milliseconds update_intervall;
 
 	application();
 	virtual ~application();

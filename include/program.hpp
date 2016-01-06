@@ -22,6 +22,7 @@ namespace indigo
 
 		void set(const std::string& name, GLuint value);
 		void set(const std::string& name, const glm::mat4& value);
+        void set(const std::string& name, const glm::vec3& value);
 
 	private:
 		GLuint handle;
