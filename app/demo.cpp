@@ -49,7 +49,7 @@ public:
         program_.use();
 
         indigo::obj_loader loader;
-        mesh_ = loader.load("../media/mesh.obj");
+        mesh_ = loader.load("../media/monkey.obj");
         mesh_->upload();
 
         camera_.aspect_ratio(800.f/600.f);
@@ -85,7 +85,7 @@ public:
         if (lbt) {
             cube_accell_up_ = glm::inverse(entity_.rotation()) * camera_.up();
             cube_accell_right_ = glm::inverse(entity_.rotation()) * camera_.right();
-            cube_accell_ = glm::vec2(mx/5.f, my/5.f);
+            cube_accell_ += glm::vec2(mx/10.f, my/10.f);
         } else {
             float pitch = my/10.f;
             float yaw = mx/10.f;
@@ -115,7 +115,7 @@ public:
         camera_.move(velocity);
     }
 
-    void render(float factor) override
+    void render(float time) override
     {
         //std::cout << "render " << factor << std::endl;
 
@@ -125,10 +125,10 @@ public:
         program_.set("light_1.position", camera_.position());
         program_.set("light_1.color", glm::vec3(1, 1, 1));
         program_.set("projection", camera_.projection());
-        program_.set("view", camera_.model(factor));
+        program_.set("view", camera_.view(time));
         program_.set("tex", GL_TEXTURE0);
 
-        program_.set("model", entity_.model(factor));
+        program_.set("model", entity_.model(time));
         texture_.bind();
         entity_.render();
 

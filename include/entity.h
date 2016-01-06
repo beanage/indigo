@@ -21,12 +21,10 @@ public:
 
     const glm::vec3& position() const;
     void position(const glm::vec3& pos);
-
     entity& move(glm::vec3 const& velocity);
 
     const glm::quat& rotation() const;
     void rotation(const glm::quat& rot);
-
     entity& turn_global(float angle, glm::vec3 axis);
     entity& turn_local(float angle, glm::vec3 axis);
 
@@ -51,8 +49,6 @@ protected:
     virtual glm::mat4 build_model_martix(const glm::vec3& pos, const glm::quat& rot) const;
 
 private:
-    glm::mat4 model_;
-
     glm::vec3 position_, prev_position_;
     glm::quat rotation_, prev_rotation_;
 };

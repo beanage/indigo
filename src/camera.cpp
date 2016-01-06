@@ -68,6 +68,11 @@ glm::mat4 camera::view() const
     return model();
 }
 
+glm::mat4 camera::view(float step) const
+{
+    return model(step);
+}
+
 void camera::turn(float yaw, float pitch)
 {
     turn_global(yaw, glm::vec3(0, 1, 0));

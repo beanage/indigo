@@ -28,6 +28,7 @@ namespace indigo
 
 		glm::mat4 projection() const;
         glm::mat4 view() const;
+        glm::mat4 view(float step) const;
 
         void turn(float yaw, float pitch);
 
