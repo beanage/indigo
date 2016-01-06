@@ -37,6 +37,8 @@ public:
 
     void init() override
     {
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+
         glEnable(GL_CULL_FACE);
         glFrontFace(GL_CCW);
         glCullFace(GL_BACK);
@@ -59,6 +61,7 @@ public:
 
     void update() override
     {
+        //std::cout << "update" << std::endl;
         update_keys();
 
         int mx, my;
@@ -96,6 +99,8 @@ public:
 
     void render(float factor) override
     {
+        //std::cout << "render " << factor << std::endl;
+
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -116,7 +121,7 @@ public:
         while (SDL_PollEvent(&event) != 0) {
             switch(event.type) {
             case SDL_QUIT:
-                quit();
+                terminate();
                 break;
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_w)
@@ -156,15 +161,10 @@ private:
 
 int main(int argc, char const ** argv)
 {
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_SetRelativeMouseMode(SDL_TRUE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    SDL_GL_SetSwapInterval(1);
+    indigo::init_gl();
 
     demo_application app;
-    app.run(argc, argv);
+    indigo::run(app, argc, argv);
 
     return 0;
 }
