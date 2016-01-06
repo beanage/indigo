@@ -49,7 +49,7 @@ public:
         program_.use();
 
         indigo::obj_loader loader;
-        mesh_ = loader.load("../media/monkey.obj");
+        mesh_ = loader.load("../media/gun.obj");
         mesh_->upload();
 
         camera_.aspect_ratio(800.f/600.f);
