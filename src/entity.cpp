@@ -18,6 +18,21 @@ void entity::update()
     prev_rotation_ = rotation_;
 }
 
+entity::entity(entity_shared_ptr parent) : parent_(parent.get())
+{
+    parent->children_.push_back(this->shared_from_this());
+}
+
+void entity::parent(entity_shared_ptr new_parent)
+{
+    if(new_parent.get() == parent_)
+}
+
+entity_shared_ptr entity::parent()
+{
+
+}
+
 const glm::vec3& entity::position() const
 {
     return position_;
