@@ -64,7 +64,7 @@ static std::tuple<int, int, int> parse_face_indices(const std::string& input)
 obj_loader::obj_loader()
 {}
 
-std::unique_ptr<mesh> obj_loader::load(const std::string& filename)
+std::shared_ptr<mesh> obj_loader::load(std::istream& stream)
 {
     std::vector<glm::vec3> tmp_vertices;
     std::vector<glm::vec3> tmp_normals;
@@ -74,13 +74,12 @@ std::unique_ptr<mesh> obj_loader::load(const std::string& filename)
     std::vector<int> tmp_uv_indices;
     std::vector<int> tmp_normal_indices;
 
-    std::ifstream file(filename, std::ifstream::in);
-    if (file.fail())
+    if (stream.fail())
             throw std::runtime_error("[obj_loader] can not open file!");
 
-    file.imbue(std::locale("C"));
+    stream.imbue(std::locale("C"));
 
-    for (std::string line; std::getline(file, line);) {
+    for (std::string line; std::getline(stream, line);) {
         std::istringstream parts(line);
 
         std::string type;
@@ -153,5 +152,5 @@ std::unique_ptr<mesh> obj_loader::load(const std::string& filename)
 	for (auto index : tmp_normal_indices)
         	result->normals_.push_back(tmp_normals[index-1]);
 
-	return std::unique_ptr<mesh>(result);
+    return std::shared_ptr<mesh>(result);
 }

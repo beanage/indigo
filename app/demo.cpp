@@ -7,6 +7,7 @@
 #include "mesh_entity.hpp"
 #include "log.hpp"
 #include "texture.hpp"
+#include "resource_manager.hpp"
 
 #include <SDL2/SDL.h>
 #include <unistd.h>
@@ -40,16 +41,21 @@ public:
         SDL_SetRelativeMouseMode(SDL_TRUE);
 
         glEnable(GL_CULL_FACE);
+        glEnable(GL_BLEND);
         glFrontFace(GL_CCW);
         glCullFace(GL_BACK);
         glClearDepth(1.0);
         glEnable(GL_DEPTH_TEST);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         glActiveTexture(GL_TEXTURE0);
 
         program_.use();
 
-        indigo::obj_loader loader;
-        mesh_ = loader.load("../media/gun.obj");
+        indigo::resource_manager<mesh> mesh_manager;
+        mesh_manager.add_search_directory("../media");
+        mesh_manager.instantiate_loader<obj_loader>("obj");
+
+        mesh_ = mesh_manager.load("gun.obj");
         mesh_->upload();
 
         camera_.aspect_ratio(800.f/600.f);
@@ -61,7 +67,6 @@ public:
 
     void update() override
     {
-        //std::cout << "update" << std::endl;
         update_keys();
 
         entity_.update();
@@ -91,15 +96,6 @@ public:
             float yaw = mx/10.f;
 
             camera_.turn(yaw, pitch);
-            /*
-            const glm::quat& r = camera_.rotation();
-
-            // Rotate up/down | apply local rotation
-            camera_.rotation(glm::rotate(glm::quat(), glm::radians(pitch), glm::vec3(1, 0, 0)) * r);//cam.right()));
-
-            // Rotate left/right | apply global rotation
-            camera_.rotation(r * glm::rotate(glm::quat(), glm::radians(yaw), glm::vec3(0, 1, 0)));
-            */
         }
 
         glm::vec3 velocity(0, 0, 0);
@@ -173,7 +169,7 @@ private:
     indigo::camera camera_;
     indigo::texture texture_;
 
-    std::unique_ptr<indigo::mesh> mesh_;
+    std::shared_ptr<indigo::mesh> mesh_;
     indigo::mesh_entity entity_;
 
     bool key_w, key_s, key_a, key_d;

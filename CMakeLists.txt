@@ -34,7 +34,8 @@ add_executable(demo
     src/basic_geom.cpp
     src/octnode.cpp
     src/mesh.cpp
-    src/application.cpp)
+    src/application.cpp
+    src/filesystem_unix.cpp)
 
 target_link_libraries(demo
     ${OPENGL_LIBRARIES}
