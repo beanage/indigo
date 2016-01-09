@@ -64,6 +64,11 @@ static std::tuple<int, int, int> parse_face_indices(const std::string& input)
 obj_loader::obj_loader()
 {}
 
+bool obj_loader::can_load(const std::string& extension)
+{
+    return extension == "obj";
+}
+
 std::shared_ptr<mesh> obj_loader::load(std::istream& stream)
 {
     std::vector<glm::vec3> tmp_vertices;

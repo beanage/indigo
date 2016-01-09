@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <algorithm>
 
 #include "mesh.hpp"
 #include "filesystem.hpp"
@@ -16,6 +17,7 @@ class resource_loader
 public:
     virtual ~resource_loader() {}
 
+    virtual bool can_load(std::string const& extension) = 0;
     virtual std::shared_ptr<Type> load(std::istream& stream) = 0;
 };
 
@@ -25,34 +27,33 @@ class resource_manager
 public:
     virtual ~resource_manager() {}
 
+    void unload(std::string const& name)
+    {
+        if (name.empty())
+            return;
+
+        auto name_parts = split_name(name);
+        auto cache_iter = cache_.find(name_parts.first);
+        if (cache_iter != cache_.end()) {
+            if (cache_iter->second.use_count() <= 1)
+            {
+                std::shared_ptr<Type> resource(nullptr);
+                cache_iter->second.swap(resource);
+            }
+        }
+    }
+
     std::shared_ptr<mesh> load(std::string const& name)
     {
         if (name.empty())
-            return std::shared_ptr<mesh>(nullptr);
+            return {nullptr};
 
-        std::string::size_type ext_pos(name.find_last_of('.'));
-        if (ext_pos < name.length()-1) {
-            std::string obj(name.substr(0, ext_pos));
-            std::string ext(name.substr(ext_pos + 1));
+        auto name_parts = split_name(name);
+        auto result = query_cache(name_parts.first);
+        if (result.get())
+            return result;
 
-            auto result = query_cache(obj);
-            if (result.get())
-                return result;
-
-            auto loader_iter = loaders_.find(ext);
-            if (loader_iter != loaders_.end()) {
-                auto path = full_path(name);
-                if (path.first) {
-                    std::ifstream stream(path.second);
-                    result = loader_iter->second->load(stream);
-                    if (result.get()) {
-                        cache_[obj] = result;
-                    }
-
-                    return result;
-                }
-            }
-        }
+        return load_and_cache(name_parts.first, name_parts.second);
     }
 
     void add_search_directory(std::string const& path)
@@ -64,14 +65,14 @@ public:
     }
 
     template <class Loader, class ...Values>
-    void instantiate_loader(std::string const& filetype, Values... values)
+    void instantiate_loader(Values... values)
     {
-        loaders_[filetype] = std::unique_ptr<Loader>(new Loader(values...));
+        loaders_.push_back(std::unique_ptr<Loader>(new Loader(values...)));
     }
 
-    void add_loader(std::string const& filetype, std::unique_ptr<resource_loader<Type>>&& loader)
+    void add_loader(std::unique_ptr<resource_loader<Type>>&& loader)
     {
-        loaders_[filetype] = std::move(loader);
+        loaders_.push_back(std::move(loader));
     }
 
 private:
@@ -97,8 +98,38 @@ private:
         return {nullptr};
     }
 
+    std::shared_ptr<Type> load_and_cache(std::string const& obj, std::string const& ext)
+    {
+        auto loader_iter = std::find_if(loaders_.begin(), loaders_.end(), [&](std::unique_ptr<resource_loader<Type>> const& loader){
+            return loader->can_load(ext);
+        });
+
+        if (loader_iter != loaders_.end()) {
+            auto path = full_path(obj + "." + ext);
+            if (path.first) {
+                std::ifstream stream(path.second);
+                auto result = (*loader_iter)->load(stream);
+                if (result.get()) {
+                    cache_[obj] = result;
+                }
+
+                return result;
+            }
+        }
+    }
+
+    std::pair<std::string, std::string> split_name(std::string const& name)
+    {
+        std::string::size_type ext_pos(name.find_last_of('.'));
+        if (ext_pos < name.length()-1) {
+            return std::make_pair(name.substr(0, ext_pos), name.substr(ext_pos + 1));
+        }
+
+        return std::make_pair(name, name);
+    }
+
     std::vector<std::string> search_paths_;
-    std::map<std::string, std::unique_ptr<resource_loader<Type>>> loaders_;
+    std::vector<std::unique_ptr<resource_loader<Type>>> loaders_;
     std::map<std::string, std::shared_ptr<Type>> cache_;
 };
 }
