@@ -17,7 +17,7 @@ class resource_loader
 public:
     virtual ~resource_loader() {}
 
-    virtual bool can_load(std::string const& extension) = 0;
+    virtual bool can_load(std::string const& extension) const = 0;
     virtual std::shared_ptr<Type> load(std::istream& stream) = 0;
 };
 

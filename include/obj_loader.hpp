@@ -15,7 +15,7 @@ class obj_loader : public resource_loader<mesh>
 public:
     obj_loader();
 
-    bool can_load(const std::string &extension) override;
+    bool can_load(const std::string &extension) const override;
     std::shared_ptr<mesh> load(std::istream& stream) override;
 };
 }

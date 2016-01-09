@@ -64,7 +64,7 @@ static std::tuple<int, int, int> parse_face_indices(const std::string& input)
 obj_loader::obj_loader()
 {}
 
-bool obj_loader::can_load(const std::string& extension)
+bool obj_loader::can_load(const std::string& extension) const
 {
     return extension == "obj";
 }
