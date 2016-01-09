@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.1)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake) 
 
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    add_definitions(-DDEBUG)
+endif()
+
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -26,7 +30,7 @@ add_executable(demo
     src/camera.cpp
     src/mesh_entity.cpp
     src/obj_loader.cpp
-    src/mtl_loader.cpp
+    src/md5_loader.cpp
     src/texture.cpp
     src/shader.cpp
     src/program.cpp
