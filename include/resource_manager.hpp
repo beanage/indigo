@@ -43,7 +43,7 @@ public:
         }
     }
 
-    std::shared_ptr<mesh> load(std::string const& name)
+    std::shared_ptr<Type> load(std::string const& name)
     {
         if (name.empty())
             return {nullptr};
