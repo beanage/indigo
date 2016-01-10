@@ -43,13 +43,19 @@ void indigo::run(application& app, int argc, const char** argv)
         prev_time = cur_time;
         update_lag += time_div.count();
 
-        // TEST
+#ifdef DEBUG
         if (cur_time - prev_sec > milliseconds(1000)) {
-            std::cout << "Frames: " << frames << " Updates: " << updates << std::endl;
+            float const time_div = static_cast<float>((cur_time - prev_sec).count());
+            float fps = frames / time_div * 1000.f;
+            float ups = updates / time_div * 1000.f;
+
+            std::cout << "Frames: " << fps << " Updates: " << ups << std::endl;
+
+            prev_sec = cur_time;
             frames = 0;
             updates = 0;
-            prev_sec = cur_time;
         }
+#endif
 
         while (update_lag >= application::update_intervall.count()) {
             app.update();

@@ -27,12 +27,12 @@ static unsigned gen_gl_texture(unsigned char* data, int width, int height)
 	glBindTexture(GL_TEXTURE_2D, obj);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE); // TODO: :)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE); // TODO: :)
 
-        if (data)
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    if (data)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -41,8 +41,8 @@ static unsigned gen_gl_texture(unsigned char* data, int width, int height)
 
 texture::texture(unsigned char* buffer, unsigned len)
 	: obj_(0)
-        , width_(0)
-        , height_(0)
+    , width_(0)
+    , height_(0)
 {
 	stbi_set_flip_vertically_on_load(true);
 
@@ -72,8 +72,8 @@ texture::texture(const rgba_color &solid_color, uint32_t width, uint32_t height)
 
 texture::texture(const std::string& file)
 	: obj_(0)
-        , width_(0)
-        , height_(0)
+    , width_(0)
+    , height_(0)
 {
 	stbi_set_flip_vertically_on_load(true);
 
@@ -85,16 +85,16 @@ texture::texture(const std::string& file)
 	obj_ = gen_gl_texture(data, x, y);
 	stbi_image_free(data);
 
-        width_ = x;
-        height_ = y;
+    width_ = x;
+    height_ = y;
 }
 
 texture::texture(int width, int height)
-        : obj_(0)
-        , width_(width)
-        , height_(height)
+    : obj_(0)
+    , width_(width)
+    , height_(height)
 {
-        gen_gl_texture(nullptr, width, height);
+    gen_gl_texture(nullptr, width, height);
 }
 
 texture::~texture()
@@ -109,17 +109,17 @@ void texture::bind() const
 
 unsigned int texture::handle() const
 {
-        return obj_;
+    return obj_;
 }
 
 uint32_t texture::width() const
 {
-        return width_;
+    return width_;
 }
 
 uint32_t texture::height() const
 {
-        return height_;
+    return height_;
 }
 
 framebuffer::framebuffer(const texture &t)

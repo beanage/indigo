@@ -25,7 +25,7 @@ window::window(const irect& rect)
 	: impl_(new impl)
 {
 	impl_->wnd = SDL_CreateWindow(
-			"", rect.left, rect.top, rect.width(), rect.height(),
+            "", rect.left, rect.top, rect.width(), rect.height(),
 			SDL_WINDOW_OPENGL|SDL_WINDOW_SHOWN);
 
 	if (!impl_->wnd)
