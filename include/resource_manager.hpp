@@ -35,11 +35,8 @@ public:
         auto name_parts = split_name(name);
         auto cache_iter = cache_.find(name_parts.first);
         if (cache_iter != cache_.end()) {
-            if (cache_iter->second.use_count() <= 1)
-            {
-                std::shared_ptr<Type> resource(nullptr);
-                cache_iter->second.swap(resource);
-            }
+            std::shared_ptr<Type> resource(nullptr);
+            cache_iter->second.swap(resource);
         }
     }
 

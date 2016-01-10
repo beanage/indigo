@@ -79,3 +79,8 @@ void program::set(const std::string& name, const glm::vec3& value)
 {
     glUniform3fv(uniform(name), 1, glm::value_ptr(value));
 }
+
+void program::set(const std::string& name, const std::vector<glm::mat4>& values)
+{
+    glUniformMatrix4fv(uniform(name), values.size(), GL_TRUE, reinterpret_cast<float const*>(values.data()));
+}

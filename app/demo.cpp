@@ -1,6 +1,8 @@
 #include "window.hpp"
 #include "mesh.hpp"
+#include "model.hpp"
 #include "obj_loader.hpp"
+#include "md5_loader.hpp"
 #include "program.hpp"
 #include "shader.hpp"
 #include "camera.hpp"
@@ -8,6 +10,7 @@
 #include "log.hpp"
 #include "texture.hpp"
 #include "resource_manager.hpp"
+#include "md5_bone.hpp"
 
 #include <SDL2/SDL.h>
 #include <unistd.h>
@@ -26,7 +29,7 @@ class demo_application : public indigo::application
 public:
     demo_application()
         : window_({0, 0, 800, 600})
-        , program_({indigo::load_shader("../shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)})
+        , program_({indigo::load_shader("../shader/md5-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("../shader/md5-vertex-shader.shader", GL_VERTEX_SHADER)})
         , mesh_(nullptr)
         , entity_(nullptr)
         , texture_("../media/texture.png")
@@ -55,8 +58,15 @@ public:
         mesh_manager.add_search_directory("../media");
         mesh_manager.instantiate_loader<obj_loader>();
 
-        mesh_ = mesh_manager.load("gun.obj");
-        mesh_->upload();
+        indigo::resource_manager<model> model_manager;
+        model_manager.add_search_directory("../media");
+        model_manager.instantiate_loader<md5_loader>();
+
+        model_ = model_manager.load("bob.md5mesh");
+        model_->upload();
+
+        //mesh_ = mesh_manager.load("mesh.obj");
+        //mesh_->upload();
 
         camera_.aspect_ratio(800.f/600.f);
         camera_.position({0.f, 0.f, 10.f});
@@ -117,8 +127,8 @@ public:
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-        program_.set("light_1.position", camera_.position());
-        program_.set("light_1.color", glm::vec3(1, 1, 1));
+        //program_.set("light_1.position", camera_.position());
+        //program_.set("light_1.color", glm::vec3(1, 1, 1));
         // program_.set("light_1.attenuation", 0.2f);
         // program_.set("light_1.ambient_coefficient", 0.05f);
         // program_.set("material_1.specular_color", glm::vec3(1, 1, 1));
@@ -126,11 +136,30 @@ public:
         // program_.set("camera_pos", camera_.position());
         program_.set("projection", camera_.projection());
         program_.set("view", camera_.view(time));
-        program_.set("tex", GL_TEXTURE0);
 
         program_.set("model", entity_.model(time));
-        texture_.bind();
-        entity_.render();
+        //texture_.bind();
+        //entity_.render();
+        //mesh_->render();
+
+        // TEST: upload bone data
+        std::vector<glm::mat4> bone_matrix;
+        for (auto const& b : model_->bones()) {
+            if (b->name() == "thumb.L") {
+                b->rotation(b->rotation() * glm::angleAxis(0.01f, glm::vec3(1, 0, 0)));
+            }
+
+            bone_matrix.push_back(static_cast<md5_bone*>(b)->model());
+        }
+
+        program_.set("bones", bone_matrix);
+        program_.set("weight_tex", 0);
+
+        glDisable(GL_CULL_FACE);
+        //glFrontFace(GL_CCW);
+        //glCullFace(GL_BACK);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        model_->render();
 
         window_.swap();
     }
@@ -172,6 +201,8 @@ private:
     indigo::program program_;
     indigo::camera camera_;
     indigo::texture texture_;
+
+    std::shared_ptr<indigo::model> model_;
 
     std::shared_ptr<indigo::mesh> mesh_;
     indigo::mesh_entity entity_;
