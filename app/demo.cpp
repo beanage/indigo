@@ -55,7 +55,7 @@ public:
 
         indigo::resource_manager<mesh> mesh_manager;
         mesh_manager.add_search_directory("../media");
-        mesh_manager.instantiate_loader<obj_loader>("obj");
+        mesh_manager.instantiate_loader<obj_loader>();
 
         mesh_ = mesh_manager.load("gun.obj");
         mesh_->upload();
@@ -109,19 +109,23 @@ public:
             velocity += camera_.right() * -.1f;
         if(key_d)
             velocity += camera_.right() * .1f;
-
+#ifdef DEBUG
         camera_.move(velocity);
+#endif
     }
 
     void render(renderer const& r) override
     {
-        //std::cout << "render " << factor << std::endl;
-
         glClearColor(0.f, 0.f, 0.f, 0.f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
         program_.set("light_1.position", camera_.position());
         program_.set("light_1.color", glm::vec3(1, 1, 1));
+        // program_.set("light_1.attenuation", 0.2f);
+        // program_.set("light_1.ambient_coefficient", 0.05f);
+        // program_.set("material_1.specular_color", glm::vec3(1, 1, 1));
+        // program_.set("material_1.specular_exponent", 0.f);
+        // program_.set("camera_pos", camera_.position());
         program_.set("projection", camera_.projection());
         program_.set("view", camera_.view(time));
         program_.set("tex", GL_TEXTURE0);

@@ -11,13 +11,36 @@
 
 using namespace indigo;
 
+namespace
+{
 class obj_mesh : public mesh
 {
 public:
+    static const unsigned int vertex_attribute_index   = 0;
+    static const unsigned int texcoord_attribute_index = 1;
+    static const unsigned int normal_attribute_index   = 2;
+
+    struct vertex
+    {
+        glm::vec3 v;
+        glm::vec3 vn;
+        glm::vec2 vt;
+    };
+
     obj_mesh()
     {}
 
-    void upload()
+    void render() const override
+    {
+        glBindVertexArray(vao_);
+        glEnableVertexAttribArray(vertex_attribute_index);
+        glEnableVertexAttribArray(texcoord_attribute_index);
+        glEnableVertexAttribArray(normal_attribute_index);
+        glDrawArrays(GL_TRIANGLES, 0, num_verts_);
+        glBindVertexArray(0);
+    }
+
+    void upload() override
     {
         if (glIsBuffer(vbo_))
                 throw std::runtime_error("[obj_mesh::upload] mesh is already online!");
@@ -36,13 +59,35 @@ public:
             ++pos_it, ++uv_it, ++norm_it;
         }
 
-        mesh::upload(data);
+        num_verts_ = data.size();
+
+        glGenBuffers(1, &vbo_);
+        glGenVertexArrays(1, &vao_);
+
+        glBindVertexArray(vao_);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+        glBufferData(GL_ARRAY_BUFFER, num_verts_ * sizeof(vertex), data.data(), GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(vertex_attribute_index);
+        glVertexAttribPointer(vertex_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), reinterpret_cast<void*>(0));
+
+        glEnableVertexAttribArray(normal_attribute_index);
+        glVertexAttribPointer(normal_attribute_index, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
+
+        glEnableVertexAttribArray(texcoord_attribute_index);
+        glVertexAttribPointer(texcoord_attribute_index, 2, GL_FLOAT, GL_TRUE, sizeof(vertex), reinterpret_cast<void*>(sizeof(glm::vec3)+sizeof(glm::vec3)));
+        glBindVertexArray(0);
     }
 
     std::vector<glm::vec3> vertices_;
     std::vector<glm::vec3> normals_;
     std::vector<glm::vec2> uvs_;
+
+    gl_handle vao_;
+    gl_handle vbo_;
+    size_t num_verts_;
 };
+}
 
 static int parse_face_indices_number(const std::string& str)
 {
@@ -63,6 +108,11 @@ static std::tuple<int, int, int> parse_face_indices(const std::string& input)
 
 obj_loader::obj_loader()
 {}
+
+bool obj_loader::can_load(const std::string& extension) const
+{
+    return extension == "obj";
+}
 
 std::shared_ptr<mesh> obj_loader::load(std::istream& stream)
 {

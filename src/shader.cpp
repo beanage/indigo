@@ -36,7 +36,7 @@ struct shader::impl
 
 			glDeleteShader(handle);
 
-			throw std::runtime_error(log);
+            throw std::runtime_error(log);
 		}
 	}
 
