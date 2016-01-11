@@ -1,4 +1,7 @@
 #include "application.hpp"
+
+#include "renderer.hpp"
+
 #include <SDL2/SDL.h>
 #include <iostream>
 
@@ -73,7 +76,8 @@ void indigo::run(application& app, int argc, const char** argv)
             update_lag -= application::update_intervall.count();
         }
 
-        app.render(update_lag / application::update_intervall.count());
+        renderer r(update_lag / application::update_intervall.count());
+        app.render(r);
         ++frames;
     }
 }

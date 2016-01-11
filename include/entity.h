@@ -14,15 +14,17 @@
 namespace indigo
 {
 class entity;
+class octnode;
 typedef std::shared_ptr<entity> entity_shared_ptr;
 
-class entity : public std::enable_shared_from_this<entity>
+class entity : protected std::enable_shared_from_this<entity>
 {
 public:
     entity(entity_shared_ptr parent = nullptr);
 
     void parent(entity_shared_ptr new_parent);
     entity_shared_ptr parent();
+    void remove();
 
     virtual ~entity() {}
     virtual void update();
@@ -54,16 +56,16 @@ public:
 protected:
     entity(const entity&) = default;
 
-    void remove();
-
-    virtual glm::mat4 build_model_martix(const glm::vec3& pos, const glm::quat& rot) const;
+    virtual glm::mat4 build_model_matrix(const glm::vec3& pos, const glm::quat& rot) const;
 
 private:
     glm::vec3 position_, prev_position_;
     glm::quat rotation_, prev_rotation_;
 
-    entity const* parent_;
+    entity* parent_;
     std::list<entity_shared_ptr> children_;
+    glm::mat4 world_transform;
+    octnode* oct;
 };
 }
 
