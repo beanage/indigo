@@ -8,6 +8,7 @@
 #include "log.hpp"
 #include "texture.hpp"
 #include "resource_manager.hpp"
+#include "scene.hpp"
 
 #include <SDL2/SDL.h>
 #include <unistd.h>
@@ -30,6 +31,7 @@ public:
         , mesh_(nullptr)
         , entity_(nullptr)
         , texture_("../media/texture.png")
+        , scene_(indigo::aabb(100.0,100.0,100.0))
         , key_w(false)
         , key_s(false)
         , key_a(false)
@@ -111,7 +113,7 @@ public:
         camera_.move(velocity);
     }
 
-    void render(float time) override
+    void render(renderer const& r) override
     {
         //std::cout << "render " << factor << std::endl;
 
@@ -168,6 +170,7 @@ private:
     indigo::program program_;
     indigo::camera camera_;
     indigo::texture texture_;
+    indigo::scene scene_;
 
     std::shared_ptr<indigo::mesh> mesh_;
     indigo::mesh_entity entity_;

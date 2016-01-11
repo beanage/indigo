@@ -6,6 +6,8 @@
 
 namespace indigo
 {
+class renderer;
+
 class application
 {
 public:
@@ -14,18 +16,18 @@ public:
 
     static const std::chrono::milliseconds update_intervall;
 
-	application();
-	virtual ~application();
+        application();
+        virtual ~application();
 
     virtual void init() = 0;
     virtual void update() = 0;
-    virtual void render(float time_factor) = 0;
+    virtual void render(renderer const& r) = 0;
 
     void terminate();
     bool terminated() const;
 
 private:
-	application(const application&) = delete;
+    application(application const&) = delete;
 
     bool quit_;
 };

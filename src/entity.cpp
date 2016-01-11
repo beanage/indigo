@@ -18,19 +18,37 @@ void entity::update()
     prev_rotation_ = rotation_;
 }
 
-entity::entity(entity_shared_ptr parent) : parent_(parent.get())
+void entity::update_world_matrix_and_octnode() {
+
+}
+
+entity::entity(entity_shared_ptr parent) : parent_(parent.get()), oct(nullptr)
 {
-    parent->children_.push_back(this->shared_from_this());
+    if(parent.get() != nullptr)
+        parent->children_.push_back(shared_from_this());
 }
 
 void entity::parent(entity_shared_ptr new_parent)
 {
-    if(new_parent.get() == parent_)
+    if(new_parent.get() != parent_ && parent_ != nullptr)
+        remove();
+    parent_ = new_parent.get();
+    if(parent_ != nullptr)
+        new_parent->children_.push_back(shared_from_this());
 }
 
 entity_shared_ptr entity::parent()
 {
+    if(parent_)
+        return parent_->shared_from_this();
+    else
+        return nullptr;
+}
 
+void entity::remove()
+{
+    if(parent_)
+        parent_->children_.remove(shared_from_this());
 }
 
 const glm::vec3& entity::position() const
@@ -79,7 +97,7 @@ entity& entity::turn_local(float angle, glm::vec3 axis)
 
 glm::mat4 entity::model() const
 {
-    return build_model_martix(position_, rotation_);
+    return build_model_matrix(position_, rotation_);
 }
 
 glm::mat4 entity::model(float step) const
@@ -87,7 +105,7 @@ glm::mat4 entity::model(float step) const
     glm::vec3 pos = glm::mix(prev_position_, position_, step);
     glm::quat rot = glm::slerp(prev_rotation_, rotation_, step);
 
-    return build_model_martix(pos, rot);
+    return build_model_matrix(pos, rot);
 }
 
 glm::mat4 entity::orientation() const
@@ -115,7 +133,8 @@ void entity::look_at(const glm::vec3& target)
     rotation(glm::quat_cast(glm::lookAt(glm::vec3(), target - position(), up())));
 }
 
-glm::mat4 entity::build_model_martix(const glm::vec3& pos, const glm::quat& rot) const
+glm::mat4 entity::build_model_matrix(const glm::vec3& pos, const glm::quat& rot) const
 {
     return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
 }
+

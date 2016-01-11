@@ -33,7 +33,7 @@ namespace indigo
         void turn(float yaw, float pitch);
 
     protected:
-        glm::mat4 build_model_martix(const glm::vec3& pos, const glm::quat& rot) const override;
+        glm::mat4 build_model_matrix(const glm::vec3& pos, const glm::quat& rot) const override;
 
 	private:
 		float fov_;
