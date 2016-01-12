@@ -37,7 +37,6 @@ add_executable(demo
     app/demo.cpp
     src/basic_geom.cpp
     src/octnode.cpp
-    src/mesh.cpp
     src/application.cpp
     src/filesystem_unix.cpp)
 
