@@ -368,9 +368,9 @@ std::unique_ptr<md5_mesh> md5_loader::parse_mesh(scanner& s)
     // fill the mesh
     for (auto const& tri : tmp_tris)
     {
-        m->vertices_.push_back(tmp_vertices[tri.verts[0]]);
-        m->vertices_.push_back(tmp_vertices[tri.verts[1]]);
         m->vertices_.push_back(tmp_vertices[tri.verts[2]]);
+        m->vertices_.push_back(tmp_vertices[tri.verts[1]]);
+        m->vertices_.push_back(tmp_vertices[tri.verts[0]]);
     }
 
     return m;

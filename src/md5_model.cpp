@@ -43,5 +43,5 @@ void md5_model::upload()
 
 void md5_model::upload_bones() const
 {
-    // TODO: Upload bone matrixes to union array
+    // TODO: Upload bone matrices to union array
 }

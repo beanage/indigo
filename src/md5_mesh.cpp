@@ -14,7 +14,8 @@ md5_mesh::md5_mesh()
 
 md5_mesh::~md5_mesh()
 {
-
+    glDeleteBuffers(1, &vbo_);
+    glDeleteVertexArrays(1, &vao_);
 }
 
 void md5_mesh::render() const
@@ -56,7 +57,7 @@ void md5_mesh::upload_vertices()
 
     glEnableVertexAttribArray(bone_count_attribute_index);
     glVertexAttribPointer(bone_count_attribute_index, 1, GL_FLOAT, GL_FALSE, sizeof(vertex), reinterpret_cast<void*>(sizeof(glm::vec2)+sizeof(float)));
-    //glBindVertexArray(0);
+    glBindVertexArray(0);
 }
 
 void md5_mesh::upload_weights()

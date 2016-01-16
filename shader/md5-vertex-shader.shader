@@ -51,7 +51,7 @@ void main()
 		frag_color = vec4(1, 0, 0, 1);
 	if (bias_sum < 1.0)
 		frag_color = vec4(0, 1, 0, 1);
-	
+
 	gl_Position  = final_vert;
 	gl_Position *= model;
 	gl_Position *= view;

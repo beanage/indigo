@@ -32,7 +32,7 @@ public:
 
 private:
 	void upload_vertices();
-	void upload_weights();
+    void upload_weights();
 
     std::string material_; // TODO: material instance
 
