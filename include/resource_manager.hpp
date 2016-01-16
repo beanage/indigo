@@ -25,20 +25,13 @@ template <class Type>
 class resource_manager
 {
 public:
-    virtual ~resource_manager() {}
-
-    void unload(std::string const& name)
+    static resource_manager<Type>& shared()
     {
-        if (name.empty())
-            return;
-
-        auto name_parts = split_name(name);
-        auto cache_iter = cache_.find(name_parts.first);
-        if (cache_iter != cache_.end()) {
-            std::shared_ptr<Type> resource(nullptr);
-            cache_iter->second.swap(resource);
-        }
+        static resource_manager<Type> instance;
+        return instance;
     }
+
+    virtual ~resource_manager() {}
 
     std::shared_ptr<Type> load(std::string const& name)
     {
@@ -53,18 +46,25 @@ public:
         return load_and_cache(name_parts.first, name_parts.second);
     }
 
-    void add_search_directory(std::string const& path)
+    void unload(std::string const& name)
+    {
+        if (name.empty())
+            return;
+
+        auto name_parts = split_name(name);
+        auto cache_iter = cache_.find(name_parts.first);
+        if (cache_iter != cache_.end()) {
+            std::shared_ptr<Type> resource(nullptr);
+            cache_iter->second.swap(resource);
+        }
+    }
+
+    void add_path(std::string const& path)
     {
         if (filesystem::is_directory(path))
             search_paths_.push_back(path);
         else
-            throw std::runtime_error("[resource_manager::add_search_path] path is not a directory!");
-    }
-
-    template <class Loader, class ...Values>
-    void instantiate_loader(Values... values)
-    {
-        loaders_.push_back(std::unique_ptr<Loader>(new Loader(values...)));
+            throw std::runtime_error("[resource_manager::add_path] path is not a directory!");
     }
 
     void add_loader(std::unique_ptr<resource_loader<Type>>&& loader)
@@ -88,7 +88,7 @@ private:
     std::shared_ptr<Type> query_cache(std::string const& name)
     {
         auto cache_iter = cache_.find(name);
-        if (cache_iter != cache_.end()) {
+        if (cache_iter != cache_.end() && cache_iter->second.get()) {
             return cache_iter->second;
         }
 
