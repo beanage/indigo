@@ -49,7 +49,7 @@ void program::use() const
 
 GLint program::attribute(const std::string& name) const
 {
-	GLint temp = glGetAttribLocation(handle, name.c_str());
+    GLint temp = glGetAttribLocation(handle, name.c_str());
 	if (temp == -1)
 		throw std::runtime_error("invalid attribute name '" + name + "'!");
 
@@ -58,26 +58,36 @@ GLint program::attribute(const std::string& name) const
 
 GLint program::uniform(const std::string& name) const
 {
-	GLint temp = glGetUniformLocation(handle, name.c_str());
+    GLint temp = glGetUniformLocation(handle, name.c_str());
 	if (temp == -1)
 		throw std::runtime_error("invalid uniform name '" + name + "'!");
 
 	return temp;
 }
 
-void program::set(const std::string& name, GLuint value)
+void program::set(const std::string& name, int value)
 {
-	glUniform1uiv(uniform(name), 1, &value);
+    glUniform1i(uniform(name), value);
 }
 
-void program::set(const std::string& name, const glm::mat4& value)
+void program::set(const std::string& name, float value)
 {
-	glUniformMatrix4fv(uniform(name), 1, GL_TRUE, glm::value_ptr(value));
+    glUniform1f(uniform(name), value);
+}
+
+void program::set(const std::string& name, const glm::vec2& value)
+{
+    glUniform2fv(uniform(name), 1, glm::value_ptr(value));
 }
 
 void program::set(const std::string& name, const glm::vec3& value)
 {
     glUniform3fv(uniform(name), 1, glm::value_ptr(value));
+}
+
+void program::set(const std::string& name, const glm::mat4& value)
+{
+	glUniformMatrix4fv(uniform(name), 1, GL_TRUE, glm::value_ptr(value));
 }
 
 void program::set(const std::string& name, const std::vector<glm::mat4>& values)
