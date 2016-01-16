@@ -28,7 +28,14 @@ public:
     };
 
     obj_mesh()
+        : vbo_(0), vao_(0)
     {}
+
+    ~obj_mesh()
+    {
+        glDeleteBuffers(1, &vbo_);
+        glDeleteVertexArrays(1, &vao_);
+    }
 
     void render() const override
     {
