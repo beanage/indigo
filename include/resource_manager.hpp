@@ -18,7 +18,7 @@ public:
     virtual ~resource_loader() {}
 
     virtual bool can_load(std::string const& extension) const = 0;
-    virtual std::shared_ptr<Type> load(std::istream& stream) = 0;
+    virtual std::shared_ptr<Type> load(std::string const& filename) = 0;
 };
 
 template <class Type>
@@ -104,8 +104,7 @@ private:
         if (loader_iter != loaders_.end()) {
             auto path = full_path(obj + "." + ext);
             if (path.first) {
-                std::ifstream stream(path.second);
-                auto result = (*loader_iter)->load(stream);
+                auto result = (*loader_iter)->load(path.second);
                 if (result.get()) {
                     cache_[obj] = result;
                 }

@@ -121,7 +121,7 @@ bool obj_loader::can_load(const std::string& extension) const
     return extension == "obj";
 }
 
-std::shared_ptr<mesh> obj_loader::load(std::istream& stream)
+std::shared_ptr<mesh> obj_loader::load(std::string const& filename)
 {
     std::vector<glm::vec3> tmp_vertices;
     std::vector<glm::vec3> tmp_normals;
@@ -131,6 +131,7 @@ std::shared_ptr<mesh> obj_loader::load(std::istream& stream)
     std::vector<int> tmp_uv_indices;
     std::vector<int> tmp_normal_indices;
 
+    std::ifstream stream(filename);
     if (stream.fail())
             throw std::runtime_error("[obj_loader] can not open file!");
 

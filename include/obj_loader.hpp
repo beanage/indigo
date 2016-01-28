@@ -16,7 +16,7 @@ public:
     obj_loader();
 
     bool can_load(std::string const& extension) const override;
-    std::shared_ptr<mesh> load(std::istream& stream) override;
+    std::shared_ptr<mesh> load(std::string const& stream) override;
 };
 }
 

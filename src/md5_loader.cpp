@@ -3,6 +3,7 @@
 #include "md5_bone.hpp"
 #include "md5_mesh.hpp"
 #include "md5_model.hpp"
+#include <fstream>
 
 // md5 format
 // ----------
@@ -381,8 +382,9 @@ bool md5_loader::can_load(std::string const& extension) const
     return extension == "md5mesh";
 }
 
-std::shared_ptr<model> md5_loader::load(std::istream& stream)
+std::shared_ptr<model> md5_loader::load(std::string const& filename)
 {
+    std::ifstream stream(filename);
     md5_model* m(new md5_model);
     std::shared_ptr<model> result(m);
 
