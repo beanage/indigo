@@ -34,32 +34,36 @@ struct octnode_plane_isect
     }
 };
 
-octnode::octnode(const aabb &geom, octant_indices pos) : geom(geom),
-    indices(pos), lr(geom.middle, x_axis), bt(geom.middle, y_axis), fb(geom.middle, z_axis)
+octnode::octnode(const aabb &geom, octant_indices pos) :
+    geom(geom),
+    indices(pos),
+    lr(geom.middle, x_axis),
+    bt(geom.middle, y_axis),
+    fb(geom.middle, z_axis)
 {
 }
 
-bool octnode::push(const entity &ent, glm::mat4 const& abs_transform)
+void octnode::push(entity const& ent)
 {
     if(!geom.intersect(ent.axis_aligned_bounding_box(abs_transform)))
         return false;
 
+    entities.insert(&ent);
+
     if(is_leaf()) {
-        entities.push_back(&ent);
         if(entities.size() > OCTNODE_NUM_ENTITY_SPLIT_THRESHOLD) {
             make_children();
             for(auto const& e : entities)
                 push(*e, abs_transform);
             entities.clear();
         }
-        return true;
     }
-    else
+    else {
         for(auto const& z : children)
             for(auto const& y : z)
                 for(auto const& x : y)
-                    if(x->push(ent, abs_transform))
-                        return true;
+                    x->push(ent, abs_transform);
+    }
 
     throw std::runtime_error("Failed to insert entity into oct for no reason.");
 }
@@ -87,7 +91,7 @@ entity const* octnode::pick(const ray &r, glm::vec3 entry, double exit) const
         };
         std::sort(inner_isects.begin(), inner_isects.end());
 
-        octnode const* current_node = octant_for_indices(octant_indices_for_pos(entry)).get();
+        octnode const* current_node = &octant_for_indices(octant_indices_for_pos(entry)).get();
 
         // move forward to the first positive intersection
         auto isect_it = inner_isects.begin();
@@ -159,7 +163,7 @@ octant_indices octnode::octant_indices_for_pos(glm::vec3 pos) const
 
 const unique_octnode &octnode::octant_for_indices(const octant_indices &pos) const
 {
-    return children[std::max(pos.z, 1)][std::max(pos.y, 1)][std::max(pos.x, 1)];
+    return children[std::min(std::max(pos.z, 0), 1)][std::min(std::max(pos.y, 0), 1)][std::min(std::max(pos.x, 0), 1)];
 }
 
 /************************ root_octnode **********************/
@@ -173,6 +177,11 @@ root_octnode::root_octnode(const aabb &size) :
     front(geom.front_bottom_left, z_axis),
     back(geom.front_bottom_left + glm::vec3(0,0,geom.size.z), z_axis)
 {
+}
+
+glm::vec3 root_octnode::push(const entity& ent)
+{
+    
 }
 
 const entity *root_octnode::pick(const ray &r) const

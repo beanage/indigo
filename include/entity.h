@@ -58,6 +58,8 @@ protected:
 
     virtual glm::mat4 build_model_matrix(const glm::vec3& pos, const glm::quat& rot) const;
 
+    void update_world_matrix_and_octnode(const glm::mat4& parent);
+
 private:
     glm::vec3 position_, prev_position_;
     glm::quat rotation_, prev_rotation_;

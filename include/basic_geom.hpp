@@ -35,7 +35,26 @@ namespace indigo
     {
         aabb(glm::vec3 size, glm::vec3 front_bottom_right);
 
-        bool intersect(aabb const& other) const;
+        /// use the dims enum to access vertices in the verts() vector.
+        /// eg. back bottom left corner would be verts()[back|bottom|left]
+        enum dims {
+            front = 0x0,
+            bottom = 0x0,
+            left = 0x0,
+            top = 0x1,
+            right = 0x2,
+            back = 0x4
+        };
+
+        std::vector<glm::vec3> verts();
+
+        bool intersect(aabb const& other, bool recurse = true) const;
+
+        /// returns a vector that will move @other into @this. behaviour
+        /// is undefined if @other is larger than @this on any dimension.
+        /// returns a null vector if @other is already completely contained.
+        glm::vec3 intersect_difference(aabb const& other) const;
+
         bool contains(double x, double y, double z) const;
 
         glm::vec3 const size;

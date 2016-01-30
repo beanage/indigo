@@ -4,7 +4,7 @@
 
 #include <functional>
 #include <memory>
-#include <list>
+#include <set>
 
 #include "entity.h"
 #include "basic_geom.hpp"
@@ -14,17 +14,23 @@
 namespace indigo
 {
     class octnode;
+    class renderer;
     typedef std::unique_ptr<octnode> unique_octnode;
 
     typedef glm::lowp_ivec3 octant_indices;
 
     class octnode
     {
+        friend class renderer;
+
     public:
-        bool push(entity const& ent, const glm::mat4 &abs_transform);
+        void pull(entity const& ent);
 
     protected:
         inline bool is_leaf() const {return children[0][0][0].get() == nullptr;}
+
+        /// this will be called by the renderer once every update
+        void rebalance();
 
         aabb const geom;
         octant_indices indices;
@@ -43,11 +49,14 @@ namespace indigo
         /// might return nullptr if this is a leaf!
         unique_octnode const& octant_for_indices(octant_indices const& pos) const;
 
+        void push(entity const& ent);
         void make_children();
+        void consume_children();
 
         plane const lr, bt, fb;
-        std::list<entity const*> entities;
+        std::set<entity const*> entities;
         unique_octnode children[2][2][2];
+        uint32_t entityrefs;
     };
 
     class root_octnode : public octnode
@@ -55,6 +64,7 @@ namespace indigo
     public:
         root_octnode(aabb const& size);
 
+        glm::vec3 push(entity const& ent);
         entity const* pick(ray const& r) const;
 
     private:

@@ -30,6 +30,7 @@ add_executable(demo
     src/window.cpp
     src/entity.cpp
     src/camera.cpp
+    src/renderer.cpp
     src/mesh_entity.cpp
     src/bitmap.cpp
     src/bitmap_loader.cpp
