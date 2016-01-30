@@ -7,6 +7,8 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     add_definitions(-DDEBUG)
 endif()
 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -30,8 +32,6 @@ add_executable(demo
     src/camera.cpp
     src/renderer.cpp
     src/mesh_entity.cpp
-    src/obj_loader.cpp
-    src/md5_loader.cpp
     src/texture.cpp
     src/shader.cpp
     src/program.cpp
@@ -39,7 +39,14 @@ add_executable(demo
     src/basic_geom.cpp
     src/octnode.cpp
     src/application.cpp
-    src/filesystem_unix.cpp)
+    src/filesystem_unix.cpp
+    # obj
+    src/obj_loader.cpp
+    # md5
+    src/md5_loader.cpp
+    src/md5_bone.cpp
+    src/md5_mesh.cpp
+    src/md5_model.cpp)
 
 target_link_libraries(demo
     ${OPENGL_LIBRARIES}
