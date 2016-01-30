@@ -8,14 +8,15 @@ namespace indigo
 {
 class application
 {
+    friend void run(application&, int, char const**);
 public:
     static const unsigned int gl_major_version;
     static const unsigned int gl_minor_version;
 
     static const std::chrono::milliseconds update_intervall;
 
-	application();
-	virtual ~application();
+    application();
+    virtual ~application();
 
     virtual void init() = 0;
     virtual void update() = 0;
@@ -25,9 +26,11 @@ public:
     bool terminated() const;
 
 private:
-	application(const application&) = delete;
+    application(const application&) = delete;
 
     bool quit_;
+    float fps_;
+    float ups_;
 };
 
 void init_gl();

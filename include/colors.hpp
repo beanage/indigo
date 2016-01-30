@@ -9,7 +9,9 @@ namespace indigo
         rgba_color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 0xff) {
             bytes[0] = r, bytes[1] = g, bytes[2] = b, bytes[3] = a;
         }
+
         uint8_t bytes[4];
+
         inline uint8_t r() {return bytes[0];}
         inline uint8_t g() {return bytes[1];}
         inline uint8_t b() {return bytes[2];}

@@ -5,8 +5,16 @@
 #include "basic_geom.hpp"
 
 namespace indigo {
+    std::ostream& operator<<(std::ostream& out, const glm::vec2& vec) {
+        return out << "{x: " << vec.x << ", y: " << vec.y << "}";
+    }
+
     std::ostream& operator<<(std::ostream& out, const glm::vec3& vec) {
         return out << "{x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << "}";
+    }
+
+    std::ostream& operator<<(std::ostream& out, const glm::vec4& vec) {
+        return out << "{x: " << vec.x << ", y: " << vec.y << ", z: " << vec.z << ", w:" << vec.w << "}";
     }
 
     std::ostream& operator<<(std::ostream& out, const glm::quat& q) {
