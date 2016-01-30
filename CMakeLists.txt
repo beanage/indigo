@@ -31,6 +31,8 @@ add_executable(demo
     src/entity.cpp
     src/camera.cpp
     src/mesh_entity.cpp
+    src/bitmap.cpp
+    src/bitmap_loader.cpp
     src/texture.cpp
     src/shader.cpp
     src/program.cpp
@@ -45,7 +47,11 @@ add_executable(demo
     src/md5_loader.cpp
     src/md5_bone.cpp
     src/md5_mesh.cpp
-    src/md5_model.cpp)
+    src/md5_model.cpp
+    # terrain
+    src/terrain.cpp
+    src/terrain_cell.cpp
+    src/terrain_mesh.cpp)
 
 target_link_libraries(demo
     ${OPENGL_LIBRARIES}
