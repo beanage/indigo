@@ -7,7 +7,15 @@ namespace indigo {
 
 aabb::aabb(glm::vec3 size, glm::vec3 front_bottom_left) : size(size), front_bottom_left(front_bottom_left), middle(front_bottom_left + size/.5f) {}
 
-bool aabb::intersect(const aabb &other) const
+std::vector<glm::vec3> aabb::verts()
+{
+    return {
+        front_bottom_left, front_bottom_left + glm::vec3(0,size.y,0), front_bottom_left + glm::vec3(size.x,0,0), front_bottom_left + glm::vec3(size.x,size.y,0),
+        front_bottom_left + glm::vec3(0,0,size.z), front_bottom_left + glm::vec3(0,size.y,size.z), front_bottom_left + glm::vec3(size.x,0,size.z), front_bottom_left + glm::vec3(size.x,size.y,size.z)
+    };
+}
+
+bool aabb::intersect(const aabb &other, bool recurse) const
 {
     return contains(other.front_bottom_left.x, other.front_bottom_left.y, other.front_bottom_left.z) ||
            contains(other.front_bottom_left.x + other.size.x, other.front_bottom_left.y, other.front_bottom_left.z) ||
@@ -17,7 +25,23 @@ bool aabb::intersect(const aabb &other) const
            contains(other.front_bottom_left.x + other.size.x, other.front_bottom_left.y, other.front_bottom_left.z + other.size.z) ||
            contains(other.front_bottom_left.x, other.front_bottom_left.y  + other.size.y, other.front_bottom_left.z + other.size.z) ||
            contains(other.front_bottom_left.x + other.size.x, other.front_bottom_left.y  + other.size.y, other.front_bottom_left.z + other.size.z) ||
-           other.intersect(*this);
+            !recurse || other.intersect(*this, false);
+}
+
+glm::vec3 aabb::intersect_difference(const aabb& other) const
+{
+    glm::vec3 result;
+
+    // iterate over all dimensions
+    for(int i = 0; i < result.length(); ++i)
+    {
+        if(other.front_bottom_left[i] < front_bottom_left[i])
+            result[i] = front_bottom_left[i] - other.front_bottom_left[i];
+        else if(other.front_bottom_left[i] + other.size[i] > front_bottom_left[i] + size[i])
+            result[i] = (front_bottom_left[i] + size[i]) - (other.front_bottom_left[i] + other.size[i]);
+    }
+
+    return result;
 }
 
 bool aabb::contains(double x, double y, double z) const
@@ -42,21 +66,22 @@ std::vector<glm::vec3> box::verts()
 
 aabb box::axis_aligned_bounding_box()
 {
-    double nan = std::numeric_limits<double>::quiet_NaN();
-    double min_x(nan), min_y(nan), min_z(nan), max_x(nan), max_y(nan), max_z(nan);
+    using std::numeric_limits<double>::quiet_NaN;
+
+    double min_x(quiet_NaN()), min_y(quiet_NaN()), min_z(quiet_NaN()), max_x(quiet_NaN()), max_y(quiet_NaN()), max_z(quiet_NaN());
 
     for(auto const& vert : verts()) {
-        if(vert.x < min_x || min_x == nan)
+        if(vert.x < min_x || min_x == quiet_NaN())
             min_x = vert.x;
-        if(vert.x > max_x || max_x == nan)
+        if(vert.x > max_x || max_x == quiet_NaN())
             max_x = vert.x;
-        if(vert.y < min_y || min_y == nan)
+        if(vert.y < min_y || min_y == quiet_NaN())
             min_y = vert.y;
-        if(vert.y > max_y || max_y == nan)
+        if(vert.y > max_y || max_y == quiet_NaN())
             max_y = vert.y;
-        if(vert.z < min_z || min_z == nan)
+        if(vert.z < min_z || min_z == quiet_NaN())
             min_z = vert.z;
-        if(vert.z > max_z || max_z == nan)
+        if(vert.z > max_z || max_z == quiet_NaN())
             max_z = vert.z;
     }
 

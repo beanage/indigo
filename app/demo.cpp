@@ -9,6 +9,7 @@
 #include "texture.hpp"
 #include "resource_manager.hpp"
 #include "scene.hpp"
+#include "renderer.hpp"
 
 #include <SDL2/SDL.h>
 #include <unistd.h>
@@ -61,7 +62,8 @@ public:
         mesh_->upload();
 
         camera_.aspect_ratio(800.f/600.f);
-        camera_.position({0.f, 0.f, 10.f});
+        camera_.position({50.f, 50.f, 50.f});
+        camera_.look_at(entity_.position());
 
         entity_.position({0.f, 0.f, 0.f});
         entity_.attach_mesh(mesh_.get());
@@ -116,24 +118,7 @@ public:
 
     void render(renderer const& r) override
     {
-        glClearColor(0.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-        program_.set("light_1.position", camera_.position());
-        program_.set("light_1.color", glm::vec3(1, 1, 1));
-        // program_.set("light_1.attenuation", 0.2f);
-        // program_.set("light_1.ambient_coefficient", 0.05f);
-        // program_.set("material_1.specular_color", glm::vec3(1, 1, 1));
-        // program_.set("material_1.specular_exponent", 0.f);
-        // program_.set("camera_pos", camera_.position());
-        program_.set("projection", camera_.projection());
-        program_.set("view", camera_.view(time));
-        program_.set("tex", GL_TEXTURE0);
-
-        program_.set("model", entity_.model(time));
-        texture_.bind();
-        entity_.render();
-
+        r.render(camera_, scene_);
         window_.swap();
     }
 
@@ -171,7 +156,6 @@ public:
 
 private:
     indigo::window window_;
-    indigo::program program_;
     indigo::camera camera_;
     indigo::texture texture_;
     indigo::scene scene_;

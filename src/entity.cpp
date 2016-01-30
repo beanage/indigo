@@ -12,16 +12,6 @@
 
 using namespace indigo;
 
-void entity::update()
-{
-    prev_position_ = position_;
-    prev_rotation_ = rotation_;
-}
-
-void entity::update_world_matrix_and_octnode() {
-
-}
-
 entity::entity(entity_shared_ptr parent) : parent_(parent.get()), oct(nullptr)
 {
     if(parent.get() != nullptr)
@@ -100,6 +90,11 @@ glm::mat4 entity::model() const
     return build_model_matrix(position_, rotation_);
 }
 
+glm::mat4 entity::build_model_matrix(const glm::vec3& pos, const glm::quat& rot) const
+{
+    return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
+}
+
 glm::mat4 entity::model(float step) const
 {
     glm::vec3 pos = glm::mix(prev_position_, position_, step);
@@ -133,8 +128,15 @@ void entity::look_at(const glm::vec3& target)
     rotation(glm::quat_cast(glm::lookAt(glm::vec3(), target - position(), up())));
 }
 
-glm::mat4 entity::build_model_matrix(const glm::vec3& pos, const glm::quat& rot) const
+/********************** update mechanism ************************/
+
+void entity::update()
 {
-    return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
+    prev_position_ = position_;
+    prev_rotation_ = rotation_;
+}
+
+void entity::update_world_matrix_and_octnode(glm::mat4 const& parent, octnode* root_octnode) {
+    
 }
 
