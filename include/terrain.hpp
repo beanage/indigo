@@ -4,8 +4,6 @@
 #include <vector>
 #include <memory>
 
-#include "terrain_mesh.hpp"
-
 namespace indigo
 {
 class bitmap;
@@ -41,8 +39,6 @@ private:
 
     std::shared_ptr<bitmap> heightmap_;
     std::shared_ptr<bitmap> opaquemap_;
-
-    //std::vector<terrain_mesh> meshes_;
 };
 }
 
