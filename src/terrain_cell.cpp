@@ -223,18 +223,6 @@ void terrain_cell::compute_normals()
                                       : bottom_cell ? bottom_cell->vertices_[x]
                                                     : vertices_[row_offset + x];
 
-            // Ab hier ists kacke! Wir brauchen nur den Winkel auf der X oder Y achse!!!
-            // float left_diff = glm::dot(current_vert.pos, left_vert.pos) / (glm::length(current_vert.pos) * glm::length(left_vert.pos));
-            // float right_diff = glm::dot(current_vert.pos, right_vert.pos) / (glm::length(current_vert.pos) * glm::length(right_vert.pos));
-            // float top_diff = glm::dot(current_vert.pos, top_vert.pos) / (glm::length(current_vert.pos) * glm::length(top_vert.pos));
-            // float bottom_diff = glm::dot(current_vert.pos, bottom_vert.pos) / (glm::length(current_vert.pos) * glm::length(bottom_vert.pos));
-
-            // auto unit_x = right_diff - left_diff;
-            // auto unit_y = bottom_diff - top_diff;
-            // auto unit_z = 1.f - unit_x - unit_y;
-
-            // glm::vec3 normal(unit_x, unit_y, unit_z);
-
             // current_vert.normal = normal;
         }
     }
