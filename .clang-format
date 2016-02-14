@@ -11,7 +11,19 @@ PointerBindsToType: true
 SpacesBeforeTrailingComments: 1
 Cpp11BracedListStyle: true
 Standard: Cpp11
-BreakBeforeBraces: Linux
+BreakBeforeBraces: Mozilla
+# BraceWrapping:
+#     AfterClass: true
+#     AfterControlStatement: false
+#     AfterEnum: false
+#     AfterFunction: true
+#     AfterNamespace: true
+#     AfterStruct: true
+#     AfterUnion: true
+#     BeforeCatch: false
+#     BeforeElse: false
+#     IndentBraces: false
+
 SpacesInAngles: false
 SpacesInParentheses: false
 SpaceInEmptyParentheses: false
@@ -32,3 +44,4 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 IndentCaseLabels: false
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: None
+AccessModifierOffset: -4

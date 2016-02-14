@@ -6,22 +6,21 @@
 #include <string>
 #include <memory>
 
-namespace indigo
+namespace indigo {
+class shader
 {
-	class shader
-	{
-	public:
-		shader(const std::string& source, GLuint type);
-		~shader();
+public:
+    shader(const std::string& source, GLuint type);
+    ~shader();
 
-		GLuint handle() const;
+    GLuint handle() const;
 
-	private:
-		struct impl;
-		std::shared_ptr<impl> shared;
-	};
+private:
+    struct impl;
+    std::shared_ptr<impl> shared;
+};
 
-	shader load_shader(const std::string& filename, GLuint type);
+shader load_shader(const std::string& filename, GLuint type);
 }
 
 #endif

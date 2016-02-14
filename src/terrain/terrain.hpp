@@ -4,14 +4,17 @@
 #include <vector>
 #include <memory>
 
-namespace indigo
-{
+namespace indigo {
 class bitmap;
 class program;
 class terrain_cell;
 
-class bad_heightmap_size_exception : public std::exception {};
-class bad_opacitymap_size_exception : public std::exception {};
+class bad_heightmap_size_exception : public std::exception
+{
+};
+class bad_opacitymap_size_exception : public std::exception
+{
+};
 
 class terrain
 {

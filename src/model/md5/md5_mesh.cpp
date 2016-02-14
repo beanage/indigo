@@ -2,14 +2,13 @@
 
 using namespace indigo;
 
-static const unsigned int texcoord_attribute_index   = 0;
+static const unsigned int texcoord_attribute_index = 0;
 static const unsigned int bone_start_attribute_index = 1;
 static const unsigned int bone_count_attribute_index = 2;
 
 md5_mesh::md5_mesh()
     : num_verts_(0)
 {
-
 }
 
 md5_mesh::~md5_mesh()
@@ -47,16 +46,22 @@ void md5_mesh::upload_vertices()
 
     glBindVertexArray(vao_);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-    glBufferData(GL_ARRAY_BUFFER, num_verts_ * sizeof(vertex), vertices_.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, num_verts_ * sizeof(vertex), vertices_.data(),
+                 GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(texcoord_attribute_index);
-    glVertexAttribPointer(texcoord_attribute_index, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), reinterpret_cast<void*>(0));
+    glVertexAttribPointer(texcoord_attribute_index, 2, GL_FLOAT, GL_FALSE,
+                          sizeof(vertex), reinterpret_cast<void*>(0));
 
     glEnableVertexAttribArray(bone_start_attribute_index);
-    glVertexAttribPointer(bone_start_attribute_index, 1, GL_FLOAT, GL_FALSE, sizeof(vertex), reinterpret_cast<void*>(sizeof(glm::vec2)));
+    glVertexAttribPointer(bone_start_attribute_index, 1, GL_FLOAT, GL_FALSE,
+                          sizeof(vertex),
+                          reinterpret_cast<void*>(sizeof(glm::vec2)));
 
     glEnableVertexAttribArray(bone_count_attribute_index);
-    glVertexAttribPointer(bone_count_attribute_index, 1, GL_FLOAT, GL_FALSE, sizeof(vertex), reinterpret_cast<void*>(sizeof(glm::vec2)+sizeof(float)));
+    glVertexAttribPointer(
+        bone_count_attribute_index, 1, GL_FLOAT, GL_FALSE, sizeof(vertex),
+        reinterpret_cast<void*>(sizeof(glm::vec2) + sizeof(float)));
     glBindVertexArray(0);
 }
 
@@ -66,7 +71,8 @@ void md5_mesh::upload_weights()
 
     glGenBuffers(1, &tbo_);
     glBindBuffer(GL_TEXTURE_BUFFER, tbo_);
-    glBufferData(GL_TEXTURE_BUFFER, sizeof(weight) * weights_.size(), weights_.data(), GL_STATIC_DRAW);
+    glBufferData(GL_TEXTURE_BUFFER, sizeof(weight) * weights_.size(),
+                 weights_.data(), GL_STATIC_DRAW);
     glGenTextures(1, &tbo_tex_);
     glBindBuffer(GL_TEXTURE_BUFFER, 0);
 }

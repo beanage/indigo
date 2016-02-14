@@ -2,12 +2,14 @@
 
 using namespace indigo;
 
-terrain_object::terrain_object(const std::shared_ptr<mesh> &m)
+terrain_object::terrain_object(const std::shared_ptr<mesh>& m)
     : mesh_(m)
-{}
+{
+}
 
 terrain_object::~terrain_object()
-{}
+{
+}
 
 glm::ivec2 terrain_object::tile() const
 {

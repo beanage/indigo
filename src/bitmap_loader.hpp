@@ -4,8 +4,7 @@
 #include "bitmap.hpp"
 #include "resource_manager.hpp"
 
-namespace indigo
-{
+namespace indigo {
 class bitmap_loader : public resource_loader<bitmap>
 {
 public:

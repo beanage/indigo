@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-bool indigo::filesystem::is_directory(const std::string &path)
+bool indigo::filesystem::is_directory(const std::string& path)
 {
     struct stat s = {0};
     if (stat(path.c_str(), &s) == 0)
@@ -13,7 +13,7 @@ bool indigo::filesystem::is_directory(const std::string &path)
     return false;
 }
 
-bool indigo::filesystem::is_file(const std::string &path)
+bool indigo::filesystem::is_file(const std::string& path)
 {
     struct stat s = {0};
     if (stat(path.c_str(), &s) == 0)
@@ -22,7 +22,8 @@ bool indigo::filesystem::is_file(const std::string &path)
     return false;
 }
 
-std::string indigo::filesystem::join(const std::string& first, const std::string& second)
+std::string indigo::filesystem::join(const std::string& first,
+                                     const std::string& second)
 {
     return first + "/" + second;
 }

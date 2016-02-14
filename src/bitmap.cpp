@@ -21,7 +21,8 @@ bitmap::bitmap(uint32_t width, uint32_t height, rgba_color color)
 
 bitmap::bitmap(uint32_t width, uint32_t height, uint8_t* rgba_data)
     : width_(width), height_(height), buffer_(rgba_data, rgba_data + width * height * bytes_per_pixel)
-{}
+{
+}
 
 uint32_t bitmap::width() const noexcept
 {
@@ -40,9 +41,7 @@ rgba_color bitmap::pixel(uint32_t x, uint32_t y) const
     y *= bytes_per_pixel * width_;
     x *= bytes_per_pixel;
 
-    return {buffer_[y + x + 0],
-            buffer_[y + x + 1],
-            buffer_[y + x + 2],
+    return {buffer_[y + x + 0], buffer_[y + x + 1], buffer_[y + x + 2],
             buffer_[y + x + 3]};
 }
 

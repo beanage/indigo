@@ -8,13 +8,14 @@
 
 #include "platform/filesystem.hpp"
 
-namespace indigo
-{
+namespace indigo {
 template <class Type>
 class resource_loader
 {
 public:
-    virtual ~resource_loader() {}
+    virtual ~resource_loader()
+    {
+    }
 
     virtual bool can_load(std::string const& extension) const = 0;
     virtual std::shared_ptr<Type> load(std::string const& filename) = 0;
@@ -30,7 +31,9 @@ public:
         return instance;
     }
 
-    virtual ~resource_manager() {}
+    virtual ~resource_manager()
+    {
+    }
 
     std::shared_ptr<Type> load(std::string const& name)
     {
@@ -63,7 +66,8 @@ public:
         if (filesystem::is_directory(path))
             search_paths_.push_back(path);
         else
-            throw std::runtime_error("[resource_manager::add_path] path is not a directory!");
+            throw std::runtime_error(
+                "[resource_manager::add_path] path is not a directory!");
     }
 
     void add_loader(std::unique_ptr<resource_loader<Type>>&& loader)
@@ -94,11 +98,14 @@ private:
         return {nullptr};
     }
 
-    std::shared_ptr<Type> load_and_cache(std::string const& obj, std::string const& ext)
+    std::shared_ptr<Type> load_and_cache(std::string const& obj,
+                                         std::string const& ext)
     {
-        auto loader_iter = std::find_if(loaders_.begin(), loaders_.end(), [&](std::unique_ptr<resource_loader<Type>> const& loader){
-            return loader->can_load(ext);
-        });
+        auto loader_iter =
+            std::find_if(loaders_.begin(), loaders_.end(),
+                         [&](std::unique_ptr<resource_loader<Type>> const& loader) {
+                             return loader->can_load(ext);
+                         });
 
         if (loader_iter != loaders_.end()) {
             auto path = full_path(obj + "." + ext);
@@ -116,7 +123,7 @@ private:
     std::pair<std::string, std::string> split_name(std::string const& name)
     {
         std::string::size_type ext_pos(name.find_last_of('.'));
-        if (ext_pos < name.length()-1) {
+        if (ext_pos < name.length() - 1) {
             return std::make_pair(name.substr(0, ext_pos), name.substr(ext_pos + 1));
         }
 

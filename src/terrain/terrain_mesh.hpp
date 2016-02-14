@@ -4,8 +4,7 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-namespace indigo
-{
+namespace indigo {
 class mesh;
 
 class terrain_object

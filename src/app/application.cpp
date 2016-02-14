@@ -10,10 +10,12 @@ const std::chrono::milliseconds application::update_intervall(10);
 
 application::application()
     : quit_(false)
-{}
+{
+}
 
 application::~application()
-{}
+{
+}
 
 void application::terminate()
 {
@@ -27,11 +29,12 @@ bool application::terminated() const
 
 static void poll_events()
 {
-    //SDL_Event event;
-    //while (SDL_PollEvent(&event) != 0) {
+    // SDL_Event event;
+    // while (SDL_PollEvent(&event) != 0) {
     //    switch (event.type) {
     //    default:;
-        // TODO: Create event factories to convert SDL events to indigo::event subclasses
+    // TODO: Create event factories to convert SDL events to indigo::event
+    // subclasses
     //    }
     //}
 }
@@ -81,8 +84,10 @@ void indigo::run(application& app, int argc, const char** argv)
 void indigo::init_gl()
 {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, application::gl_major_version);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, application::gl_minor_version);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,
+                        application::gl_major_version);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,
+                        application::gl_minor_version);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetSwapInterval(1);
 }

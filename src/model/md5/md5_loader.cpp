@@ -42,16 +42,23 @@ class md5_loader::scanner
 public:
     struct token
     {
-        token() : type(eof), num_val(0.f)
-        {}
+        token()
+            : type(eof), num_val(0.f)
+        {
+        }
 
-        token(unsigned t) : type(t), num_val(0.f)
-        {}
+        token(unsigned t)
+            : type(t), num_val(0.f)
+        {
+        }
 
-        enum {
+        enum
+        {
             null,
-            lparen, rparen,
-            lbrace, rbrace,
+            lparen,
+            rparen,
+            lbrace,
+            rbrace,
             identifier,
             string,
             number,
@@ -64,8 +71,10 @@ public:
     };
 
     scanner() = delete;
-    scanner(std::string const&& source) : source_(source), pos_(source_.begin())
-    {}
+    scanner(std::string const&& source)
+        : source_(source), pos_(source_.begin())
+    {
+    }
 
     token next()
     {
@@ -76,10 +85,18 @@ public:
             return {token::eof};
 
         switch (*pos_) {
-        case '{': ++pos_; return {token::lbrace};
-        case '}': ++pos_; return {token::rbrace};
-        case '(': ++pos_; return {token::lparen};
-        case ')': ++pos_; return {token::rparen};
+        case '{':
+            ++pos_;
+            return {token::lbrace};
+        case '}':
+            ++pos_;
+            return {token::rbrace};
+        case '(':
+            ++pos_;
+            return {token::lparen};
+        case ')':
+            ++pos_;
+            return {token::rparen};
 
         default:
             if (*pos_ == '"')
@@ -117,8 +134,11 @@ private:
         if (get() == '/') {
             ++pos_;
             if (get() == '/') {
-                while (!eof() && *++pos_ != '\n') {}
-                if (!eof()) {++pos_;}
+                while (!eof() && *++pos_ != '\n') {
+                }
+                if (!eof()) {
+                    ++pos_;
+                }
                 skip_whitespace();
             }
         }
@@ -184,12 +204,13 @@ private:
     std::string::const_iterator pos_;
 };
 
-namespace
-{
+namespace {
 struct md5_joint
 {
-    md5_joint() : parent_index(-1)
-    {}
+    md5_joint()
+        : parent_index(-1)
+    {
+    }
 
     std::string name;
     int parent_index;
@@ -223,7 +244,8 @@ static std::string parse_string(md5_loader::scanner& s)
 static void parse_version(md5_loader::scanner& s)
 {
     if (parse_number<unsigned>(s) != 10)
-        throw std::runtime_error("[md5_loader parse_version] unknown md5 file version. Only version 10 is loadable!");
+        throw std::runtime_error("[md5_loader parse_version] unknown md5 file "
+                                 "version. Only version 10 is loadable!");
 }
 
 static void parse_commandline(md5_loader::scanner& s)
@@ -249,7 +271,8 @@ static glm::vec3 parse_vec3(md5_loader::scanner& s)
     throw std::runtime_error("[md5_loader parse_vec3] expected '('!");
 }
 
-static void parse_joints(md5_loader::scanner& s, std::vector<md5_joint>& joints)
+static void parse_joints(md5_loader::scanner& s,
+                         std::vector<md5_joint>& joints)
 {
     md5_loader::scanner::token t = s.next();
     if (t.type == md5_loader::scanner::token::lbrace) {
@@ -270,11 +293,13 @@ static void parse_joints(md5_loader::scanner& s, std::vector<md5_joint>& joints)
     }
 }
 
-static void parse_vert(md5_loader::scanner& s, std::vector<md5_mesh::vertex>& vertices)
+static void parse_vert(md5_loader::scanner& s,
+                       std::vector<md5_mesh::vertex>& vertices)
 {
     md5_loader::scanner::token t = s.next();
     if (t.type != md5_loader::scanner::token::number)
-        throw std::runtime_error("[md5_loader parse_vertex] vertex index expected!");
+        throw std::runtime_error(
+            "[md5_loader parse_vertex] vertex index expected!");
 
     t = s.next();
     if (t.type != md5_loader::scanner::token::lparen)
@@ -299,7 +324,8 @@ static void parse_tri(md5_loader::scanner& s, std::vector<md5_triangle>& tris)
 {
     md5_loader::scanner::token t = s.next();
     if (t.type != md5_loader::scanner::token::number)
-        throw std::runtime_error("[md5_loader parse_vertex] triangle index expected!");
+        throw std::runtime_error(
+            "[md5_loader parse_vertex] triangle index expected!");
 
     md5_triangle tri;
     tri.verts[0] = parse_number<int>(s);
@@ -309,11 +335,13 @@ static void parse_tri(md5_loader::scanner& s, std::vector<md5_triangle>& tris)
     tris.push_back(std::move(tri));
 }
 
-static void parse_weight(md5_loader::scanner& s, std::vector<md5_mesh::weight>& weights)
+static void parse_weight(md5_loader::scanner& s,
+                         std::vector<md5_mesh::weight>& weights)
 {
     md5_loader::scanner::token t = s.next();
     if (t.type != md5_loader::scanner::token::number)
-        throw std::runtime_error("[md5_loader parse_vertex] weight index expected!");
+        throw std::runtime_error(
+            "[md5_loader parse_vertex] weight index expected!");
 
     md5_mesh::weight w;
     w.joint = parse_number<int>(s);
@@ -349,14 +377,17 @@ std::unique_ptr<md5_mesh> md5_loader::parse_mesh(scanner& s)
         t = s.next();
         while (t.type != scanner::token::rbrace) {
             if (t.type == scanner::token::identifier) {
-            switch_t<std::string>(t.str_val)
-                    .case_t("shader", [&](){material = parse_string(s);})
-                    .case_t("numverts", [&](){tmp_vertices.reserve(parse_number<int>(s));})
-                    .case_t("vert", [&](){parse_vert(s, tmp_vertices);})
-                    .case_t("numtris", [&](){tmp_tris.reserve(parse_number<int>(s));})
-                    .case_t("tri", [&](){parse_tri(s, tmp_tris);})
-                    .case_t("numweights", [&](){m->weights_.reserve(parse_number<int>(s));})
-                    .case_t("weight", [&](){parse_weight(s, m->weights_);});
+                switch_t<std::string>(t.str_val)
+                    .case_t("shader", [&]() { material = parse_string(s); })
+                    .case_t("numverts",
+                            [&]() { tmp_vertices.reserve(parse_number<int>(s)); })
+                    .case_t("vert", [&]() { parse_vert(s, tmp_vertices); })
+                    .case_t("numtris",
+                            [&]() { tmp_tris.reserve(parse_number<int>(s)); })
+                    .case_t("tri", [&]() { parse_tri(s, tmp_tris); })
+                    .case_t("numweights",
+                            [&]() { m->weights_.reserve(parse_number<int>(s)); })
+                    .case_t("weight", [&]() { parse_weight(s, m->weights_); });
             } else {
                 throw std::runtime_error("[md5_loader::load_mesh] invalid token!");
             }
@@ -368,8 +399,7 @@ std::unique_ptr<md5_mesh> md5_loader::parse_mesh(scanner& s)
     }
 
     // fill the mesh
-    for (auto const& tri : tmp_tris)
-    {
+    for (auto const& tri : tmp_tris) {
         m->vertices_.push_back(tmp_vertices[tri.verts[2]]);
         m->vertices_.push_back(tmp_vertices[tri.verts[1]]);
         m->vertices_.push_back(tmp_vertices[tri.verts[0]]);
@@ -397,12 +427,14 @@ std::shared_ptr<model> md5_loader::load(std::string const& filename)
     while (t.type != scanner::token::eof) {
         if (t.type == scanner::token::identifier) {
             switch_t<std::string>(t.str_val)
-                    .case_t("MD5Version", [&](){parse_version(s);})
-                    .case_t("commandline", [&](){parse_commandline(s);})
-                    .case_t("numJoints", [&](){tmp_bones.reserve(parse_number<size_t>(s));})
-                    .case_t("numMeshes", [&](){m->meshes_.reserve(parse_number<size_t>(s));})
-                    .case_t("joints", [&](){parse_joints(s, tmp_bones);})
-                    .case_t("mesh", [&](){m->meshes_.push_back(parse_mesh(s));});
+                .case_t("MD5Version", [&]() { parse_version(s); })
+                .case_t("commandline", [&]() { parse_commandline(s); })
+                .case_t("numJoints",
+                        [&]() { tmp_bones.reserve(parse_number<size_t>(s)); })
+                .case_t("numMeshes",
+                        [&]() { m->meshes_.reserve(parse_number<size_t>(s)); })
+                .case_t("joints", [&]() { parse_joints(s, tmp_bones); })
+                .case_t("mesh", [&]() { m->meshes_.push_back(parse_mesh(s)); });
         } else {
             throw std::runtime_error("[md5_loader::load] invalid token!");
         }

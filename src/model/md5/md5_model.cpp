@@ -5,14 +5,15 @@
 using namespace indigo;
 
 md5_model::~md5_model()
-{}
+{
+}
 
 std::vector<bone*> md5_model::bones()
 {
     std::vector<bone*> result;
-    std::transform(bones_.begin(), bones_.end(), std::back_insert_iterator<typeof(result)>(result), [&](std::unique_ptr<md5_bone> const& m){
-       return m.get();
-    });
+    std::transform(bones_.begin(), bones_.end(),
+                   std::back_insert_iterator<typeof(result)>(result),
+                   [&](std::unique_ptr<md5_bone> const& m) { return m.get(); });
 
     return result;
 }
@@ -20,9 +21,9 @@ std::vector<bone*> md5_model::bones()
 std::vector<mesh*> md5_model::meshes()
 {
     std::vector<mesh*> result;
-    std::transform(meshes_.begin(), meshes_.end(), std::back_insert_iterator<typeof(result)>(result), [&](std::unique_ptr<md5_mesh> const& m){
-       return m.get();
-    });
+    std::transform(meshes_.begin(), meshes_.end(),
+                   std::back_insert_iterator<typeof(result)>(result),
+                   [&](std::unique_ptr<md5_mesh> const& m) { return m.get(); });
 
     return result;
 }

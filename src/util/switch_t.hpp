@@ -1,8 +1,7 @@
 #ifndef __SWITCH_T_HPP_INCLUDED__
 #define __SWITCH_T_HPP_INCLUDED__
 
-namespace indigo
-{
+namespace indigo {
 // usage:
 //     std::string input = ... ;
 //
@@ -20,8 +19,10 @@ namespace indigo
 template <typename T>
 struct switch_t
 {
-    switch_t(T const& v) : v_(v), break_(false)
-    {}
+    switch_t(T const& v)
+        : v_(v), break_(false)
+    {
+    }
 
     template <typename F>
     switch_t<T>& case_t(T const& c, F f)

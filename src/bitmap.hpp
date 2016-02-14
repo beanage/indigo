@@ -5,8 +5,7 @@
 #include <inttypes.h>
 #include "colors.hpp"
 
-namespace indigo
-{
+namespace indigo {
 class bitmap
 {
 public:

@@ -1,16 +1,17 @@
 #ifndef __MATERIAL_HPP_INCLUDED__
 #define __MATERIAL_HPP_INCLUDED__
 
-namespace indigo
+namespace indigo {
+class material
 {
-	class material
-	{
-	public:
-		virtual ~material() {}
+public:
+    virtual ~material()
+    {
+    }
 
-		virtual void upload() = 0;
-		virtual void render() const = 0;
-	};
+    virtual void upload() = 0;
+    virtual void render() const = 0;
+};
 }
 
 #endif

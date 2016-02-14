@@ -8,8 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace indigo
-{
+namespace indigo {
 class obj_loader : public resource_loader<mesh>
 {
 public:

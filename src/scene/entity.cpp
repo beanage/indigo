@@ -46,7 +46,7 @@ void entity::rotation(const glm::quat& rot)
     prev_rotation_ = rotation_ = rot;
 }
 
-entity&entity::turn_global(float angle, glm::vec3 axis)
+entity& entity::turn_global(float angle, glm::vec3 axis)
 {
     if (prev_rotation_ == rotation_)
         prev_rotation_ = rotation_;
@@ -100,7 +100,8 @@ void entity::look_at(const glm::vec3& target)
     rotation(glm::quat_cast(glm::lookAt(glm::vec3(), target - position(), up())));
 }
 
-glm::mat4 entity::build_model_martix(const glm::vec3& pos, const glm::quat& rot) const
+glm::mat4 entity::build_model_martix(const glm::vec3& pos,
+                                     const glm::quat& rot) const
 {
     return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
 }

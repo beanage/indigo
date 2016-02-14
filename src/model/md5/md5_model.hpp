@@ -7,16 +7,16 @@
 
 #include <memory>
 
-namespace indigo
-{
+namespace indigo {
 class md5_model : public model
 {
     friend class md5_loader;
+
 public:
     virtual ~md5_model();
 
     std::vector<bone*> bones();
-    std::vector<mesh *> meshes();
+    std::vector<mesh*> meshes();
 
     void render() const;
     void upload();

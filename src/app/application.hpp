@@ -4,11 +4,11 @@
 #include <chrono>
 #include <ratio>
 
-namespace indigo
-{
+namespace indigo {
 class application
 {
     friend void run(application&, int, char const**);
+
 public:
     static const unsigned int gl_major_version;
     static const unsigned int gl_minor_version;

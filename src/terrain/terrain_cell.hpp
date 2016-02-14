@@ -6,8 +6,7 @@
 #include <array>
 #include <vector>
 
-namespace indigo
-{
+namespace indigo {
 class bitmap;
 class terrain;
 
@@ -20,10 +19,11 @@ public:
     terrain_cell(const terrain* parent, unsigned x, unsigned y);
     ~terrain_cell();
 
-    void render() const ;
+    void render() const;
     void upload();
 
-    bool intersects(glm::vec3 from, glm::vec3 to, glm::mat4 model, glm::vec3& position, unsigned& x, unsigned& y);
+    bool intersects(glm::vec3 from, glm::vec3 to, glm::mat4 model,
+                    glm::vec3& position, unsigned& x, unsigned& y);
 
     unsigned x() const;
     unsigned y() const;
@@ -46,7 +46,7 @@ private:
         glm::vec2 uv;
     };
 
-    std::array<vertex, (size+1) * (size+1)> vertices_;
+    std::array<vertex, (size + 1) * (size + 1)> vertices_;
     std::vector<unsigned> indices_;
     // TODO: Add list of tiles to allow picking and non opaque tiles
 

@@ -5,8 +5,7 @@
 #include "colors.hpp"
 #include "platform/gl.hpp"
 
-namespace indigo
-{
+namespace indigo {
 
 class texture
 {

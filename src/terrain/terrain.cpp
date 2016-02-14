@@ -10,7 +10,8 @@ terrain::terrain(unsigned width, unsigned height)
 {
     for (unsigned y = 0; y < height_; ++y)
         for (unsigned x = 0; x < width_; ++x)
-            cells_.push_back(std::unique_ptr<terrain_cell>(new terrain_cell(this, x, y)));
+            cells_.push_back(
+                std::unique_ptr<terrain_cell>(new terrain_cell(this, x, y)));
 
     for (auto& cell : cells_)
         cell->compute_normals();

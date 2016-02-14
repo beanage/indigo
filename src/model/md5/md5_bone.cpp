@@ -7,7 +7,8 @@ using namespace indigo;
 
 md5_bone::md5_bone()
     : parent_(nullptr)
-{}
+{
+}
 
 std::string md5_bone::name() const
 {

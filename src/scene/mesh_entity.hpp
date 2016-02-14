@@ -3,8 +3,7 @@
 
 #include "scene/entity.hpp"
 
-namespace indigo
-{
+namespace indigo {
 class mesh;
 
 class mesh_entity : public entity
@@ -15,13 +14,20 @@ public:
     const mesh* attached_mesh() const;
     void attach_mesh(const mesh* m);
 
-    enum render_mode {
+    enum render_mode
+    {
         filled,
         wireframe
     };
 
-    void rendermode(render_mode mode) {rendermode_ = mode;}
-    render_mode rendermode() {return rendermode_;}
+    void rendermode(render_mode mode)
+    {
+        rendermode_ = mode;
+    }
+    render_mode rendermode()
+    {
+        return rendermode_;
+    }
 
     virtual void render() const;
 

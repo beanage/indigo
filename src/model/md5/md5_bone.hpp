@@ -3,11 +3,11 @@
 
 #include "model/bone.hpp"
 
-namespace indigo
-{
+namespace indigo {
 class md5_bone : public bone
 {
     friend class md5_loader;
+
 public:
     md5_bone();
 
