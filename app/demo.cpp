@@ -1,17 +1,17 @@
-#include "window.hpp"
-#include "mesh.hpp"
-#include "model.hpp"
-#include "obj_loader.hpp"
-#include "md5_loader.hpp"
-#include "program.hpp"
-#include "shader.hpp"
-#include "camera.hpp"
-#include "mesh_entity.hpp"
-#include "log.hpp"
+#include "platform/window.hpp"
+#include "model/mesh.hpp"
+#include "model/model.hpp"
+#include "model/obj/obj_loader.hpp"
+#include "model/md5/md5_loader.hpp"
+#include "shader/program.hpp"
+#include "shader/shader.hpp"
+#include "scene/camera.hpp"
+#include "scene/mesh_entity.hpp"
+#include "util/log.hpp"
 #include "texture.hpp"
 #include "resource_manager.hpp"
-#include "md5_bone.hpp"
-#include "terrain.hpp"
+#include "model/md5/md5_bone.hpp"
+#include "terrain/terrain.hpp"
 #include "bitmap.hpp"
 #include "bitmap_loader.hpp"
 
@@ -24,8 +24,8 @@
 #include <glm/gtx/intersect.hpp>
 #include <memory>
 
-#include "application.hpp"
-#include "debug.hpp"
+#include "app/application.hpp"
+#include "util/debug.hpp"
 
 using namespace indigo;
 
@@ -34,17 +34,17 @@ class demo_application : public indigo::application
 public:
     demo_application()
         : window_({0, 0, 800, 600})
-        , program_md5_({indigo::load_shader("../shader/md5-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("../shader/md5-vertex-shader.shader", GL_VERTEX_SHADER)})
-        , program_obj_({indigo::load_shader("../shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("../shader/default-vertex-shader.shader", GL_VERTEX_SHADER)})
-        , program_cel_({indigo::load_shader("../shader/cell-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("../shader/cell-vertex-shader.shader", GL_VERTEX_SHADER)})
+        , program_md5_({indigo::load_shader("shader/md5-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("shader/md5-vertex-shader.shader", GL_VERTEX_SHADER)})
+        , program_obj_({indigo::load_shader("shader/default-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("shader/default-vertex-shader.shader", GL_VERTEX_SHADER)})
+        , program_cel_({indigo::load_shader("shader/cell-fragment-shader.shader", GL_FRAGMENT_SHADER), indigo::load_shader("shader/cell-vertex-shader.shader", GL_VERTEX_SHADER)})
         , mesh_(nullptr)
         , entity_(nullptr)
-        , texture_("../media/texture.png")
-        , heightmap_("../media/height.png")
-        , grass_("../media/grass.png")
-        , earth_("../media/sand.png")
-        , rock_("../media/snow.png")
-        , materialtex_("../media/materialmix.png")
+        , texture_("media/texture.png")
+        , heightmap_("media/height.png")
+        , grass_("media/grass.png")
+        , earth_("media/sand.png")
+        , rock_("media/snow.png")
+        , materialtex_("media/materialmix.png")
         , key_w(false)
         , key_s(false)
         , key_a(false)
@@ -73,15 +73,15 @@ public:
         std::cout << texture_objects << " total texture objects available" << std::endl;
 
         auto& mesh_manager = indigo::resource_manager<mesh>::shared();
-        mesh_manager.add_path("../media");
+        mesh_manager.add_path("media");
         mesh_manager.add_loader(std::unique_ptr<obj_loader>(new obj_loader()));
 
         auto& model_manager = indigo::resource_manager<model>::shared();
-        model_manager.add_path("../media");
+        model_manager.add_path("media");
         model_manager.add_loader(std::unique_ptr<md5_loader>(new md5_loader()));
 
         auto& bitmap_manager = indigo::resource_manager<bitmap>::shared();
-        bitmap_manager.add_path("../media");
+        bitmap_manager.add_path("media");
         bitmap_manager.add_loader(std::unique_ptr<bitmap_loader>(new bitmap_loader()));
 
         model_ = model_manager.load("bob.md5mesh");
@@ -99,9 +99,9 @@ public:
         auto heightmap = indigo::resource_manager<bitmap>::shared().load("heightmap.png");
         auto opaquemap = indigo::resource_manager<bitmap>::shared().load("opaquemap.png");
 
-        terrain_ = new terrain(4, 4);
-        terrain_->update_height(heightmap);
-        terrain_->update_tiles(opaquemap);
+        terrain_ = new terrain(8, 8);
+        terrain_->heightmap(heightmap);
+        terrain_->opacitymap(opaquemap);
         terrain_->upload();
     }
 

@@ -1,5 +1,5 @@
 #include "texture.hpp"
-#include "gl.hpp"
+#include "platform/gl.hpp"
 
 #include <stdexcept>
 #include <array>

@@ -19,38 +19,20 @@ include_directories(
     ${GLEW_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR}
     ${GLM_INCLUDE_DIR})
+    
+add_definitions(-DGLM_FORCE_RADIANS)
+    
+add_subdirectory(src)
 
 include_directories(
-    include
+    src/
     contrib/stb)
 
-add_definitions(-DGLM_FORCE_RADIANS)
-
 add_executable(demo
-    src/window.cpp
-    src/entity.cpp
-    src/camera.cpp
-    src/mesh_entity.cpp
-    src/bitmap.cpp
-    src/bitmap_loader.cpp
-    src/texture.cpp
-    src/shader.cpp
-    src/program.cpp
-    app/demo.cpp
-    src/basic_geom.cpp
-    src/octnode.cpp
-    src/application.cpp
-    src/filesystem_unix.cpp
-    # obj
-    src/obj_loader.cpp
-    # md5
-    src/md5_loader.cpp
-    src/md5_bone.cpp
-    src/md5_mesh.cpp
-    src/md5_model.cpp
-    # terrain
-    src/terrain.cpp
-    src/terrain_cell.cpp)
+    ${INDIGO_SOURCES}
+    ${INDIGO_HEADERS}
+    
+    app/demo.cpp)
 
 target_link_libraries(demo
     ${OPENGL_LIBRARIES}
