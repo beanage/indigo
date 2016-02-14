@@ -2,7 +2,7 @@
 #define __OBJ_LOADER_HPP_INCLUDED__
 
 #include "model/mesh.hpp"
-#include "resource_manager.hpp"
+#include "platform/resource_manager.hpp"
 
 #include <memory>
 #include <string>

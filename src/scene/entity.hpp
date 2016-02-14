@@ -5,7 +5,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include "basic_geom.hpp"
+#include "core/basic_geom.hpp"
 
 #include <tuple>
 

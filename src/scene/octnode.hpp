@@ -6,7 +6,7 @@
 #include <list>
 
 #include "scene/entity.hpp"
-#include "basic_geom.hpp"
+#include "core/basic_geom.hpp"
 
 #define OCTNODE_NUM_ENTITY_SPLIT_THRESHOLD 10
 

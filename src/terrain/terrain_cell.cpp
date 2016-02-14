@@ -1,7 +1,7 @@
 #include "terrain_cell.hpp"
 #include "terrain.hpp"
-#include "resource_manager.hpp"
-#include "bitmap.hpp"
+#include "platform/resource_manager.hpp"
+#include "platform/bitmap.hpp"
 #include <glm/gtx/intersect.hpp>
 
 using namespace indigo;

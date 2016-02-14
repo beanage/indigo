@@ -11,5 +11,6 @@ set(UTIL_HEADERS
     ${DIR}/split.hpp
     ${DIR}/switch_t.hpp
     ${DIR}/debug.hpp
+    ${DIR}/colors.hpp
     
     PARENT_SCOPE)

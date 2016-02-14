@@ -2,7 +2,7 @@
 #define __INDIGO_DEBUG_HPP__
 
 #include <iostream>
-#include "basic_geom.hpp"
+#include "core/basic_geom.hpp"
 
 namespace indigo {
 std::ostream& operator<<(std::ostream& out, const glm::vec2& vec)

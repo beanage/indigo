@@ -1,5 +1,4 @@
 #include "entity.hpp"
-#include "basic_geom.hpp"
 
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/quaternion.hpp>

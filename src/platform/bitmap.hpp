@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <inttypes.h>
-#include "colors.hpp"
+#include "util/colors.hpp"
 
 namespace indigo {
 class bitmap

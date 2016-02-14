@@ -2,7 +2,7 @@
 #define __TEXTTURE_HPP_INCLUDED__
 
 #include <string>
-#include "colors.hpp"
+#include "util/colors.hpp"
 #include "platform/gl.hpp"
 
 namespace indigo {

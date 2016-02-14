@@ -2,7 +2,7 @@
 #define __MD5_LOADER_HPP_INCLUDED__
 
 #include "model/model.hpp"
-#include "resource_manager.hpp"
+#include "platform/resource_manager.hpp"
 
 #include <memory>
 #include <istream>
