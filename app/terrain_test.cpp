@@ -3,6 +3,7 @@
 #include "platform/window.hpp"
 #include "app/application.hpp"
 #include "app/keyboard_event.hpp"
+#include "app/application_event.hpp"
 #include "app/event_visitor.hpp"
 
 #include "scene/camera.hpp"
@@ -16,6 +17,11 @@ public:
 	keyboard_handler(application& app)
 		: application_(app)
 	{}
+
+	bool visit(const app_terminate_event& e) override
+	{
+		application_.terminate();
+	}
 
 	bool visit(const key_down_event& e) override
 	{

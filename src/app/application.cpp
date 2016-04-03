@@ -1,6 +1,7 @@
 #include "application.hpp"
 #include "sdl_utility.hpp"
 #include "keyboard_event.hpp"
+#include "application_event.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
 #include <algorithm>
@@ -49,6 +50,11 @@ void application::remove_event_handler(event_visitor* handler)
 		event_handler_.erase(iter);
 }
 
+static void submit_app_terminate(SDL_Event* e, application& app)
+{
+	app.event(app_terminate_event());
+}
+
 static void submit_key_down(SDL_Event* e, application& app)
 {
 	app.event(key_down_event(
@@ -69,6 +75,7 @@ static void submit_key_up(SDL_Event* e, application& app)
 void application::poll_events()
 {
 	static const std::vector<std::pair<int, void (*)(SDL_Event*, application&)>> sdl_event_handlers = {
+		std::make_pair(SDL_QUIT, &submit_app_terminate),
 		std::make_pair(SDL_KEYDOWN, &submit_key_down),
 		std::make_pair(SDL_KEYUP, &submit_key_up),
 	};
