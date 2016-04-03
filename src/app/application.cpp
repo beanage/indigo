@@ -1,6 +1,9 @@
 #include "application.hpp"
+#include "sdl_utility.hpp"
+#include "keyboard_event.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <algorithm>
 
 using namespace indigo;
 
@@ -10,11 +13,16 @@ const std::chrono::milliseconds application::update_intervall(10);
 
 application::application()
     : quit_(false)
-{
-}
+{}
 
 application::~application()
+{}
+
+void application::event(const basic_event& e)
 {
+	for (auto v : event_handler_)
+		if (e.accept(*v))
+			break;
 }
 
 void application::terminate()
@@ -27,16 +35,55 @@ bool application::terminated() const
     return quit_;
 }
 
-static void poll_events()
+void application::add_event_handler(event_visitor* handler)
 {
-    // SDL_Event event;
-    // while (SDL_PollEvent(&event) != 0) {
-    //    switch (event.type) {
-    //    default:;
-    // TODO: Create event factories to convert SDL events to indigo::event
-    // subclasses
-    //    }
-    //}
+	if (!handler)
+		throw std::runtime_error("Inserting NULL event handler!");
+	event_handler_.push_back(handler);
+}
+
+void application::remove_event_handler(event_visitor* handler)
+{
+	auto iter = std::find(event_handler_.begin(), event_handler_.end(), handler);
+	if (iter != event_handler_.end())
+		event_handler_.erase(iter);
+}
+
+static void submit_key_down(SDL_Event* e, application& app)
+{
+	app.event(key_down_event(
+		sdl_utility::translate_sdl_keycode(e->key.keysym.sym),
+		sdl_utility::translate_sdl_modifiers(e->key.keysym.mod),
+		e->key.repeat
+	));
+}
+
+static void submit_key_up(SDL_Event* e, application& app)
+{
+	app.event(key_up_event(
+		sdl_utility::translate_sdl_keycode(e->key.keysym.sym),
+		sdl_utility::translate_sdl_modifiers(e->key.keysym.mod)
+	));
+}
+
+void application::poll_events()
+{
+	static const std::vector<std::pair<int, void (*)(SDL_Event*, application&)>> sdl_event_handlers = {
+		std::make_pair(SDL_KEYDOWN, &submit_key_down),
+		std::make_pair(SDL_KEYUP, &submit_key_up),
+	};
+
+	SDL_Event event;
+	while (SDL_PollEvent(&event) != 0) {
+		auto func_iter = std::find_if(sdl_event_handlers.begin(), sdl_event_handlers.end(), [&](const decltype(sdl_event_handlers)::value_type& pair) {
+			return pair.first == event.type;
+		});
+
+		if (func_iter != sdl_event_handlers.end())
+			((*func_iter).second)(&event, *this);
+		else
+			std::cout << "Unhandled event " << event.type << std::endl;
+	}
 }
 
 void indigo::run(application& app, int argc, const char** argv)
@@ -65,10 +112,9 @@ void indigo::run(application& app, int argc, const char** argv)
             prev_sec = cur_time;
             frames = 0;
             updates = 0;
-            std::cout << app.ups_ << " - " << app.fps_ << std::endl;
         }
 
-        poll_events();
+        app.poll_events();
 
         while (update_lag >= application::update_intervall.count()) {
             app.update();
