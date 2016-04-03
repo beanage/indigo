@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/tools/cmake) 
 
@@ -26,20 +27,11 @@ add_subdirectory(src)
 
 include_directories(
     src/
-    contrib/stb)
+    contrib/stb
+    contrib/json)
 
-add_executable(demo
-    ${INDIGO_SOURCES}
-    ${INDIGO_HEADERS}
-    
-    app/demo.cpp)
-
-target_link_libraries(demo
-    ${OPENGL_LIBRARIES}
-    ${GLEW_LIBRARY}
-    ${SDL2_LIBRARY})
-
-target_compile_features(demo
+function(set_compile_features target)
+target_compile_features(${target}
     PRIVATE cxx_range_for
     PRIVATE cxx_nullptr
     PRIVATE cxx_lambdas
@@ -49,3 +41,36 @@ target_compile_features(demo
     PRIVATE cxx_override
     PRIVATE cxx_defaulted_functions
     PRIVATE cxx_variadic_templates)
+endfunction(set_compile_features)
+
+add_library(indigo STATIC
+    ${INDIGO_SOURCES}
+    ${INDIGO_HEADERS})
+
+set_compile_features(indigo)
+
+target_link_libraries(indigo
+    ${OPENGL_LIBRARIES}
+    ${GLEW_LIBRARY}
+    ${SDL2_LIBRARY})
+
+# DEMO
+
+# add_executable(demo
+#     app/demo.cpp)
+
+# set_compile_features(demo)
+
+# target_link_libraries(demo
+#     indigo)
+
+
+# TERRAIN
+
+add_executable(terrain_test
+    app/terrain_test.cpp)
+
+set_compile_features(terrain_test)
+
+target_link_libraries(terrain_test
+    indigo)
