@@ -111,7 +111,7 @@ public:
 
 	void update() override
 	{
-		camman_.move(camera_);
+		cam_man_.move(camera_);
 	}
 
 	void render(float time) override
