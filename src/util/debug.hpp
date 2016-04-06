@@ -1,5 +1,4 @@
-#ifndef __INDIGO_DEBUG_HPP__
-#define __INDIGO_DEBUG_HPP__
+#pragma once
 
 #include <iostream>
 #include "core/basic_geom.hpp"
@@ -37,5 +36,3 @@ std::ostream& operator<<(std::ostream& out, const box& r)
     return out << "{size: " << r.size << "}";
 }
 }
-
-#endif

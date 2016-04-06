@@ -1,5 +1,4 @@
-#ifndef __CAMERA_HPP_INCLUDED__
-#define __CAMERA_HPP_INCLUDED__
+#pragma once
 
 #include <glm/mat4x4.hpp>
 #include "scene/entity.hpp"
@@ -43,5 +42,3 @@ private:
     view_mode mode_;
 };
 }
-
-#endif

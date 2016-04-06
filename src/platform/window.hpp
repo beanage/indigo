@@ -1,5 +1,4 @@
-#ifndef __WINDOW_H_INCLUDED__
-#define __WINDOW_H_INCLUDED__
+#pragma once
 
 #include <string>
 #include <memory>
@@ -25,5 +24,3 @@ private:
     std::unique_ptr<impl> impl_;
 };
 }
-
-#endif

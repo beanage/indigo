@@ -1,5 +1,4 @@
-#ifndef __APPLICATION_HPP_INCLUDED__
-#define __APPLICATION_HPP_INCLUDED__
+#pragma once
 
 #include <chrono>
 #include <memory>
@@ -52,5 +51,3 @@ private:
 void init_gl();
 void run(application& app, int argc, char const** argv);
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __RECT_H_INCLUDED__
-#define __RECT_H_INCLUDED__
+#pragma once
 
 #include <utility>
 #include <ostream>
@@ -102,5 +101,3 @@ basic_rect<T> centered_rect(typename basic_rect<T>::type bounds_w,
 using rect = basic_rect<float>;
 using irect = basic_rect<int>;
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __ENTITY_H_INCLUDED__
-#define __ENTITY_H_INCLUDED__
+#pragma once
 
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -66,5 +65,3 @@ private:
     glm::quat rotation_, prev_rotation_;
 };
 }
-
-#endif

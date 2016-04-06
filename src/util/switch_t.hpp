@@ -1,5 +1,4 @@
-#ifndef __SWITCH_T_HPP_INCLUDED__
-#define __SWITCH_T_HPP_INCLUDED__
+#pragma once
 
 namespace indigo {
 // usage:
@@ -47,5 +46,3 @@ private:
     bool break_;
 };
 }
-
-#endif

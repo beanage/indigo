@@ -1,5 +1,4 @@
-#ifndef __INDIGO_COLORS_HPP_INCLUDED__
-#define __INDIGO_COLORS_HPP_INCLUDED__
+#pragma once
 
 #include <stdint.h>
 
@@ -47,5 +46,3 @@ static const rgba_color orange(0xFF, 0x99, 0x00);
 static const rgba_color indigo(0x00, 0x99, 0x66);
 }
 }
-
-#endif

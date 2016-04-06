@@ -1,5 +1,4 @@
-#ifndef __TEXTTURE_HPP_INCLUDED__
-#define __TEXTTURE_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 #include "util/colors.hpp"
@@ -52,5 +51,3 @@ private:
     gl_handle rbo_;
 };
 }
-
-#endif

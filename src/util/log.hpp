@@ -1,5 +1,4 @@
-#ifndef __LOG_HPP_INCLUDED__
-#define __LOG_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 #include <fstream>
@@ -18,5 +17,3 @@ void log(const std::string& msg)
     std::cout << msg << std::endl;
 }
 }
-
-#endif

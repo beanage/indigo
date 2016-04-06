@@ -1,5 +1,4 @@
-#ifndef __MODEL_HPP_INCLUDED__
-#define __MODEL_HPP_INCLUDED__
+#pragma once
 
 #include <vector>
 
@@ -24,5 +23,3 @@ public:
     virtual void upload() = 0;
 };
 }
-
-#endif

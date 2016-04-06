@@ -1,5 +1,4 @@
-#ifndef __BITMAP_HPP_INCLUDED__
-#define __BITMAP_HPP_INCLUDED__
+#pragma once
 
 #include <vector>
 #include <inttypes.h>
@@ -30,5 +29,3 @@ private:
     std::vector<uint8_t> buffer_;
 };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __INDIGO_APPLICATION_EVENT_HPP_INCLUDED__
-#define __INDIGO_APPLICATION_EVENT_HPP_INCLUDED__
+#pragma once
 
 #include "basic_event.hpp"
 
@@ -13,5 +12,3 @@ public:
 	bool accept(event_visitor& v) const override;
 };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __PROGRAM_HPP_INCLUDED__
-#define __PROGRAM_HPP_INCLUDED__
+#pragma once
 
 #include "platform/gl.hpp"
 #include "shader.hpp"
@@ -33,5 +32,3 @@ private:
     program& operator=(const program&) = delete;
 };
 }
-
-#endif

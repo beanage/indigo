@@ -1,5 +1,4 @@
-#ifndef __MD5_LOADER_HPP_INCLUDED__
-#define __MD5_LOADER_HPP_INCLUDED__
+#pragma once
 
 #include "model/model.hpp"
 #include "platform/resource_manager.hpp"
@@ -27,5 +26,3 @@ private:
     std::unique_ptr<md5_mesh> parse_mesh(scanner& s);
 };
 }
-
-#endif

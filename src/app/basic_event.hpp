@@ -1,5 +1,4 @@
-#ifndef __BASIC_EVENT_HPP_INCLUDED__
-#define __BASIC_EVENT_HPP_INCLUDED__
+#pragma once
 
 namespace indigo
 {
@@ -13,5 +12,3 @@ public:
 	virtual bool accept(event_visitor& v) const = 0;
 };
 }
-
-#endif

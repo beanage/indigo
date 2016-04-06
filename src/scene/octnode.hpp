@@ -1,5 +1,4 @@
-#ifndef __OCTNODE_H_INCLUDED__
-#define __OCTNODE_H_INCLUDED__
+#pragma once
 
 #include <functional>
 #include <memory>
@@ -62,5 +61,3 @@ private:
     plane const left, right, top, bottom, front, back;
 };
 }
-
-#endif

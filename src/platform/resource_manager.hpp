@@ -1,5 +1,4 @@
-#ifndef __RESOURCE_MANAGER_HPP_INCLUDED__
-#define __RESOURCE_MANAGER_HPP_INCLUDED__
+#pragma once
 
 #include <memory>
 #include <string>
@@ -135,5 +134,3 @@ private:
     std::map<std::string, std::shared_ptr<Type>> cache_;
 };
 }
-
-#endif

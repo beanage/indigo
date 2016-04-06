@@ -1,5 +1,4 @@
-#ifndef __MD5_BONE_HPP_INCLUDED__
-#define __MD5_BONE_HPP_INCLUDED__
+#pragma once
 
 #include "model/bone.hpp"
 
@@ -31,5 +30,3 @@ private:
     md5_bone* parent_;
 };
 }
-
-#endif

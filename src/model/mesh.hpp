@@ -1,5 +1,4 @@
-#ifndef __MESH_HPP_INCLUDED__
-#define __MESH_HPP_INCLUDED__
+#pragma once
 
 namespace indigo {
 class mesh
@@ -13,5 +12,3 @@ public:
     virtual void upload() = 0;
 };
 }
-
-#endif

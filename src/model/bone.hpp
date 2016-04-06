@@ -1,5 +1,4 @@
-#ifndef __BONE_HPP_INCLUDED__
-#define __BONE_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 #include <glm/glm.hpp>
@@ -9,9 +8,7 @@ namespace indigo {
 class bone
 {
 public:
-    virtual ~bone()
-    {
-    }
+    virtual ~bone() {}
 
     virtual std::string name() const = 0;
 
@@ -25,10 +22,6 @@ public:
     virtual bone const* parent() const = 0;
 
 protected:
-    bone()
-    {
-    }
+    bone() {}
 };
 }
-
-#endif

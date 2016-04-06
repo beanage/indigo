@@ -1,5 +1,4 @@
-#ifndef __MD5_MODEL_HPP_INCLUDED__
-#define __MD5_MODEL_HPP_INCLUDED__
+#pragma once
 
 #include "model/model.hpp"
 #include "md5_bone.hpp"
@@ -28,5 +27,3 @@ private:
     std::vector<std::unique_ptr<md5_mesh>> meshes_;
 };
 }
-
-#endif

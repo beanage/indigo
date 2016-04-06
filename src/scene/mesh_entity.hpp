@@ -1,5 +1,4 @@
-#ifndef __MESH_ENTITY_HPP_INCLUDED__
-#define __MESH_ENTITY_HPP_INCLUDED__
+#pragma once
 
 #include "scene/entity.hpp"
 
@@ -36,5 +35,3 @@ private:
     render_mode rendermode_;
 };
 }
-
-#endif

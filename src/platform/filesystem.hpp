@@ -1,5 +1,4 @@
-#ifndef __FILESYSTEM_HPP_INCLUDED__
-#define __FILESYSTEM_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 
@@ -10,5 +9,3 @@ bool is_file(std::string const& path);
 std::string join(std::string const& first, std::string const& second);
 }
 }
-
-#endif

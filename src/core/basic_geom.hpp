@@ -1,5 +1,4 @@
-#ifndef __BASEGEOM_H_INCLUDED__
-#define __BASEGEOM_H_INCLUDED__
+#pragma once
 
 #include "glm/vec3.hpp"
 #include "glm/mat4x4.hpp"
@@ -53,5 +52,3 @@ struct box
     glm::mat4 const transform;
 };
 }
-
-#endif

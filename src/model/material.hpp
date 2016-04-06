@@ -1,5 +1,4 @@
-#ifndef __MATERIAL_HPP_INCLUDED__
-#define __MATERIAL_HPP_INCLUDED__
+#pragma once
 
 namespace indigo {
 class material
@@ -13,5 +12,3 @@ public:
     virtual void render() const = 0;
 };
 }
-
-#endif

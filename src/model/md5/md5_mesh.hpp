@@ -1,5 +1,4 @@
-#ifndef __MD5_MESH_HPP_INCLUDED__
-#define __MD5_MESH_HPP_INCLUDED__
+#pragma once
 
 #include "model/mesh.hpp"
 #include "platform/gl.hpp"
@@ -51,5 +50,3 @@ private:
     std::vector<weight> weights_;
 };
 }
-
-#endif

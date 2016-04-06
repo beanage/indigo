@@ -1,5 +1,4 @@
-#ifndef __BITMAP_LOADER_HPP_INCLUDED__
-#define __BITMAP_LOADER_HPP_INCLUDED__
+#pragma once
 
 #include "bitmap.hpp"
 #include "resource_manager.hpp"
@@ -17,5 +16,3 @@ private:
     bitmap_loader(bitmap_loader const&) = delete;
 };
 }
-
-#endif

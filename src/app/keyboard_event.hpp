@@ -1,5 +1,4 @@
-#ifndef __INDIGO_KEYBOARD_EVENT_INCLUDED__
-#define __INDIGO_KEYBOARD_EVENT_INCLUDED__
+#pragma once
 
 #include "basic_event.hpp"
 
@@ -67,5 +66,3 @@ public:
 	bool accept(event_visitor&) const override;
 };
 }
-
-#endif

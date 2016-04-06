@@ -1,5 +1,4 @@
-#ifndef __SHADER_HPP_INCLUDED__
-#define __SHADER_HPP_INCLUDED__
+#pragma once
 
 #include "platform/gl.hpp"
 
@@ -22,5 +21,3 @@ private:
 
 shader load_shader(const std::string& filename, GLuint type);
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __EVENT_VISITOR_HPP_INCLUDED__
-#define __EVENT_VISITOR_HPP_INCLUDED__
+#pragma once
 
 namespace indigo
 {
@@ -20,5 +19,3 @@ protected:
 	event_visitor() = default;
 };
 }
-
-#endif

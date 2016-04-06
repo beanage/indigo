@@ -1,5 +1,4 @@
-#ifndef __OBJ_LOADER_HPP_INCLUDED__
-#define __OBJ_LOADER_HPP_INCLUDED__
+#pragma once
 
 #include "model/mesh.hpp"
 #include "platform/resource_manager.hpp"
@@ -18,5 +17,3 @@ public:
     std::shared_ptr<mesh> load(std::string const& stream) override;
 };
 }
-
-#endif

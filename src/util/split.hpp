@@ -1,5 +1,4 @@
-#ifndef __SPLIT_HPP_INCLUDED__
-#define __SPLIT_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 #include <algorithm>
@@ -23,5 +22,3 @@ std::vector<std::basic_string<T>> split(const std::basic_string<T>& str,
     return res;
 }
 }
-
-#endif
