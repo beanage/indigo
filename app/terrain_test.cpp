@@ -3,6 +3,7 @@
 #include "platform/window.hpp"
 #include "app/application.hpp"
 #include "app/keyboard_event.hpp"
+#include "app/mouse_event.hpp"
 #include "app/application_event.hpp"
 #include "app/event_visitor.hpp"
 
@@ -21,12 +22,13 @@ public:
 	bool visit(const app_terminate_event& e) override
 	{
 		application_.terminate();
+		return true;
 	}
-
+	
 	bool visit(const key_down_event& e) override
 	{
-		if (e.modifiers() & key_modifier::ctrl) {
-			switch (e.keycode()) {
+		if (e.modifiers & key_modifier::ctrl) {
+			switch (e.keycode) {
 				case 'q': application_.terminate(); break;
 				default: return false;
 			}
@@ -34,7 +36,12 @@ public:
 			return true;
 		}
 
-		return false;
+		switch (e.keycode) {
+			case key_code::esc: application_.terminate(); break;
+			default: return false;
+		}
+
+		return true;
 	}
 
 private:
@@ -50,7 +57,7 @@ public:
 
 	bool visit(const key_down_event& e) override
 	{
-		switch (e.keycode()) {
+		switch (e.keycode) {
 			case 'w': forward_ = true; break;
 			case 'a': left_ = true; break;
 			case 's': backward_ = true; break;
@@ -63,7 +70,7 @@ public:
 
 	bool visit(const key_up_event& e) override
 	{
-		switch (e.keycode()) {
+		switch (e.keycode) {
 			case 'w': forward_ = false; break;
 			case 'a': left_ = false; break;
 			case 's': backward_ = false; break;

@@ -1,6 +1,7 @@
 #include "application.hpp"
 #include "sdl_utility.hpp"
 #include "keyboard_event.hpp"
+#include "mouse_event.hpp"
 #include "application_event.hpp"
 #include <SDL2/SDL.h>
 #include <iostream>
@@ -72,24 +73,79 @@ static void submit_key_up(SDL_Event* e, application& app)
 	));
 }
 
+static void submit_mouse_move(SDL_Event* e, application& app)
+{
+	app.event(mouse_move_event(
+		e->motion.x,
+		e->motion.y,
+		e->motion.which
+	));
+}
+
+static void submit_mouse_down(SDL_Event* e, application& app)
+{
+	app.event(mouse_down_event(
+		e->button.x,
+		e->button.y,
+		e->button.which,
+		sdl_utility::translate_sdl_mousebutton(e->button.button),
+		e->button.clicks > 1
+	));
+}
+
+static void submit_mouse_up(SDL_Event* e, application& app)
+{
+	app.event(mouse_up_event(
+		e->button.x,
+		e->button.y,
+		e->button.which,
+		sdl_utility::translate_sdl_mousebutton(e->button.button)
+	));
+}
+
+static void submit_mouse_wheel(SDL_Event* e, application& app)
+{
+	app.event(mouse_wheel_event(
+		e->wheel.x,
+		e->wheel.y,
+		e->wheel.which,
+		e->wheel.x + e->wheel.y
+	));
+}
+
 void application::poll_events()
 {
-	static const std::vector<std::pair<int, void (*)(SDL_Event*, application&)>> sdl_event_handlers = {
-		std::make_pair(SDL_QUIT, &submit_app_terminate),
-		std::make_pair(SDL_KEYDOWN, &submit_key_down),
-		std::make_pair(SDL_KEYUP, &submit_key_up),
-	};
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event) != 0) {
-		auto func_iter = std::find_if(sdl_event_handlers.begin(), sdl_event_handlers.end(), [&](const decltype(sdl_event_handlers)::value_type& pair) {
-			return pair.first == event.type;
-		});
-
-		if (func_iter != sdl_event_handlers.end())
-			((*func_iter).second)(&event, *this);
-		else
-			std::cout << "Unhandled event " << event.type << std::endl;
+		switch (event.type) {
+			case SDL_QUIT:
+				submit_app_terminate(&event, *this);
+				break;
+			case SDL_KEYUP:
+				submit_key_up(&event, *this);
+				break;
+			case SDL_KEYDOWN:
+				submit_key_down(&event, *this);
+				break;
+			case SDL_MOUSEMOTION:
+				submit_mouse_move(&event, *this);
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				submit_mouse_down(&event, *this);
+				break;
+			case SDL_MOUSEBUTTONUP:
+				submit_mouse_up(&event, *this);
+				break;
+			case SDL_MOUSEWHEEL:
+				submit_mouse_wheel(&event, *this);
+				break;
+			case SDL_TEXTEDITING:
+			case SDL_TEXTINPUT:
+				// Ignore this events
+				break;
+			default:
+				std::cout << "Unhandled event " << event.type << std::endl;
+		}
 	}
 }
 
