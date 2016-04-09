@@ -12,13 +12,13 @@ program::program(const std::vector<shader>& shaders)
 
     std::vector<shader>::const_iterator shader_iter = shaders.begin();
     for (; shader_iter != shaders.end(); ++shader_iter)
-        glAttachShader(handle, (*shader_iter).handle());
+        glAttachShader(handle, (*shader_iter).id());
 
     glLinkProgram(handle);
 
     shader_iter = shaders.begin();
     for (; shader_iter != shaders.end(); ++shader_iter)
-        glDetachShader(handle, (*shader_iter).handle());
+        glDetachShader(handle, (*shader_iter).id());
 
     GLint link_status = 0;
     glGetProgramiv(handle, GL_LINK_STATUS, &link_status);

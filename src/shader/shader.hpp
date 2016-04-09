@@ -5,19 +5,33 @@
 #include <string>
 #include <memory>
 
-namespace indigo {
+namespace indigo
+{
 class shader
 {
 public:
-    shader(const std::string& source, GLuint type);
-    ~shader();
+	enum class type : GLenum
+	{
+		vertex   = GL_VERTEX_SHADER,
+		fragment = GL_FRAGMENT_SHADER,
+	};
 
-    GLuint handle() const;
+	explicit shader(type t);
+	~shader();
+
+	shader() = delete;
+	shader(const shader&) = delete;
+
+	GLuint id() const;
+
+	void source(const std::string& source);
+	std::string source() const;
+
+	bool compile();
 
 private:
-    struct impl;
-    std::shared_ptr<impl> shared;
+	enum type type_;
+	GLuint id_;
+	std::string source_;
 };
-
-shader load_shader(const std::string& filename, GLuint type);
 }

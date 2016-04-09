@@ -1,72 +1,57 @@
 #include "shader.hpp"
+#include "util/log.hpp"
 
 #include <fstream>
 #include <sstream>
 
 using namespace indigo;
 
-struct shader::impl
+shader::shader(enum type t)
+	: type_(t), id_(0u)
 {
-    GLuint handle;
-
-    impl(const std::string& source, GLuint type)
-    {
-        handle = glCreateShader(type);
-        if (!handle)
-            ; // Error
-
-        const char* c_source = source.c_str();
-        glShaderSource(handle, 1, static_cast<const GLchar**>(&c_source), NULL);
-
-        glCompileShader(handle);
-
-        GLint compilation_status = 0;
-        glGetShaderiv(handle, GL_COMPILE_STATUS, &compilation_status);
-        if (compilation_status == GL_FALSE) {
-            GLint log_length = 0;
-            glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &log_length);
-
-            GLchar* log_buffer = new GLchar[log_length + 1];
-            glGetShaderInfoLog(handle, log_length, NULL, log_buffer);
-            std::string log = "error compiling shader: ";
-            log += log_buffer;
-            delete[] log_buffer;
-
-            glDeleteShader(handle);
-
-            throw std::runtime_error(log);
-        }
-    }
-
-    ~impl()
-    {
-        glDeleteShader(handle);
-    }
-};
-
-shader::shader(const std::string& source, GLuint type)
-    : shared(new impl(source, type))
-{
+	id_ = glCreateShader(GLenum(type_));
 }
 
 shader::~shader()
 {
+	if (id_)
+		glDeleteShader(id_);
 }
 
-GLuint shader::handle() const
+GLuint shader::id() const
 {
-    return shared->handle;
+	return id_;
 }
 
-shader indigo::load_shader(const std::string& filename, GLuint type)
+void shader::source(const std::string& source)
 {
-    std::ifstream file;
-    file.open(filename, std::ios::in | std::ios::binary);
-    if (!file.is_open())
-        throw std::runtime_error("error loading shader from file.");
-
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-
-    return shader(buffer.str(), type);
+	source_ = source;
 }
+
+std::string shader::source() const
+{
+	return source_;
+}
+
+bool shader::compile()
+{
+	const GLchar* source(source_.c_str());
+
+	glShaderSource(id_, 1, &source, NULL);
+	glCompileShader(id_);
+
+	GLint status(0);
+	glGetShaderiv(id_, GL_COMPILE_STATUS, &status);
+
+	GLint log_len(0);
+	glGetShaderiv(id_, GL_INFO_LOG_LENGTH, &log_len);
+
+	std::string log(log_len, '\0');
+	glGetShaderInfoLog(id_, log.size(), nullptr, &log[0]);
+
+	if (!status)
+		log::write("Shader: ", log);
+
+	return !status;
+}
+
