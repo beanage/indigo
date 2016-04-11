@@ -6,29 +6,37 @@
 #include <vector>
 #include <glm/mat4x4.hpp>
 
-namespace indigo {
-class program
+namespace indigo
+{
+class basic_shader_program
 {
 public:
-    program(const std::vector<shader>& shaders);
-    ~program();
+	virtual ~basic_shader_program();
 
-    void use() const;
+	basic_shader_program(const basic_shader_program&) = delete;
+	basic_shader_program& operator=(const basic_shader_program&) = delete;
 
-    GLint attribute(const std::string& name) const;
-    GLint uniform(const std::string& name) const;
+	GLuint id() const;
+	void use() const;
 
-    void set(const std::string& name, int value);
-    void set(const std::string& name, float value);
-    void set(const std::string& name, const glm::vec2& value);
-    void set(const std::string& name, const glm::vec3& value);
-    void set(const std::string& name, const glm::mat4& value);
-    void set(const std::string& name, const std::vector<glm::mat4>& values);
+protected:
+	basic_shader_program();
+
+	bool link();
+
+	void attach_shader(shader& s);
+
+	GLint uniform_location(const std::string& name) const;
+	GLint attribute_location(const std::string& name) const;
+
+	void uniform(GLint location, int value);
+	void uniform(GLint location, float value);
+	void uniform(GLint location, const glm::vec2& value);
+	void uniform(GLint location, const glm::vec3& value);
+	void uniform(GLint location, const glm::mat4& value);
+	void uniform(GLint location, const std::vector<glm::mat4>& values);
 
 private:
-    GLuint handle;
-
-    program(const program&) = delete;
-    program& operator=(const program&) = delete;
+    GLuint id_;
 };
 }

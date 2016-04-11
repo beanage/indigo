@@ -1,98 +1,95 @@
 #include "program.hpp"
+#include "util/log.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 
 using namespace indigo;
 
-program::program(const std::vector<shader>& shaders)
+basic_shader_program::basic_shader_program()
+	: id_(0)
 {
-    handle = glCreateProgram();
-    if (!handle)
-        ; // Error
-
-    std::vector<shader>::const_iterator shader_iter = shaders.begin();
-    for (; shader_iter != shaders.end(); ++shader_iter)
-        glAttachShader(handle, (*shader_iter).id());
-
-    glLinkProgram(handle);
-
-    shader_iter = shaders.begin();
-    for (; shader_iter != shaders.end(); ++shader_iter)
-        glDetachShader(handle, (*shader_iter).id());
-
-    GLint link_status = 0;
-    glGetProgramiv(handle, GL_LINK_STATUS, &link_status);
-    if (link_status == GL_FALSE) {
-        GLint log_length = 0;
-        glGetProgramiv(handle, GL_INFO_LOG_LENGTH, &log_length);
-
-        GLchar* log_buffer = new GLchar[log_length + 1];
-        glGetProgramInfoLog(handle, log_length, NULL, log_buffer);
-        std::string log = "error linking program: ";
-        log += log_buffer;
-        delete[] log_buffer;
-        glDeleteProgram(handle);
-
-        throw std::runtime_error(log);
-    }
+	id_ = glCreateProgram();
 }
 
-program::~program()
+basic_shader_program::~basic_shader_program()
 {
-    glDeleteProgram(handle);
+	glDeleteProgram(id_);
 }
 
-void program::use() const
+void basic_shader_program::use() const
 {
-    glUseProgram(handle);
+	glUseProgram(id_);
 }
 
-GLint program::attribute(const std::string& name) const
+bool basic_shader_program::link()
 {
-    GLint temp = glGetAttribLocation(handle, name.c_str());
+	glLinkProgram(id_);
+
+	GLint status(0);
+	glGetProgramiv(id_, GL_LINK_STATUS, &status);
+
+	GLint log_len(0);
+	glGetProgramiv(id_, GL_INFO_LOG_LENGTH, &log_len);
+
+	if (!status) {
+		std::string log(log_len, '\0');
+		glGetProgramInfoLog(id_, log.size(), nullptr, &log[0]);
+
+		log::write("Shader Program: ", log);
+	}
+
+	return status != 0;
+}
+
+void basic_shader_program::attach_shader(shader& s)
+{
+	glAttachShader(id_, s.id());
+}
+
+GLint basic_shader_program::attribute_location(const std::string& name) const
+{
+    GLint temp = glGetAttribLocation(id_, name.c_str());
     if (temp == -1)
         throw std::runtime_error("invalid attribute name '" + name + "'!");
 
     return temp;
 }
 
-GLint program::uniform(const std::string& name) const
+GLint basic_shader_program::uniform_location(const std::string& name) const
 {
-    GLint temp = glGetUniformLocation(handle, name.c_str());
+    GLint temp = glGetUniformLocation(id_, name.c_str());
     if (temp == -1)
         throw std::runtime_error("invalid uniform name '" + name + "'!");
 
     return temp;
 }
 
-void program::set(const std::string& name, int value)
+void basic_shader_program::uniform(GLint location, int value)
 {
-    glUniform1i(uniform(name), value);
+    glUniform1i(location, value);
 }
 
-void program::set(const std::string& name, float value)
+void basic_shader_program::uniform(GLint location, float value)
 {
-    glUniform1f(uniform(name), value);
+    glUniform1f(location, value);
 }
 
-void program::set(const std::string& name, const glm::vec2& value)
+void basic_shader_program::uniform(GLint location, const glm::vec2& value)
 {
-    glUniform2fv(uniform(name), 1, glm::value_ptr(value));
+    glUniform2fv(location, 1, glm::value_ptr(value));
 }
 
-void program::set(const std::string& name, const glm::vec3& value)
+void basic_shader_program::uniform(GLint location, const glm::vec3& value)
 {
-    glUniform3fv(uniform(name), 1, glm::value_ptr(value));
+    glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
-void program::set(const std::string& name, const glm::mat4& value)
+void basic_shader_program::uniform(GLint location, const glm::mat4& value)
 {
-    glUniformMatrix4fv(uniform(name), 1, GL_TRUE, glm::value_ptr(value));
+    glUniformMatrix4fv(location, 1, GL_TRUE, glm::value_ptr(value));
 }
 
-void program::set(const std::string& name,
-                  const std::vector<glm::mat4>& values)
+void basic_shader_program::uniform(GLint location, const std::vector<glm::mat4>& values)
 {
-    glUniformMatrix4fv(uniform(name), values.size(), GL_TRUE,
-                       reinterpret_cast<float const*>(values.data()));
+    glUniformMatrix4fv(location, values.size(), GL_TRUE, reinterpret_cast<float const*>(values.data()));
 }

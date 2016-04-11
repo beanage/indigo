@@ -46,12 +46,13 @@ bool shader::compile()
 	GLint log_len(0);
 	glGetShaderiv(id_, GL_INFO_LOG_LENGTH, &log_len);
 
-	std::string log(log_len, '\0');
-	glGetShaderInfoLog(id_, log.size(), nullptr, &log[0]);
+	if (!status) {
+		std::string log(static_cast<size_t>(log_len), '\0');
+		glGetShaderInfoLog(id_, log.size(), nullptr, &log[0]);
 
-	if (!status)
 		log::write("Shader: ", log);
+	}
 
-	return !status;
+	return status != 0;
 }
 
