@@ -34,7 +34,10 @@ protected:
 class mouse_move_event : public basic_mouse_event<mouse_move_event>
 {
 public:
-	mouse_move_event(float x, float y, unsigned device);
+	float x_rel;
+	float y_rel;
+
+	mouse_move_event(float x, float y, float xrel, float yrel, unsigned device);
 	mouse_move_event() = delete;
 };
 

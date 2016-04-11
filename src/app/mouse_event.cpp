@@ -2,8 +2,10 @@
 
 using namespace indigo;
 
-mouse_move_event::mouse_move_event(float x, float y, unsigned device)
+mouse_move_event::mouse_move_event(float x, float y, float xrel, float yrel, unsigned device)
 	: basic_mouse_event(x, y, device)
+	, x_rel(xrel)
+	, y_rel(yrel)
 {}
 
 mouse_down_event::mouse_down_event(float x, float y, unsigned device, mouse_button button, bool double_click)

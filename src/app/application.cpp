@@ -78,6 +78,8 @@ static void submit_mouse_move(SDL_Event* e, application& app)
 	app.event(mouse_move_event(
 		e->motion.x,
 		e->motion.y,
+		e->motion.xrel,
+		e->motion.yrel,
 		e->motion.which
 	));
 }
@@ -179,7 +181,7 @@ void indigo::run(application& app, int argc, const char** argv)
 
         app.poll_events();
 
-        while (update_lag >= application::update_intervall.count()) {
+        for (unsigned i = 0; i < 100 && update_lag >= application::update_intervall.count(); ++i) {
             app.update();
             ++updates;
             update_lag -= application::update_intervall.count();
@@ -193,10 +195,8 @@ void indigo::run(application& app, int argc, const char** argv)
 void indigo::init_gl()
 {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,
-                        application::gl_major_version);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,
-                        application::gl_minor_version);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, application::gl_major_version);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, application::gl_minor_version);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetSwapInterval(1);
 }
