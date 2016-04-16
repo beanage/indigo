@@ -10,6 +10,7 @@ add_subdirectory(shader)
 add_subdirectory(terrain)
 add_subdirectory(util)
 add_subdirectory(core)
+add_subdirectory(mesh)
 
 set(INDIGO_SOURCES
     ${APP_SOURCES}
@@ -20,6 +21,7 @@ set(INDIGO_SOURCES
     ${TERRAIN_SOURCES}
     ${UTIL_SOURCES}
     ${CORE_SOURCES}
+    ${MESH_SOURCES}
     
     PARENT_SCOPE)
     
@@ -32,5 +34,6 @@ set(INDIGO_HEADERS
     ${TERRAIN_HEADERS}
     ${UTIL_HEADERS}
     ${CORE_HEADERS}
+    ${MESH_HEADERS}
     
     PARENT_SCOPE)
