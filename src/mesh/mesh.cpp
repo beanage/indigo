@@ -66,7 +66,7 @@ void mesh::render(basic_shader_program& s)
 	if (indices_.empty())
 		glDrawArrays(GLenum(prim_), 0, vertices_.size());
 	else
-		glDrawElements(GLenum(prim_), indices_.size(), GL_UNSIGNED_INT, indices_.data());
+		glDrawElements(GLenum(prim_), indices_.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
 
@@ -97,7 +97,7 @@ void mesh::upload()
 	if (use_indices) {
 		glGenBuffers(1, &ibo_);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(uint32_t), indices_.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(GLuint), indices_.data(), GL_STATIC_DRAW);
 	}
 
 	glEnableVertexAttribArray(0);
@@ -155,17 +155,52 @@ void mesh::texcoords(const std::vector<glm::vec2>& t)
 	texcoords_ = t;
 }
 
-const std::vector<uint32_t>& mesh::indices() const
+const std::vector<GLuint>& mesh::indices() const
 {
 	return indices_;
 }
 
-void mesh::indices(const std::vector<uint32_t>& i)
+void mesh::indices(const std::vector<GLuint>& i)
 {
 	indices_ = i;
 }
 
 // basic geometry constructors
+
+indigo::mesh indigo::create_cube()
+{
+	static const std::vector<glm::vec3> vertices = {
+		{-.5f, -.5f,  .5f},
+		{ .5f, -.5f,  .5f},
+		{-.5f,  .5f,  .5f},
+		{ .5f,  .5f,  .5f},
+		{-.5f, -.5f, -.5f},
+		{ .5f, -.5f, -.5f},
+		{-.5f,  .5f, -.5f},
+		{ .5f,  .5f, -.5f},
+	};
+
+	static const std::vector<GLuint> indices = {
+		0, 1, 2, // front
+		1, 3, 2,
+		6, 5, 4, // back
+		6, 7, 5,
+		4, 0, 6, // left
+		0, 2, 6,
+		5, 3, 1, // right
+		7, 3, 5,
+		2, 3, 7, // top
+		7, 6, 2,
+		5, 1, 0, // bottom
+		0, 4, 5,
+	};
+
+	mesh cube(primitive::triangles);
+	cube.vertices(vertices);
+	cube.indices(indices);
+
+	return cube;
+}
 
 indigo::mesh indigo::create_plane_z()
 {

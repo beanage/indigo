@@ -235,7 +235,7 @@ public:
 		add_event_handler(&key_handler_);
 		add_event_handler(&cam_man_);
 
-		mesh_ = create_plane_z();
+		mesh_ = create_cube();
 		mesh_.upload();
 		
 		glEnable(GL_CULL_FACE);
@@ -251,6 +251,8 @@ public:
 	void update() override
 	{
 		cam_man_.move(camera_);
+
+		model_ = glm::rotate(model_, 0.025f, glm::vec3(1, 0, 0));
 	}
 
 	void render(float time) override
@@ -259,14 +261,12 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader_.use();
-		shader_.model(glm::mat4());
+		shader_.model(model_);
 		shader_.view(camera_.view(time));
 		shader_.projection(camera_.projection());
-
-		camera_.update();
-
 		mesh_.render(shader_);
 
+		camera_.update();
 		window_.swap();
 	}
 

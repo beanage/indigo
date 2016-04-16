@@ -47,15 +47,15 @@ public:
 	const std::vector<glm::vec2>& texcoords() const;
 	void texcoords(const std::vector<glm::vec2>& t);
 
-	const std::vector<uint32_t>& indices() const;
-	void indices(const std::vector<uint32_t>& i);
+	const std::vector<GLuint>& indices() const;
+	void indices(const std::vector<GLuint>& i);
 
 private:
 	std::vector<glm::vec3> vertices_;
 	std::vector<glm::vec3> normals_;
 	std::vector<glm::vec3> colors_;
 	std::vector<glm::vec2> texcoords_;
-	std::vector<uint32_t> indices_;
+	std::vector<GLuint> indices_;
 
 	gl_handle vbo_;
 	gl_handle ibo_;
@@ -64,4 +64,5 @@ private:
 };
 
 mesh create_plane_z();
+mesh create_cube();
 }
