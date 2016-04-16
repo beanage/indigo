@@ -251,8 +251,6 @@ public:
 	void update() override
 	{
 		cam_man_.move(camera_);
-
-		log::write("Hallo %, was ist %?", "Johannes", "los");
 	}
 
 	void render(float time) override
