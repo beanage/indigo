@@ -5,6 +5,7 @@
 #include "util/switch_t.hpp"
 #include "platform/gl.hpp"
 #include <fstream>
+#include <array>
 
 // md5 format
 // ----------
@@ -112,7 +113,7 @@ public:
 
     bool eof() const
     {
-        pos_ == source_.end();
+        return pos_ == source_.end();
     }
 
 private:

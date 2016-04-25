@@ -93,3 +93,33 @@ void basic_shader_program::uniform(GLint location, const std::vector<glm::mat4>&
 {
     glUniformMatrix4fv(location, values.size(), GL_TRUE, reinterpret_cast<float const*>(values.data()));
 }
+
+void basic_shader_program::uniform(std::string location, int value)
+{
+	glUniform1i(uniform_location(location), value);
+}
+
+void basic_shader_program::uniform(std::string location, float value)
+{
+	glUniform1f(uniform_location(location), value);
+}
+
+void basic_shader_program::uniform(std::string location, const glm::vec2& value)
+{
+	glUniform2fv(uniform_location(location), 1, glm::value_ptr(value));
+}
+
+void basic_shader_program::uniform(std::string location, const glm::vec3& value)
+{
+	glUniform3fv(uniform_location(location), 1, glm::value_ptr(value));
+}
+
+void basic_shader_program::uniform(std::string location, const glm::mat4& value)
+{
+	glUniformMatrix4fv(uniform_location(location), 1, GL_TRUE, glm::value_ptr(value));
+}
+
+void basic_shader_program::uniform(std::string location, const std::vector<glm::mat4>& values)
+{
+	glUniformMatrix4fv(uniform_location(location), values.size(), GL_TRUE, reinterpret_cast<float const*>(values.data()));
+}

@@ -185,6 +185,6 @@ const entity* root_octnode::pick(const ray& r) const
             break;
         }
 
-    octnode::pick(r, r.offset, first_positive_intersection);
+    return octnode::pick(r, r.offset, first_positive_intersection);
 }
 }

@@ -1,4 +1,1 @@
-//
-// Created by Joseph Birkner on 4/25/16.
-//
-
+#include "shader/shader_loader.hpp"

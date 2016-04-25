@@ -37,14 +37,14 @@ terrain_cell const* terrain::cell(unsigned x, unsigned y) const
     return cells_[y * width_ + x].get();
 }
 
-void terrain::render(program& prog) const
+void terrain::render(basic_shader_program& prog) const
 {
-    prog.set("cell_size", (float)terrain_cell::size);
-    prog.set("tile_size", terrain_cell::tile_size);
-    prog.set("cell_count", glm::vec2(width_, height_));
+    prog.uniform("cell_size", (float)terrain_cell::size);
+    prog.uniform("tile_size", terrain_cell::tile_size);
+    prog.uniform("cell_count", glm::vec2(width_, height_));
 
     for (auto const& cell : cells_) {
-        prog.set("cell_position", glm::vec2((float)cell->x(), (float)cell->y()));
+        prog.uniform("cell_position", glm::vec2((float)cell->x(), (float)cell->y()));
 
         cell->render();
     }

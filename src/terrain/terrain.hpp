@@ -6,7 +6,7 @@
 
 namespace indigo {
 class bitmap;
-class program;
+class basic_shader_program;
 class terrain_cell;
 
 class bad_heightmap_size_exception : public std::exception
@@ -28,7 +28,7 @@ public:
     terrain_cell* cell(unsigned x, unsigned y);
     terrain_cell const* cell(unsigned x, unsigned y) const;
 
-    void render(program& prog) const;
+    void render(basic_shader_program& prog) const;
     void upload();
 
     void heightmap(std::shared_ptr<bitmap> heightmap);
