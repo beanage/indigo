@@ -54,17 +54,6 @@ target_link_libraries(indigo
     ${GLEW_LIBRARY}
     ${SDL2_LIBRARY})
 
-# DEMO
-
-# add_executable(demo
-#     app/demo.cpp)
-
-# set_compile_features(demo)
-
-# target_link_libraries(demo
-#     indigo)
-
-
 # TERRAIN
 
 add_executable(terrain_test

@@ -8,7 +8,7 @@ class mesh;
 class mesh_entity : public entity
 {
 public:
-    mesh_entity(const mesh* m);
+    mesh_entity(const mesh* m= nullptr);
 
     const mesh* attached_mesh() const;
     void attach_mesh(const mesh* m);

@@ -2,12 +2,8 @@
 #include "util/split.hpp"
 #include "platform/gl.hpp"
 #include <glm/glm.hpp>
-#include <vector>
 #include <fstream>
 #include <sstream>
-#include <locale>
-#include <memory>
-#include <tuple>
 
 using namespace indigo;
 

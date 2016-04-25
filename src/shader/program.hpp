@@ -19,6 +19,19 @@ public:
 	GLuint id() const;
 	void use() const;
 
+	void uniform(GLint location, int value);
+	void uniform(GLint location, float value);
+	void uniform(GLint location, const glm::vec2& value);
+	void uniform(GLint location, const glm::vec3& value);
+	void uniform(GLint location, const glm::mat4& value);
+	void uniform(GLint location, const std::vector<glm::mat4>& values);
+	void uniform(std::string location, int value);
+	void uniform(std::string location, float value);
+	void uniform(std::string location, const glm::vec2& value);
+	void uniform(std::string location, const glm::vec3& value);
+	void uniform(std::string location, const glm::mat4& value);
+	void uniform(std::string location, const std::vector<glm::mat4>& values);
+
 protected:
 	basic_shader_program();
 
@@ -28,13 +41,6 @@ protected:
 
 	GLint uniform_location(const std::string& name) const;
 	GLint attribute_location(const std::string& name) const;
-
-	void uniform(GLint location, int value);
-	void uniform(GLint location, float value);
-	void uniform(GLint location, const glm::vec2& value);
-	void uniform(GLint location, const glm::vec3& value);
-	void uniform(GLint location, const glm::mat4& value);
-	void uniform(GLint location, const std::vector<glm::mat4>& values);
 
 private:
     GLuint id_;

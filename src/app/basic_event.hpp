@@ -22,7 +22,7 @@ public:
 
 	virtual bool accept(event_visitor& v) const override
 	{
-		v.visit(static_cast<const SubClass&>(*this));
+		return v.visit(static_cast<const SubClass&>(*this));
 	}
 };
 }

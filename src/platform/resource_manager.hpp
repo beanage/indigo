@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#include <vector>
 
 #include "platform/filesystem.hpp"
 

@@ -1,14 +1,14 @@
 #include <iostream>
+#include <scene/mesh_entity.hpp>
 
 #include "platform/window.hpp"
 #include "app/application.hpp"
 #include "app/keyboard_event.hpp"
 #include "app/mouse_event.hpp"
 #include "app/application_event.hpp"
-#include "app/event_visitor.hpp"
-
+#include "platform/resource_manager.hpp"
+#include "model/mesh.hpp"
 #include "scene/camera.hpp"
-#include "scene/entity.hpp"
 
 using namespace indigo;
 
@@ -118,6 +118,14 @@ public:
 		camera_.aspect_ratio(800.f/600.f);
 		camera_.position({0.f, 0.f, 0.f});
 
+		// auto& mesh_manager = indigo::resource_manager<mesh>::shared();
+		// mesh_manager.add_path("media");
+		// mesh_manager.add_loader(std::unique_ptr<obj_loader>(new obj_loader()));
+		// orc_mesh = mesh_manager.load("monkey.obj");
+		// if(!orc_mesh)
+		// 	throw std::runtime_error("Failed to load orc!");
+		// orc.attach_mesh(orc_mesh.get());
+
 		add_event_handler(&key_handler_);
 		add_event_handler(&cam_man_);
 	}
@@ -128,13 +136,17 @@ public:
 	}
 
 	void render(float time) override
-	{}
+	{
+
+	}
 
 private:
 	window window_;
 	camera camera_;
 	camera_man cam_man_;
 	keyboard_handler key_handler_;
+	std::shared_ptr<mesh> orc_mesh;
+	mesh_entity orc;
 };
 
 
