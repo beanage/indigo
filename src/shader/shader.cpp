@@ -53,6 +53,6 @@ bool shader::compile()
 		log::write("Shader: ", log);
 	}
 
-	return status != 0;
+	return status == 0;
 }
 

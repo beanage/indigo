@@ -27,3 +27,12 @@ std::string indigo::filesystem::join(const std::string& first,
 {
     return first + "/" + second;
 }
+
+std::string indigo::filesystem::extension(std::string const &path)
+{
+    auto dir_sep_pos = path.rfind('/');
+    auto dot_pos = path.rfind('.');
+    if(dot_pos <= dir_sep_pos || ++dot_pos >= path.size())
+        return "";
+    return std::string(path.begin()+dot_pos, path.end());
+}

@@ -4,12 +4,19 @@
 #include <memory>
 #include <vector>
 #include <ratio>
+#include <platform/bitmap.hpp>
 
 namespace indigo
 {
 class basic_event;
 class basic_event_factory;
 class event_visitor;
+
+template<class T> class resource_manager;
+class model;
+class shader;
+class bitmap;
+class mesh;
 
 class application
 {
@@ -30,6 +37,11 @@ public:
 
     virtual void event(const basic_event& e);
 
+    virtual void pathes(resource_manager<model>& mgr) {}
+    virtual void pathes(resource_manager<mesh>& mgr) {}
+    virtual void pathes(resource_manager<shader>& mgr) {}
+    virtual void pathes(resource_manager<bitmap>& mgr) {}
+
     void terminate();
     bool terminated() const;
 
@@ -39,6 +51,7 @@ protected:
 
 private:
     application(const application&) = delete;
+    void setup_resource_managers();
 
     void poll_events();
 

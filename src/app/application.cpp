@@ -1,11 +1,13 @@
 #include "application.hpp"
 #include "sdl_utility.hpp"
 #include "keyboard_event.hpp"
-#include "mouse_event.hpp"
 #include "application_event.hpp"
-#include <SDL2/SDL.h>
 #include <iostream>
-#include <algorithm>
+
+#include "shader/shader_loader.hpp"
+#include "model/md5/md5_loader.hpp"
+#include "model/obj/obj_loader.hpp"
+#include "platform/bitmap_loader.hpp"
 
 using namespace indigo;
 
@@ -15,7 +17,8 @@ const std::chrono::milliseconds application::update_intervall(10);
 
 application::application()
     : quit_(false)
-{}
+{
+}
 
 application::~application()
 {}
@@ -155,6 +158,8 @@ void indigo::run(application& app, int argc, const char** argv)
 {
     using std::chrono::milliseconds;
 
+    init_gl();
+    app.setup_resource_managers();
     app.init();
 
     milliseconds prev_time(SDL_GetTicks());
@@ -192,12 +197,32 @@ void indigo::run(application& app, int argc, const char** argv)
     }
 }
 
+void application::setup_resource_managers()
+{
+	auto& model_manager = indigo::resource_manager<model>::shared();
+	model_manager.add_loader(std::unique_ptr<md5_loader>(new md5_loader()));
+	pathes(model_manager);
+
+    auto& mesh_manager = indigo::resource_manager<mesh>::shared();
+    mesh_manager.add_loader(std::unique_ptr<obj_loader>(new obj_loader()));
+    pathes(mesh_manager);
+
+	auto& bitmap_manager = indigo::resource_manager<bitmap>::shared();
+	bitmap_manager.add_loader(std::unique_ptr<bitmap_loader>(new bitmap_loader()));
+	pathes(bitmap_manager);
+
+	auto& shader_manager = indigo::resource_manager<shader>::shared();
+	shader_manager.add_loader(std::unique_ptr<shader_loader>(new shader_loader()));
+	pathes(shader_manager);
+}
+
+
 void indigo::init_gl()
 {
-    //SDL_Init(SDL_INIT_VIDEO);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, application::gl_major_version);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, application::gl_minor_version);
+	SDL_Init(SDL_INIT_VIDEO);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, application::gl_major_version);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, application::gl_minor_version);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    SDL_GL_SetSwapInterval(1);
+	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+	SDL_GL_SetSwapInterval(1);
 }

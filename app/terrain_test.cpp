@@ -7,8 +7,12 @@
 #include "app/mouse_event.hpp"
 #include "app/application_event.hpp"
 #include "platform/resource_manager.hpp"
+#include "shader/default_program.hpp"
+
 #include "model/mesh.hpp"
 #include "scene/camera.hpp"
+
+#include <iostream>
 
 using namespace indigo;
 
@@ -111,6 +115,11 @@ public:
 		, key_handler_(*this)
 	{}
 
+	virtual void pathes(resource_manager<model>& mgr) override {mgr.add_path("media");}
+    virtual void pathes(resource_manager<mesh>& mgr) override {mgr.add_path("media");}
+	virtual void pathes(resource_manager<shader>& mgr) override {mgr.add_path("shader");}
+	virtual void pathes(resource_manager<bitmap>& mgr) override {mgr.add_path("media");}
+
 	void init() override
 	{
 		window_.title("Terrain Test");
@@ -118,13 +127,13 @@ public:
 		camera_.aspect_ratio(800.f/600.f);
 		camera_.position({0.f, 0.f, 0.f});
 
-		// auto& mesh_manager = indigo::resource_manager<mesh>::shared();
-		// mesh_manager.add_path("media");
-		// mesh_manager.add_loader(std::unique_ptr<obj_loader>(new obj_loader()));
-		// orc_mesh = mesh_manager.load("monkey.obj");
-		// if(!orc_mesh)
-		// 	throw std::runtime_error("Failed to load orc!");
-		// orc.attach_mesh(orc_mesh.get());
+        def_shader.reset(new default_program);
+
+        auto& mesh_manager = indigo::resource_manager<mesh>::shared();
+        orc_mesh = mesh_manager.load("monkey.obj");
+        if(!orc_mesh)
+        	throw std::runtime_error("Failed to load orc!");
+		orc.attach_mesh(orc_mesh.get());
 
 		add_event_handler(&key_handler_);
 		add_event_handler(&cam_man_);
@@ -135,8 +144,9 @@ public:
 		cam_man_.move(camera_);
 	}
 
-	void render(float time) override
+	void render(float time /*renderer r*/) override
 	{
+		// r.render(camera_, orc);
 
 	}
 
@@ -146,14 +156,13 @@ private:
 	camera_man cam_man_;
 	keyboard_handler key_handler_;
 	std::shared_ptr<mesh> orc_mesh;
-	mesh_entity orc;
+	std::unique_ptr<default_program> def_shader;
+    mesh_entity orc;
 };
 
 
 int main(int argc, const char** argv)
 {
-	init_gl();
-
 	terrain_test app;
 	run(app, argc, argv);
 

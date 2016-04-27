@@ -1,4 +1,4 @@
-#include "program.hpp"
+#include "basic_program.hpp"
 #include "util/log.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
