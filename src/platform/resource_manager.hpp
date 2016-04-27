@@ -5,6 +5,7 @@
 #include <map>
 #include <algorithm>
 #include <vector>
+#include <iostream>
 
 #include "platform/filesystem.hpp"
 
@@ -98,8 +99,7 @@ private:
         return {nullptr};
     }
 
-    std::shared_ptr<Type> load_and_cache(std::string const& obj,
-                                         std::string const& ext)
+    std::shared_ptr<Type> load_and_cache(std::string const& obj, std::string const& ext)
     {
         auto loader_iter =
             std::find_if(loaders_.begin(), loaders_.end(),
@@ -114,10 +114,12 @@ private:
                 if (result.get()) {
                     cache_[obj] = result;
                 }
-
                 return result;
             }
         }
+
+        std::cout << "[resource_manager] failed to find loader for " << obj << "." << ext << std::endl;
+        return std::shared_ptr<Type>();
     }
 
     std::pair<std::string, std::string> split_name(std::string const& name)

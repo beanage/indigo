@@ -10,7 +10,7 @@ namespace indigo
 class shader
 {
 public:
-	enum class type : GLenum
+	enum type : GLenum
 	{
 		vertex   = GL_VERTEX_SHADER,
 		fragment = GL_FRAGMENT_SHADER,

@@ -1,6 +1,6 @@
 #include "terrain.hpp"
 #include "terrain_cell.hpp"
-#include "shader/program.hpp"
+#include "shader/basic_program.hpp"
 #include "platform/bitmap.hpp"
 
 using namespace indigo;
