@@ -4,3 +4,4 @@
 .swo
 /build/*
 CMakeLists.txt.user
+default.log
