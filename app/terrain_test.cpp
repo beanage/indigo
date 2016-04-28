@@ -122,6 +122,13 @@ public:
 
 	void init() override
 	{
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_BLEND);
+		glFrontFace(GL_CCW);
+		glCullFace(GL_BACK);
+		glClearDepth(1.0);
+		glEnable(GL_DEPTH_TEST);
+
 		window_.title("Terrain Test");
 
 		camera_.aspect_ratio(800.f/600.f);
@@ -146,6 +153,8 @@ public:
 
 	void render(float time /*renderer r*/) override
 	{
+		glClearColor(1.f, 0.f, 0.f, 0.f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// r.render(camera_, orc);
 		def_shader->use();
         def_shader->uniform(u_projection, camera_.projection());
@@ -154,6 +163,7 @@ public:
         def_shader->uniform(u_light_1_position, camera_.position());
         def_shader->uniform(u_light_1_color, glm::vec3(1, 1, 1));
         orc.render();
+		window_.swap();
 	}
 
 private:
