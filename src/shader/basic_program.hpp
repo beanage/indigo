@@ -42,13 +42,13 @@ protected:
 	bool link();
 	void attach_shader(shader& s);
 
-	virtual void load_uniform_locations();
-
 	GLint locate_uniform(const std::string& name) const;
 	GLint locate_attribute(const std::string& name) const;
 
 private:
     GLuint id_;
 	std::vector<GLint> uniform_locations_;
+
+	void load_uniform_locations();
 };
 }

@@ -169,8 +169,6 @@ private:
 
 int main(int argc, const char** argv)
 {
-	terrain_test app;
-	run(app, argc, argv);
-
+	run<terrain_test>(argc, argv);
 	return 0;
 }

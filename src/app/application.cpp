@@ -154,11 +154,10 @@ void application::poll_events()
 	}
 }
 
-void indigo::run(application& app, int argc, const char** argv)
+void indigo::__run::internal_run(application &app, int argc, char const **argv)
 {
     using std::chrono::milliseconds;
 
-    init_gl();
     app.setup_resource_managers();
     app.init();
 

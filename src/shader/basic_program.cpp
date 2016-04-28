@@ -38,6 +38,7 @@ bool basic_shader_program::link()
 		log::write("Shader Program: ", log);
 	}
 
+    use();
 	load_uniform_locations();
 	return status != 0;
 }
@@ -59,7 +60,7 @@ GLint basic_shader_program::locate_attribute(const std::string &name) const
 GLint basic_shader_program::locate_uniform(const std::string& name) const
 {
     GLint temp = glGetUniformLocation(id_, name.c_str());
-    if (temp == -1)
+    if (temp < 0)
         throw std::runtime_error("invalid uniform name '" + name + "'!");
 
     return temp;
@@ -96,6 +97,8 @@ void basic_shader_program::uniform(uniform_location location, const std::vector<
 }
 
 void basic_shader_program::load_uniform_locations() {
+	if(uniform_locations_.size() > 0)
+		return;
 	uniform_locations_.resize(__last__);
 	uniform_locations_[u_projection] = locate_uniform("projection");
 	uniform_locations_[u_view] = locate_uniform("view");

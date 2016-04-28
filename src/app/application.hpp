@@ -20,7 +20,7 @@ class mesh;
 
 class application
 {
-    friend void run(application&, int, char const**);
+    friend class __run;
 
 public:
     static const unsigned int gl_major_version;
@@ -61,6 +61,20 @@ private:
     std::vector<event_visitor*> event_handler_;
 };
 
+
+
 void init_gl();
-void run(application& app, int argc, char const** argv);
+class __run {
+    template<class T>
+    friend void run(int argc, char const** argv);
+private:
+    static void internal_run(application &app, int argc, char const **argv);
+};
+
+template<class app>
+void run(int argc, char const** argv) {
+    init_gl();
+    app a;
+    __run::internal_run(a, argc, argv);
+}
 }
