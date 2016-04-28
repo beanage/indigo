@@ -171,6 +171,7 @@ public:
 
         orc.render();
 
+        camera_.update();
         window_.swap();
     }
 
