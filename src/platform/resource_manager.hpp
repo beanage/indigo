@@ -41,12 +41,11 @@ public:
         if (name.empty())
             return {nullptr};
 
-        auto name_parts = split_name(name);
-        auto result = query_cache(name_parts.first);
+        auto result = query_cache(name);
         if (result.get())
             return result;
 
-        return load_and_cache(name_parts.first, name_parts.second);
+        return load_and_cache(name);
     }
 
     void unload(std::string const& name)
@@ -54,8 +53,7 @@ public:
         if (name.empty())
             return;
 
-        auto name_parts = split_name(name);
-        auto cache_iter = cache_.find(name_parts.first);
+        auto cache_iter = cache_.find(name);
         if (cache_iter != cache_.end()) {
             std::shared_ptr<Type> resource(nullptr);
             cache_iter->second.swap(resource);
@@ -99,8 +97,9 @@ private:
         return {nullptr};
     }
 
-    std::shared_ptr<Type> load_and_cache(std::string const& obj, std::string const& ext)
+    std::shared_ptr<Type> load_and_cache(std::string const& name)
     {
+        std::string ext = filesystem::extension(name);
         auto loader_iter =
             std::find_if(loaders_.begin(), loaders_.end(),
                          [&](std::unique_ptr<resource_loader<Type>> const& loader) {
@@ -108,28 +107,18 @@ private:
                          });
 
         if (loader_iter != loaders_.end()) {
-            auto path = full_path(obj + "." + ext);
+            auto path = full_path(name);
             if (path.first) {
                 auto result = (*loader_iter)->load(path.second);
                 if (result.get()) {
-                    cache_[obj] = result;
+                    cache_[name] = result;
                 }
                 return result;
             }
         }
 
-        std::cout << "[resource_manager] failed to find loader for " << obj << "." << ext << std::endl;
+        std::cout << "[resource_manager] failed to find loader for " << name << std::endl;
         return std::shared_ptr<Type>();
-    }
-
-    std::pair<std::string, std::string> split_name(std::string const& name)
-    {
-        std::string::size_type ext_pos(name.find_last_of('.'));
-        if (ext_pos < name.length() - 1) {
-            return std::make_pair(name.substr(0, ext_pos), name.substr(ext_pos + 1));
-        }
-
-        return std::make_pair(name, name);
     }
 
     std::vector<std::string> search_paths_;
