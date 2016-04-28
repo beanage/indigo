@@ -8,13 +8,15 @@
 
 namespace indigo
 {
-enum uniform_location {
-	u_projection,
-	u_view,
-	u_model,
-	u_light_1_position,
-	u_light_1_color,
-	__last__
+enum uniform_location
+{
+	uniform_projection,
+	uniform_view,
+	uniform_model,
+	uniform_light_1_position,
+	uniform_light_1_color,
+
+	__uniform_last__
 };
 
 class basic_shader_program

@@ -97,12 +97,13 @@ void basic_shader_program::uniform(uniform_location location, const std::vector<
 }
 
 void basic_shader_program::load_uniform_locations() {
-	if(uniform_locations_.size() > 0)
+	if(!uniform_locations_.empty())
 		return;
-	uniform_locations_.resize(__last__);
-	uniform_locations_[u_projection] = locate_uniform("projection");
-	uniform_locations_[u_view] = locate_uniform("view");
-	uniform_locations_[u_model] = locate_uniform("model");
-	uniform_locations_[u_light_1_position] = locate_uniform("light_1.position");
-	uniform_locations_[u_light_1_color] = locate_uniform("light_1.color");
+
+	uniform_locations_.resize(__uniform_last__);
+	uniform_locations_[uniform_projection] = locate_uniform("projection");
+	uniform_locations_[uniform_view] = locate_uniform("view");
+	uniform_locations_[uniform_model] = locate_uniform("model");
+	uniform_locations_[uniform_light_1_position] = locate_uniform("light_1.position");
+	uniform_locations_[uniform_light_1_color] = locate_uniform("light_1.color");
 }
