@@ -11,12 +11,6 @@
 
 using namespace indigo;
 
-void entity::update()
-{
-    prev_position_ = position_;
-    prev_rotation_ = rotation_;
-}
-
 const glm::vec3& entity::position() const
 {
     return position_;
@@ -29,8 +23,7 @@ void entity::position(const glm::vec3& pos)
 
 entity& entity::move(const glm::vec3& velocity)
 {
-    if (prev_position_ == position_)
-        prev_position_ = position_;
+    prev_position_ = position_;
     position_ += velocity;
     return *this;
 }
@@ -47,16 +40,14 @@ void entity::rotation(const glm::quat& rot)
 
 entity& entity::turn_global(float angle, glm::vec3 axis)
 {
-    if (prev_rotation_ == rotation_)
-        prev_rotation_ = rotation_;
+    prev_rotation_ = rotation_;
     rotation_ = rotation_ * glm::rotate(glm::quat(), glm::radians(angle), axis);
     return *this;
 }
 
 entity& entity::turn_local(float angle, glm::vec3 axis)
 {
-    if (prev_rotation_ == rotation_)
-        prev_rotation_ = rotation_;
+    prev_rotation_ = rotation_;
     rotation_ = glm::rotate(glm::quat(), glm::radians(angle), axis) * rotation_;
     return *this;
 }

@@ -12,14 +12,9 @@ namespace indigo {
 class entity
 {
 public:
-    virtual ~entity()
-    {
-    }
+    virtual ~entity() {}
 
-    virtual void update();
-    virtual void render() const
-    {
-    }
+    virtual void render() const {}
 
     const glm::vec3& position() const;
     void position(const glm::vec3& pos);
