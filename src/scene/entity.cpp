@@ -63,7 +63,7 @@ entity& entity::turn_local(float angle, glm::vec3 axis)
 
 glm::mat4 entity::model() const
 {
-    return build_model_martix(position_, rotation_);
+    return build_model_matrix(position_, rotation_);
 }
 
 glm::mat4 entity::model(float step) const
@@ -71,7 +71,7 @@ glm::mat4 entity::model(float step) const
     glm::vec3 pos = glm::mix(prev_position_, position_, step);
     glm::quat rot = glm::slerp(prev_rotation_, rotation_, step);
 
-    return build_model_martix(pos, rot);
+    return build_model_matrix(pos, rot);
 }
 
 glm::mat4 entity::orientation() const
@@ -99,8 +99,8 @@ void entity::look_at(const glm::vec3& target)
     rotation(glm::quat_cast(glm::lookAt(glm::vec3(), target - position(), up())));
 }
 
-glm::mat4 entity::build_model_martix(const glm::vec3& pos,
-                                     const glm::quat& rot) const
+glm::mat4 entity::build_model_matrix(const glm::vec3 &pos,
+                                     const glm::quat &rot) const
 {
     return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
 }

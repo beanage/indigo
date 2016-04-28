@@ -76,8 +76,8 @@ void camera::turn(float yaw, float pitch)
     turn_local(pitch, glm::vec3(1, 0, 0));
 }
 
-glm::mat4 camera::build_model_martix(const glm::vec3& pos,
-                                     const glm::quat& rot) const
+glm::mat4 camera::build_model_matrix(const glm::vec3 &pos,
+                                     const glm::quat &rot) const
 {
     return glm::toMat4(rot) * glm::translate(glm::mat4(), -pos);
 }

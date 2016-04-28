@@ -147,7 +147,13 @@ public:
 	void render(float time /*renderer r*/) override
 	{
 		// r.render(camera_, orc);
-
+		def_shader->use();
+        def_shader->uniform(u_projection, camera_.projection());
+        def_shader->uniform(u_view, camera_.view(time));
+        def_shader->uniform(u_model, orc.model(time));
+        def_shader->uniform(u_light_1_position, camera_.position());
+        def_shader->uniform(u_light_1_color, glm::vec3(1, 1, 1));
+        orc.render();
 	}
 
 private:

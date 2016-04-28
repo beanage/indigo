@@ -57,8 +57,8 @@ protected:
     entity() = default;
     entity(const entity&) = default;
 
-    virtual glm::mat4 build_model_martix(const glm::vec3& pos,
-                                         const glm::quat& rot) const;
+    virtual glm::mat4 build_model_matrix(const glm::vec3 &pos,
+                                         const glm::quat &rot) const;
 
 private:
     glm::vec3 position_, prev_position_;
