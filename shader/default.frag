@@ -23,6 +23,7 @@ void main()
 	vec3 surface_to_light = light_1.position - frag_pos;
 	float brightness = clamp(dot(norm, surface_to_light) / (length(surface_to_light) * length(norm)), 0, 1);
 	
-	vec4 tex_color = texture(tex, frag_uv);
+	// vec4 tex_color = texture(tex, frag_uv);
+	vec4 tex_color = vec4(.3,.4,.5,1.);
 	color = vec4(brightness * light_1.color * tex_color.rgb, tex_color.a);
 }
