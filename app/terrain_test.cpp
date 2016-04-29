@@ -13,6 +13,7 @@
 #include "scene/camera.hpp"
 
 #include <iostream>
+#include <SDL2/SDL.h>
 
 using namespace indigo;
 
@@ -61,6 +62,8 @@ public:
         , left_(false)
         , backward_(false)
         , right_(false)
+        , rotx_(0.f)
+        , roty_(0.f)
     {}
 
     bool visit(const key_down_event& e) override
@@ -89,6 +92,14 @@ public:
         return true;
     }
 
+    bool visit(const mouse_move_event& e) override
+    {
+            rotx_ = e.x_rel / 3.f;
+            roty_ = e.y_rel / 3.f;
+
+            return true;
+    }
+
     void move(camera& cam)
     {
         glm::vec3 velocity;
@@ -100,7 +111,11 @@ public:
             velocity += cam.right() * -speed_;
         if (right_)
             velocity += cam.right() * speed_;
+
         cam.move(velocity);
+        cam.turn(rotx_, roty_);
+
+        rotx_ = roty_ = 0.f;
     }
 
 private:
@@ -109,6 +124,8 @@ private:
     bool left_;
     bool right_;
     float speed_;
+    float rotx_;
+    float roty_;
 };
 
 class terrain_test : public application
@@ -126,6 +143,8 @@ public:
 
     void init() override
     {
+        SDL_SetRelativeMouseMode(SDL_TRUE);
+
         glEnable(GL_CULL_FACE);
         glEnable(GL_BLEND);
         glFrontFace(GL_CCW);
