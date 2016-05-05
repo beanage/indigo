@@ -31,23 +31,28 @@ include_directories(
     contrib/json)
 
 function(set_compile_features target)
-target_compile_features(${target}
-    PRIVATE cxx_range_for
-    PRIVATE cxx_nullptr
-    PRIVATE cxx_lambdas
-    PRIVATE cxx_auto_type
-    PRIVATE cxx_func_identifier
-    PRIVATE cxx_right_angle_brackets
-    PRIVATE cxx_override
-    PRIVATE cxx_defaulted_functions
-    PRIVATE cxx_variadic_templates)
+    target_compile_features(${target}
+        PRIVATE cxx_range_for
+        PRIVATE cxx_nullptr
+        PRIVATE cxx_lambdas
+        PRIVATE cxx_auto_type
+        PRIVATE cxx_func_identifier
+        PRIVATE cxx_right_angle_brackets
+        PRIVATE cxx_override
+        PRIVATE cxx_defaulted_functions
+        PRIVATE cxx_variadic_templates)
 endfunction(set_compile_features)
+
+function(set_warning_flags target)
+    set_property(TARGET ${target} APPEND_STRING PROPERTY COMPILE_FLAGS -Wall)
+endfunction(set_warning_flags)
 
 add_library(indigo STATIC
     ${INDIGO_SOURCES}
     ${INDIGO_HEADERS})
 
 set_compile_features(indigo)
+set_warning_flags(indigo)
 
 target_link_libraries(indigo
     ${OPENGL_LIBRARIES}
@@ -60,6 +65,7 @@ add_executable(terrain_test
     app/terrain_test.cpp)
 
 set_compile_features(terrain_test)
+set_warning_flags(terrain_test)
 
 target_link_libraries(terrain_test
     indigo)
