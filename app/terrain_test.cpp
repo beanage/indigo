@@ -182,13 +182,10 @@ public:
 
         // r.render(camera_, orc);
         def_shader->use();
-        def_shader->uniform(uniform_projection, camera_.projection());
-        def_shader->uniform(uniform_view, camera_.view(time));
-        def_shader->uniform(uniform_model, orc.model(time));
-        def_shader->uniform(uniform_light_1_position, camera_.position());
-        def_shader->uniform(uniform_light_1_color, glm::vec3(1, 1, 1));
-
-        orc.render();
+        def_shader->projection(camera_.projection());
+        def_shader->view(camera_.view(time));
+        def_shader->model(orc.model(time));
+        def_shader->light1(camera_.position(), glm::vec3(1, 1, 1));
 
         window_.swap();
     }
