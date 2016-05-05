@@ -57,11 +57,11 @@ class camera_man : public event_visitor
 {
 public:
     camera_man()
-        : speed_(.1f)
-        , forward_(false)
-        , left_(false)
+        : forward_(false)
         , backward_(false)
+        , left_(false)
         , right_(false)
+        , speed_(.1f)
         , rotx_(0.f)
         , roty_(0.f)
     {}

@@ -455,7 +455,7 @@ std::shared_ptr<model> md5_loader::load(std::string const& filename)
     }
 
     // Fill the bones parent
-    for (int i = 0; i < tmp_bones.size(); ++i) {
+    for (size_t i = 0; i < tmp_bones.size(); ++i) {
         if (tmp_bones[i].parent_index >= 0)
             m->bones_[i]->parent_ = m->bones_[tmp_bones[i].parent_index].get();
     }
