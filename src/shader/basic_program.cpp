@@ -33,7 +33,7 @@ bool basic_shader_program::link()
 
 	if (!status) {
 		std::string log(log_len, '\0');
-		glGetProgramInfoLog(id_, log.size(), nullptr, &log[0]);
+		glGetProgramInfoLog(id_, static_cast<GLsizei>(log.size()), nullptr, &log[0]);
 
 		log::write("Shader Program: ", log);
 	}
@@ -106,4 +106,16 @@ void basic_shader_program::load_uniform_locations() {
 	uniform_locations_[uniform_model] = locate_uniform("model");
 	uniform_locations_[uniform_light_1_position] = locate_uniform("light_1.position");
 	uniform_locations_[uniform_light_1_color] = locate_uniform("light_1.color");
+}
+
+void basic_shader_program::model(glm::mat4 const& value) {
+	uniform(uniform_model, value);
+}
+
+void basic_shader_program::view(glm::mat4 const& value) {
+    uniform(uniform_view, value);
+}
+
+void basic_shader_program::projection(glm::mat4 const& value) {
+    uniform(uniform_projection, value);
 }

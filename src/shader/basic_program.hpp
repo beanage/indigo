@@ -31,15 +31,19 @@ public:
 
 	void use() const;
 
+	void model(glm::mat4 const& value);
+	void view(glm::mat4 const& value);
+	void projection(glm::mat4 const& value);
+
+protected:
+	basic_shader_program();
+
 	void uniform(uniform_location location, int value);
 	void uniform(uniform_location location, float value);
 	void uniform(uniform_location location, const glm::vec2& value);
 	void uniform(uniform_location location, const glm::vec3& value);
 	void uniform(uniform_location location, const glm::mat4& value);
 	void uniform(uniform_location location, const std::vector<glm::mat4>& values);
-
-protected:
-	basic_shader_program();
 
 	bool link();
 	void attach_shader(shader& s);
