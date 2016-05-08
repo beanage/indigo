@@ -95,3 +95,28 @@ glm::mat4 entity::build_model_matrix(const glm::vec3 &pos,
 {
     return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
 }
+
+aabb entity::axis_aligned_bounding_box(glm::mat4 const& abs_transform) const {
+    return aabb(glm::vec3(), glm::vec3());
+}
+
+box entity::bounding_box() const {
+    return box();
+}
+
+std::pair<bool, double> entity::intersect(ray const& r) const {
+    return std::pair<bool, double>(false, 0.0);
+}
+
+void entity::add(entity_shared_ptr &ent) {
+    children_.push_back(ent);
+}
+
+void entity::update_world_matrix(glm::mat4 const &parent, float time) {
+    world_ = parent * model(time);
+}
+
+
+
+
+

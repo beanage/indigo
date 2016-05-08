@@ -6,14 +6,21 @@
 
 #include "core/basic_geom.hpp"
 
+#include <memory>
 #include <tuple>
+#include <list>
 
-namespace indigo {
+namespace indigo
+{
+class renderer;
+class entity;
+typedef std::shared_ptr<entity> entity_shared_ptr;
+
 class entity
 {
+    friend class renderer;
 public:
     virtual ~entity() {}
-
     virtual void render() const {}
 
     const glm::vec3& position() const;
@@ -35,28 +42,25 @@ public:
 
     void look_at(const glm::vec3& target);
 
-    aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform) const
-    {
-        return aabb(glm::vec3(), glm::vec3());
-    }
-    virtual box bounding_box() const
-    {
-        return box();
-    }
-    virtual std::pair<bool, double> intersect(ray const& r) const
-    {
-        return std::pair<bool, double>(false, 0.0);
-    }
+    aabb axis_aligned_bounding_box(glm::mat4 const& abs_transform) const;
+
+    virtual box bounding_box() const;
+    virtual std::pair<bool, double> intersect(ray const& r) const;
+
+    void add(entity_shared_ptr& ent);
 
 protected:
     entity() = default;
     entity(const entity&) = default;
 
+    void update_world_matrix(glm::mat4 const &parent, float time);
     virtual glm::mat4 build_model_matrix(const glm::vec3 &pos,
                                          const glm::quat &rot) const;
 
 private:
+    glm::mat4 world_;
     glm::vec3 position_, prev_position_;
     glm::quat rotation_, prev_rotation_;
+    std::list<entity_shared_ptr> children_;
 };
 }
