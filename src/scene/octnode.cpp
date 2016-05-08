@@ -166,7 +166,7 @@ octnode::octant_for_indices(const octant_indices& pos) const
 /************************ root_octnode **********************/
 
 root_octnode::root_octnode(const aabb& size)
-    : octnode(size), left(geom.front_bottom_left, x_axis), right(geom.front_bottom_left + glm::vec3(geom.size.x, 0, 0), x_axis), bottom(geom.front_bottom_left, y_axis), top(geom.front_bottom_left + glm::vec3(0, geom.size.y, 0), y_axis), front(geom.front_bottom_left, z_axis), back(geom.front_bottom_left + glm::vec3(0, 0, geom.size.z), z_axis)
+    : octnode(size), left(geom.front_bottom_left, x_axis), right(geom.front_bottom_left + glm::vec3(geom.size.x, 0, 0), x_axis), top(geom.front_bottom_left + glm::vec3(0, geom.size.y, 0), y_axis), bottom(geom.front_bottom_left, y_axis), front(geom.front_bottom_left, z_axis), back(geom.front_bottom_left + glm::vec3(0, 0, geom.size.z), z_axis)
 {
 }
 

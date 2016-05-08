@@ -42,7 +42,7 @@ static unsigned gen_gl_texture(unsigned char* data, int width, int height)
 }
 
 texture::texture(unsigned char* buffer, unsigned len)
-    : obj_(0), width_(0), height_(0)
+    : width_(0), height_(0), obj_(0)
 {
     stbi_set_flip_vertically_on_load(true);
 
@@ -59,7 +59,7 @@ texture::texture(unsigned char* buffer, unsigned len)
 }
 
 texture::texture(const rgba_color& solid_color, uint32_t width, uint32_t height)
-    : obj_(0), width_(width), height_(height)
+    : width_(width), height_(height), obj_(0)
 {
     size_t size = width * height * 4 * sizeof(uint8_t);
     uint8_t data[size];
@@ -69,7 +69,7 @@ texture::texture(const rgba_color& solid_color, uint32_t width, uint32_t height)
 }
 
 texture::texture(const std::string& file)
-    : obj_(0), width_(0), height_(0)
+    : width_(0), height_(0), obj_(0)
 {
     stbi_set_flip_vertically_on_load(true);
 
@@ -86,7 +86,7 @@ texture::texture(const std::string& file)
 }
 
 texture::texture(int width, int height)
-    : obj_(0), width_(width), height_(height)
+    : width_(width), height_(height), obj_(0)
 {
     gen_gl_texture(nullptr, width, height);
 }
@@ -117,7 +117,7 @@ uint32_t texture::height() const
 }
 
 framebuffer::framebuffer(const texture& t)
-    : texture_(t), fbo_(0)
+    : texture_(t), fbo_(0), rbo_(0)
 {
     texture_.bind();
 

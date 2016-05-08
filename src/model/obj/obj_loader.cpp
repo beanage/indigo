@@ -23,7 +23,7 @@ public:
     };
 
     obj_mesh()
-        : vbo_(0), vao_(0)
+        : vao_(0), vbo_(0), num_verts_(0)
     {
     }
 
