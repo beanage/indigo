@@ -8,7 +8,7 @@ indigo::default_program::default_program() {
     link();
 }
 
-void indigo::default_program::light1(glm::vec3 const& position, glm::vec3 const& color) {
+void indigo::default_program::sun(glm::vec3 const& position, glm::vec3 const& color) {
     uniform(uniform_light_1_position, position);
     uniform(uniform_light_1_color, color);
 }

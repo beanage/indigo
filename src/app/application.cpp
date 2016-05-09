@@ -8,6 +8,7 @@
 #include "model/md5/md5_loader.hpp"
 #include "model/obj/obj_loader.hpp"
 #include "platform/bitmap_loader.hpp"
+#include "scene/renderer.hpp"
 
 using namespace indigo;
 
@@ -191,7 +192,8 @@ void indigo::__run::internal_run(application &app, int argc, char const **argv)
             update_lag -= application::update_intervall.count();
         }
 
-        app.render(update_lag / application::update_intervall.count());
+		renderer r(update_lag / application::update_intervall.count());
+        app.render(r);
         ++frames;
     }
 }

@@ -35,6 +35,8 @@ public:
 	void view(glm::mat4 const& value);
 	void projection(glm::mat4 const& value);
 
+	virtual void sun(glm::vec3 const& position, glm::vec3 const& color) {}
+
 protected:
 	basic_shader_program();
 

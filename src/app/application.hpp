@@ -17,6 +17,7 @@ class model;
 class shader;
 class bitmap;
 class mesh;
+class renderer;
 
 class application
 {
@@ -33,7 +34,7 @@ public:
 
     virtual void init() = 0;
     virtual void update() = 0;
-    virtual void render(float time_factor) = 0;
+    virtual void render(renderer&) = 0;
 
     virtual void event(const basic_event& e);
 

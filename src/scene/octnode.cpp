@@ -27,6 +27,15 @@ struct octnode_plane_isect
         }
     }
 
+    octnode_plane_isect(octnode_plane_isect&& other) : step(other.step), pos(other.pos), t(other.t) {}
+
+    octnode_plane_isect& operator= (octnode_plane_isect const& other) {
+        step = other.step;
+        pos = other.pos;
+        t = other.t;
+        return *this;
+    }
+
     glm::lowp_ivec3 step;
     glm::vec3 pos;
     float t;
@@ -81,10 +90,11 @@ entity const* octnode::pick(const ray& r, glm::vec3 entry, double exit) const
         return closest_entity;
     } else {
         // determine the succession of intersections
-        std::array<octnode_plane_isect, 3> inner_isects = {
-            octnode_plane_isect(r, lr, glm::lowp_ivec3(1, 0, 0)),
-            octnode_plane_isect(r, bt, glm::lowp_ivec3(0, 1, 0)),
-            octnode_plane_isect(r, fb, glm::lowp_ivec3(0, 0, 1))};
+        std::array<octnode_plane_isect, 3> inner_isects = {{
+            octnode_plane_isect(r, bt, glm::lowp_ivec3{0, 1, 0}),
+            octnode_plane_isect(r, lr, glm::lowp_ivec3{1, 0, 0}),
+            octnode_plane_isect(r, fb, glm::lowp_ivec3{0, 0, 1})
+        }};
         std::sort(inner_isects.begin(), inner_isects.end());
 
         octnode const* current_node =
@@ -172,10 +182,11 @@ root_octnode::root_octnode(const aabb& size)
 
 const entity* root_octnode::pick(const ray& r) const
 {
-    std::array<octnode_plane_isect, 6> bounding_isects = {
+    std::array<octnode_plane_isect, 6> bounding_isects = {{
         octnode_plane_isect(r, top), octnode_plane_isect(r, bottom),
         octnode_plane_isect(r, left), octnode_plane_isect(r, right),
-        octnode_plane_isect(r, front), octnode_plane_isect(r, back)};
+        octnode_plane_isect(r, front), octnode_plane_isect(r, back)
+    }};
 
     std::sort(bounding_isects.begin(), bounding_isects.end());
     double first_positive_intersection = .0;

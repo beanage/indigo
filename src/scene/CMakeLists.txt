@@ -10,6 +10,7 @@ set(SCENE_SOURCES
     ${DIR}/scene.cpp
     ${DIR}/renderer.cpp
     ${DIR}/group_entity.cpp
+    ${DIR}/basic_light.cpp
     PARENT_SCOPE)
     
 set(SCENE_HEADERS
@@ -20,5 +21,5 @@ set(SCENE_HEADERS
     ${DIR}/renderer.hpp
     ${DIR}/group_entity.hpp
     ${DIR}/octnode.hpp
-    
+    ${DIR}/basic_light.hpp
     PARENT_SCOPE)

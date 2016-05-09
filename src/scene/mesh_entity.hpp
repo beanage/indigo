@@ -4,6 +4,7 @@
 
 namespace indigo {
 class mesh;
+class default_program;
 
 class mesh_entity : public entity
 {
@@ -28,10 +29,13 @@ public:
         return rendermode_;
     }
 
-    virtual void render() const;
+    virtual void render(renderer &r) const;
 
 private:
+    static std::unique_ptr<default_program> def_shader;
+
     const mesh* model_;
     render_mode rendermode_;
+
 };
 }

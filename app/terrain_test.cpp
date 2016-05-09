@@ -11,6 +11,9 @@
 
 #include "model/mesh.hpp"
 #include "scene/camera.hpp"
+#include "scene/renderer.hpp"
+#include "scene/scene.hpp"
+#include "scene/basic_light.hpp"
 
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -134,6 +137,7 @@ public:
     terrain_test()
         : window_({0, 0, 800, 600})
         , key_handler_(*this)
+        , scene_({100, 100, 100})
     {}
 
     virtual void pathes(resource_manager<model>& mgr) override {mgr.add_path("media");}
@@ -157,14 +161,16 @@ public:
         camera_.aspect_ratio(800.f/600.f);
         camera_.position({0.f, 0.f, 0.f});
 
-        def_shader.reset(new default_program);
-
         auto& mesh_manager = indigo::resource_manager<mesh>::shared();
         orc_mesh = mesh_manager.load("monkey.obj");
         if(!orc_mesh)
             throw std::runtime_error("Failed to load orc!");
-        orc.attach_mesh(orc_mesh.get());
         orc_mesh->upload();
+
+        orc = std::make_shared<mesh_entity>();
+        orc->attach_mesh(orc_mesh.get());
+
+        scene_.add(orc);
 
         add_event_handler(&key_handler_);
         add_event_handler(&cam_man_);
@@ -173,20 +179,12 @@ public:
     void update() override
     {
         cam_man_.move(camera_);
+        scene_.sun({camera_.position(), glm::vec3(.0, 1., .0)});
     }
 
-    void render(float time /*renderer r*/) override
+    void render(renderer& r) override
     {
-        glClearColor(1.f, 0.f, 0.f, 0.f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // r.render(camera_, orc);
-        def_shader->use();
-        def_shader->projection(camera_.projection());
-        def_shader->view(camera_.view(time));
-        def_shader->model(orc.model(time));
-        def_shader->light1(camera_.position(), glm::vec3(1, 1, 1));
-
+        r.render(camera_, scene_);
         window_.swap();
     }
 
@@ -196,8 +194,8 @@ private:
     camera_man cam_man_;
     keyboard_handler key_handler_;
     std::shared_ptr<mesh> orc_mesh;
-    std::unique_ptr<default_program> def_shader;
-    mesh_entity orc;
+    std::shared_ptr<mesh_entity> orc;
+    scene scene_;
 };
 
 

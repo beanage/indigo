@@ -21,7 +21,7 @@ class entity
     friend class renderer;
 public:
     virtual ~entity() {}
-    virtual void render() const {}
+    virtual void render(renderer &r) const {}
 
     const glm::vec3& position() const;
     void position(const glm::vec3& pos);
@@ -57,8 +57,9 @@ protected:
     virtual glm::mat4 build_model_matrix(const glm::vec3 &pos,
                                          const glm::quat &rot) const;
 
-private:
     glm::mat4 world_;
+
+private:
     glm::vec3 position_, prev_position_;
     glm::quat rotation_, prev_rotation_;
     std::list<entity_shared_ptr> children_;
