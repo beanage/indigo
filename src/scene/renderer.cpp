@@ -44,7 +44,7 @@ void renderer::fetch(basic_shader_program& target)
     if(!impl_->current_cam || !impl_->current_scene)
         throw std::runtime_error("attempt to call renderer::fetch() without scene!");
 
-    target.view(impl_->current_cam->view());
+    target.view(impl_->current_cam->view(time));
     target.projection(impl_->current_cam->projection());
     target.sun(impl_->current_scene->sun().color, impl_->current_scene->sun().position);
 }
