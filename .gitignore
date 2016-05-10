@@ -1,7 +1,8 @@
 *.*.swp
 *.*.swo
-.swp
-.swo
+*.swp
+*.swo
+*.orig
 /build/*
 CMakeLists.txt.user
 default.log
