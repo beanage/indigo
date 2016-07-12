@@ -36,12 +36,7 @@ public:
     virtual void update() = 0;
     virtual void render(renderer&) = 0;
 
-    virtual void event(const basic_event& e);
-
-    virtual void pathes(resource_manager<model>& mgr) {}
-    virtual void pathes(resource_manager<mesh>& mgr) {}
-    virtual void pathes(resource_manager<shader>& mgr) {}
-    virtual void pathes(resource_manager<bitmap>& mgr) {}
+    void event(const basic_event& e);
 
     void terminate();
     bool terminated() const;

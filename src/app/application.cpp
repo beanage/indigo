@@ -2,13 +2,14 @@
 #include "sdl_utility.hpp"
 #include "keyboard_event.hpp"
 #include "application_event.hpp"
-#include <iostream>
 
 #include "shader/shader_loader.hpp"
 #include "model/md5/md5_loader.hpp"
 #include "model/obj/obj_loader.hpp"
 #include "platform/bitmap_loader.hpp"
 #include "scene/renderer.hpp"
+
+#include <iostream>
 
 using namespace indigo;
 
@@ -200,21 +201,21 @@ void indigo::__run::internal_run(application &app, int argc, char const **argv)
 
 void application::setup_resource_managers()
 {
-	auto& model_manager = indigo::resource_manager<model>::shared();
-	model_manager.add_loader(std::unique_ptr<md5_loader>(new md5_loader()));
-	pathes(model_manager);
+    auto& model_manager = indigo::resource_manager<model>::shared();
+    model_manager.add_loader(std::unique_ptr<md5_loader>(new md5_loader()));
+    model_manager.add_path("media");
 
     auto& mesh_manager = indigo::resource_manager<mesh>::shared();
     mesh_manager.add_loader(std::unique_ptr<obj_loader>(new obj_loader()));
-    pathes(mesh_manager);
+    mesh_manager.add_path("media");
 
-	auto& bitmap_manager = indigo::resource_manager<bitmap>::shared();
-	bitmap_manager.add_loader(std::unique_ptr<bitmap_loader>(new bitmap_loader()));
-	pathes(bitmap_manager);
+    auto& bitmap_manager = indigo::resource_manager<bitmap>::shared();
+    bitmap_manager.add_loader(std::unique_ptr<bitmap_loader>(new bitmap_loader()));
+    bitmap_manager.add_path("media");
 
-	auto& shader_manager = indigo::resource_manager<shader>::shared();
-	shader_manager.add_loader(std::unique_ptr<shader_loader>(new shader_loader()));
-	pathes(shader_manager);
+    auto& shader_manager = indigo::resource_manager<shader>::shared();
+    shader_manager.add_loader(std::unique_ptr<shader_loader>(new shader_loader()));
+    shader_manager.add_path("shader");
 }
 
 

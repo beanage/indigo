@@ -140,11 +140,6 @@ public:
         , scene_({100, 100, 100})
     {}
 
-    virtual void pathes(resource_manager<model>& mgr) override {mgr.add_path("media");}
-    virtual void pathes(resource_manager<mesh>& mgr) override {mgr.add_path("media");}
-    virtual void pathes(resource_manager<shader>& mgr) override {mgr.add_path("shader");}
-    virtual void pathes(resource_manager<bitmap>& mgr) override {mgr.add_path("media");}
-
     void init() override
     {
         SDL_SetRelativeMouseMode(SDL_TRUE);
