@@ -5,30 +5,32 @@
 
 namespace indigo
 {
-    class scene;
-    class camera;
-    class entity;
-    class application;
-    class basic_shader_program;
-    class __run;
+class scene;
+class camera;
+class entity;
+class basic_shader_program;
+class __run;
 
-    class renderer
-    {
-        friend class __run;
+class renderer
+{
+    friend class __run;
+public:
+    void render(camera const& cam, scene& scene_);
 
-    public:
-        void render(camera const& cam, scene& scene_);
-        void fetch(basic_shader_program& target);
+    void prepare(basic_shader_program& p);
+    const scene& get_scene() const;
+    const camera& get_camera() const;
+    const entity& get_entity() const;
 
-        float const time;
+    float const time;
 
-    private:
-        renderer(float time);
-        ~renderer();
+private:
+    renderer(float time);
+    ~renderer();
 
-        void render(entity& ent, glm::mat4 const& parent);
+    void render(entity& ent, glm::mat4 const& parent);
 
-        struct impl;
-        std::unique_ptr<impl> impl_;
-    };
+    struct render_state;
+    render_state* state_;
+};
 }

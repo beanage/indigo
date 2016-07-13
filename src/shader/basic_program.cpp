@@ -1,5 +1,8 @@
 #include "basic_program.hpp"
 #include "util/log.hpp"
+#include "scene/renderer.hpp"
+#include "scene/entity.hpp"
+#include "scene/camera.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -19,6 +22,13 @@ basic_shader_program::~basic_shader_program()
 void basic_shader_program::use() const
 {
 	glUseProgram(id_);
+}
+
+void basic_shader_program::fetch(const renderer& r)
+{
+    uniform(model_loc_, r.get_entity().model(r.time));
+    uniform(view_loc_, r.get_camera().view(r.time));
+    uniform(proj_loc_, r.get_camera().projection());
 }
 
 bool basic_shader_program::link()
@@ -101,19 +111,4 @@ void basic_shader_program::locate_uniforms()
 	model_loc_ = locate_uniform("model");
 	view_loc_ = locate_uniform("view");
 	proj_loc_ = locate_uniform("projection");
-}
-
-void basic_shader_program::model(glm::mat4 const& value)
-{
-	uniform(model_loc_, value);
-}
-
-void basic_shader_program::view(glm::mat4 const& value)
-{
-    uniform(view_loc_, value);
-}
-
-void basic_shader_program::projection(glm::mat4 const& value)
-{
-    uniform(proj_loc_, value);
 }

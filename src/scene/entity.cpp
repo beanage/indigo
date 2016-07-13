@@ -23,7 +23,7 @@ void entity::position(const glm::vec3& pos)
 
 entity& entity::move(const glm::vec3& velocity)
 {
-    prev_position_ = position_;
+    prev_position_ = position_; // TODO: Was passiert im letzten frame, wen kein move oder position aufgerufen wird?
     position_ += velocity;
     return *this;
 }

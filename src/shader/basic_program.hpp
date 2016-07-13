@@ -8,18 +8,20 @@
 
 namespace indigo
 {
+class renderer;
+
 class basic_shader_program
 {
 public:
 	virtual ~basic_shader_program();
 
-	GLuint id() const {return id_;}
+	GLuint id() const { return id_; }
 
+    /** Use this shader */
 	void use() const;
 
-	void model(glm::mat4 const& value);
-	void view(glm::mat4 const& value);
-	void projection(glm::mat4 const& value);
+    /** Fetch shader attributes */
+    virtual void fetch(const renderer& r);
 
 protected:
 	basic_shader_program();
@@ -46,6 +48,6 @@ private:
     GLuint view_loc_;
     GLuint proj_loc_;
 
-	void locate_uniforms();
+    void locate_uniforms();
 };
 }

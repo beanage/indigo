@@ -3,6 +3,10 @@
 #include "platform/gl.hpp"
 #include "shader/default_program.hpp"
 #include "scene/renderer.hpp"
+#include "scene/global_light.hpp"
+
+#include <glm/mat4x4.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace indigo;
 
@@ -29,8 +33,8 @@ void mesh_entity::render(renderer &r) const
 {
     if (model_) {
         def_shader->use();
-        def_shader->model(world_);
-        r.fetch(*def_shader);
+        r.prepare(*def_shader);
+
         glPolygonMode(GL_FRONT_AND_BACK, rendermode_ == wireframe ? GL_LINE : GL_FILL);
         model_->render();
     }

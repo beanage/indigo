@@ -17,6 +17,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace indigo;
 
@@ -169,12 +170,20 @@ public:
 
         add_event_handler(&key_handler_);
         add_event_handler(&cam_man_);
+
+        scene_.sun(global_light{glm::vec3{1, 1, 1}, glm::vec3{0, 0, 1}});
+        sun_rotation_ = 0.f;
     }
 
     void update() override
     {
         cam_man_.move(camera_);
-        scene_.sun({camera_.position(), glm::vec3(.0, 1., .0)});
+
+        glm::mat4 rot = glm::rotate(glm::mat4(), sun_rotation_ += .01f, glm::vec3(0, 1, 0));
+        rot = glm::rotate(rot, -15.f, glm::vec3(1, 0, 0));
+        glm::vec4 v1 = rot * glm::vec4(0, 0, 1, 1);
+        glm::vec3 v2 = glm::normalize(glm::vec3(v1));
+        scene_.sun(global_light{glm::vec3(1, 1, 1), v2});
     }
 
     void render(renderer& r) override
@@ -191,6 +200,7 @@ private:
     std::shared_ptr<mesh> orc_mesh;
     std::shared_ptr<mesh_entity> orc;
     scene scene_;
+    float sun_rotation_;
 };
 
 
