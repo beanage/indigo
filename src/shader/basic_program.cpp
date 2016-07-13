@@ -39,7 +39,7 @@ bool basic_shader_program::link()
 	}
 
     use();
-	load_uniform_locations();
+	locate_uniforms();
 	return status != 0;
 }
 
@@ -66,56 +66,54 @@ GLint basic_shader_program::locate_uniform(const std::string& name) const
     return temp;
 }
 
-void basic_shader_program::uniform(uniform_location location, int value)
+void basic_shader_program::uniform(GLuint location, int value)
 {
-    glUniform1i(uniform_locations_[location], value);
+    glUniform1i(location, value);
 }
 
-void basic_shader_program::uniform(uniform_location location, float value)
+void basic_shader_program::uniform(GLuint location, float value)
 {
-    glUniform1f(uniform_locations_[location], value);
+    glUniform1f(location, value);
 }
 
-void basic_shader_program::uniform(uniform_location location, const glm::vec2& value)
+void basic_shader_program::uniform(GLuint location, const glm::vec2& value)
 {
-    glUniform2fv(uniform_locations_[location], 1, glm::value_ptr(value));
+    glUniform2fv(location, 1, glm::value_ptr(value));
 }
 
-void basic_shader_program::uniform(uniform_location location, const glm::vec3& value)
+void basic_shader_program::uniform(GLuint location, const glm::vec3& value)
 {
-    glUniform3fv(uniform_locations_[location], 1, glm::value_ptr(value));
+    glUniform3fv(location, 1, glm::value_ptr(value));
 }
 
-void basic_shader_program::uniform(uniform_location location, const glm::mat4& value)
+void basic_shader_program::uniform(GLuint location, const glm::mat4& value)
 {
-    glUniformMatrix4fv(uniform_locations_[location], 1, GL_TRUE, glm::value_ptr(value));
+    glUniformMatrix4fv(location, 1, GL_TRUE, glm::value_ptr(value));
 }
 
-void basic_shader_program::uniform(uniform_location location, const std::vector<glm::mat4>& values)
+void basic_shader_program::uniform(GLuint location, const std::vector<glm::mat4>& values)
 {
-    glUniformMatrix4fv(uniform_locations_[location], values.size(), GL_TRUE, reinterpret_cast<float const*>(values.data()));
+    glUniformMatrix4fv(location, values.size(), GL_TRUE, reinterpret_cast<float const*>(values.data()));
 }
 
-void basic_shader_program::load_uniform_locations() {
-	if(!uniform_locations_.empty())
-		return;
-
-	uniform_locations_.resize(__uniform_last__);
-	uniform_locations_[uniform_projection] = locate_uniform("projection");
-	uniform_locations_[uniform_view] = locate_uniform("view");
-	uniform_locations_[uniform_model] = locate_uniform("model");
-	uniform_locations_[uniform_light_1_position] = locate_uniform("light_1.position");
-	uniform_locations_[uniform_light_1_color] = locate_uniform("light_1.color");
+void basic_shader_program::locate_uniforms()
+{
+	model_loc_ = locate_uniform("model");
+	view_loc_ = locate_uniform("view");
+	proj_loc_ = locate_uniform("projection");
 }
 
-void basic_shader_program::model(glm::mat4 const& value) {
-	uniform(uniform_model, value);
+void basic_shader_program::model(glm::mat4 const& value)
+{
+	uniform(model_loc_, value);
 }
 
-void basic_shader_program::view(glm::mat4 const& value) {
-    uniform(uniform_view, value);
+void basic_shader_program::view(glm::mat4 const& value)
+{
+    uniform(view_loc_, value);
 }
 
-void basic_shader_program::projection(glm::mat4 const& value) {
-    uniform(uniform_projection, value);
+void basic_shader_program::projection(glm::mat4 const& value)
+{
+    uniform(proj_loc_, value);
 }

@@ -11,7 +11,7 @@
 
 using namespace indigo;
 
-const glm::vec3& entity::position() const
+glm::vec3 entity::position() const
 {
     return position_;
 }
@@ -28,7 +28,7 @@ entity& entity::move(const glm::vec3& velocity)
     return *this;
 }
 
-const glm::quat& entity::rotation() const
+glm::quat entity::rotation() const
 {
     return rotation_;
 }
@@ -96,27 +96,32 @@ glm::mat4 entity::build_model_matrix(const glm::vec3 &pos,
     return glm::translate(glm::mat4(), pos) * glm::toMat4(rot);
 }
 
-aabb entity::axis_aligned_bounding_box(glm::mat4 const& abs_transform) const {
+aabb entity::axis_aligned_bounding_box(glm::mat4 const& abs_transform) const
+{
     return aabb(glm::vec3(), glm::vec3());
 }
 
-box entity::bounding_box() const {
+box entity::bounding_box() const
+{
     return box();
 }
 
-std::pair<bool, double> entity::intersect(ray const& r) const {
+std::pair<bool, double> entity::intersect(ray const& r) const
+{
     return std::pair<bool, double>(false, 0.0);
 }
 
-void entity::add(entity_shared_ptr &ent) {
+void entity::add(const entity_shared_ptr& ent)
+{
     children_.push_back(ent);
 }
 
-void entity::update_world_matrix(glm::mat4 const &parent, float time) {
-    world_ = parent * model(time);
+void entity::remove(const entity_shared_ptr& ent)
+{
+    children_.remove(ent);
 }
 
-
-
-
-
+void entity::update_world_matrix(glm::mat4 const &parent, float time)
+{
+    world_ = parent * model(time);
+}

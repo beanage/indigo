@@ -11,7 +11,7 @@ std::unique_ptr<default_program> mesh_entity::def_shader;
 mesh_entity::mesh_entity(const mesh* m)
     : model_(m)
 {
-    if(!def_shader)
+    if (!def_shader)
         def_shader.reset(new default_program);
 }
 

@@ -1,41 +1,34 @@
-//
-// Created by Joseph Birkner on 5/7/16.
-//
-
-#ifndef __INDIGO_SCENE_HPP__
-#define __INDIGO_SCENE_HPP__
+#pragma once
 
 #include <memory>
-#include "vec3.hpp"
+#include <vec3.hpp>
+
+#include "group_entity.hpp"
+#include "global_light.hpp"
 
 namespace indigo
 {
     class entity;
     class renderer;
-    typedef std::shared_ptr<entity> entity_shared_ptr;
-    struct global_light;
 
     class scene
     {
         friend class renderer;
     public:
-        scene(glm::vec3 const& size);
-        scene(scene const&) = delete;
-        ~scene();
+        explicit scene(glm::vec3 const& size);
 
-        scene& add(entity_shared_ptr ent);
-        scene& remove(entity_shared_ptr const& ent);
+        scene& add(std::shared_ptr<entity> const& ent);
+        scene& remove(std::shared_ptr<entity> const& ent);
 
-        global_light const& sun();
-        void sun(global_light const& s);
+        void sun(const global_light& light);
+        global_light sun() const;
 
     private:
-        entity& root();
+        scene() = delete;
+        scene(const scene&) = delete;
+        scene(scene&&) = delete;
 
-        struct impl;
-        std::unique_ptr<impl> impl_;
+        group_entity root_;
+        global_light sun_;
     };
 }
-
-
-#endif //__INDIGO_SCENE_HPP__

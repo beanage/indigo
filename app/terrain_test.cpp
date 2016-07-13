@@ -13,7 +13,7 @@
 #include "scene/camera.hpp"
 #include "scene/renderer.hpp"
 #include "scene/scene.hpp"
-#include "scene/basic_light.hpp"
+#include "scene/global_light.hpp"
 
 #include <iostream>
 #include <SDL2/SDL.h>

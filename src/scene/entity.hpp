@@ -21,13 +21,13 @@ class entity
     friend class renderer;
 public:
     virtual ~entity() {}
-    virtual void render(renderer &r) const {}
+    virtual void render(renderer&) const {}
 
-    const glm::vec3& position() const;
+    glm::vec3 position() const;
     void position(const glm::vec3& pos);
     entity& move(glm::vec3 const& velocity);
 
-    const glm::quat& rotation() const;
+    glm::quat rotation() const;
     void rotation(const glm::quat& rot);
     entity& turn_global(float angle, glm::vec3 axis);
     entity& turn_local(float angle, glm::vec3 axis);
@@ -47,11 +47,13 @@ public:
     virtual box bounding_box() const;
     virtual std::pair<bool, double> intersect(ray const& r) const;
 
-    void add(entity_shared_ptr& ent);
+    void add(const entity_shared_ptr& ent);
+    void remove(const entity_shared_ptr& ent);
 
 protected:
     entity() = default;
     entity(const entity&) = default;
+    entity& operator=(const entity&) = default;
 
     void update_world_matrix(glm::mat4 const &parent, float time);
     virtual glm::mat4 build_model_matrix(const glm::vec3 &pos,

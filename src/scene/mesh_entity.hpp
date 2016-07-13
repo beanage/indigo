@@ -2,14 +2,15 @@
 
 #include "scene/entity.hpp"
 
-namespace indigo {
+namespace indigo
+{
 class mesh;
 class default_program;
 
 class mesh_entity : public entity
 {
 public:
-    mesh_entity(const mesh* m= nullptr);
+    mesh_entity(const mesh* m = nullptr);
 
     const mesh* attached_mesh() const;
     void attach_mesh(const mesh* m);
@@ -24,6 +25,7 @@ public:
     {
         rendermode_ = mode;
     }
+
     render_mode rendermode()
     {
         return rendermode_;
@@ -32,10 +34,12 @@ public:
     virtual void render(renderer &r) const;
 
 private:
+    mesh_entity(const mesh_entity&) = delete;
+    mesh_entity(mesh_entity&&) = delete;
+
     static std::unique_ptr<default_program> def_shader;
 
     const mesh* model_;
     render_mode rendermode_;
-
 };
 }
