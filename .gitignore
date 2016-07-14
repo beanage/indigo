@@ -3,6 +3,7 @@
 *.swp
 *.swo
 *.orig
+/.idea/*
 /build/*
 CMakeLists.txt.user
 default.log
