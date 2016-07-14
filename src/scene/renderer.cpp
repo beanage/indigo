@@ -35,7 +35,7 @@ void renderer::render(camera const& cam, scene& scene)
     if (state_)
         throw std::runtime_error("attempt to make nested renderer::render(camera, scene) call!");
 
-    glClearColor(1.f, 0.f, 0.f, 0.f);
+    glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     render_state state;
