@@ -1,8 +1,8 @@
 # prequisites
-OpenGL 3.3 (for adequate GLSL support)
-GLEW
-SDL2
-GLM
+* OpenGL >= 3.3
+* GLEW
+* SDL2
+* GLM
 
 # how to build and run the demo
 1. Make sure you have GCC 4.8 and CMake 3.1 or greater installed
